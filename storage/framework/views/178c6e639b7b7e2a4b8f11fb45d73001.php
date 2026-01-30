@@ -32,7 +32,7 @@
                         </div>
                     </form>
                 </div>
-                <a class="tf-button style-1 w208" href="#"><i
+                <a class="tf-button style-1 w208" href="<?php echo e(route('admin.category.add')); ?>"><i
                         class="icon-plus"></i>Add new</a>
             </div>
             <div class="wg-table table-all-user">
@@ -56,7 +56,7 @@
                                 <td><?php echo e($category->id); ?></td>
                                 <td class="pname">
                                     <div class="image">
-                                        <img src="#" class="image">
+                                        <img src="<?php echo e(asset('uploads/categories')); ?>/<?php echo e($category->image); ?>" alts="<?php echo e($category->name); ?>" class="image">
                                     </div>
                                     <div class="name">
                                         <a href="#" class="body-title-2"><?php echo e($category->name); ?></a>
