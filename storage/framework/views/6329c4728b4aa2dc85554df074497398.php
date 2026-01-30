@@ -70,7 +70,9 @@
                                                 <i class="icon-edit-3"></i>
                                             </div>
                                         </a>
-                                        <form action="#" method="POST">
+                                        <form action="<?php echo e(route('admin.brand.delete',['id'=>$brand->id])); ?>" method="POST">
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
                                             <div class="item text-danger delete">
                                                 <i class="icon-trash-2"></i>
                                             </div>
@@ -92,4 +94,27 @@
     </div>
 </div>
 <?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
+    <script>
+        $(function() {
+            $('.delete').on('click',function(e){
+                e.preventDefault();
+                var form = $(this).closest('form');
+                swal({
+                    title: "Are you sure?",
+                    text: "You want to delete this record?",
+                    type:"warning",
+                    buttons:["No","Yes"],
+                    confirmButtonColor:'#dc3545'
+                }).then(function(result){
+                    if(result){
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+    
+<?php $__env->stopPush(); ?>
 <?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\drip-and-co-nahom-7\drip-and-co-nahom-7\resources\views/admin/brands.blade.php ENDPATH**/ ?>
