@@ -137,14 +137,47 @@ class AdminController extends Controller
     }
     
     public function GenerateCategoryThumbnailsImage($image, $imageName) 
-        {
-            $destinationPath = public_path('uploads/categories');
-            $img = Image::read($image->path());
-            $img->cover(124,124,'top');
-            $img->resize(124,124,function($constraint){
-                $constraint->aspectRatio(); 
-            })->save($destinationPath.'/'.$imageName);
+    {
+        $destinationPath = public_path('uploads/categories');
+        $img = Image::read($image->path());
+        $img->cover(124,124,'top');
+        $img->resize(124,124,function($constraint){
+            $constraint->aspectRatio(); 
+        })->save($destinationPath.'/'.$imageName);
+    }
+
+    public function category_edit($id)
+    {
+        $category = Category::find($id);
+        return view('admin.category-edit',compact('category'));
+    }
+
+    public function category_update(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'slug' => 'required|unique:categories,slug',
+            'image' => 'mimes:png,jpg,jpeg|max:2048'
+        ]);
+
+        $category = Category::find($request->id);
+        $category->name = $request->name;
+        $category->slug = Str::slug($request->name);
+        if($request->hasFile('image')){
+            if(File::exists(public_path('uploads/categories').'/'.$category->image))
+            {
+                File:delete(ppublic_path('uploads/categories').'/'.$category->image);
+            }
+            $image = $request->file('image');
+            $file_extension = $request->file('image')->extension();
+            $file_name = Carbon::now()->timestamp.'.'.$file_extension;
+            $this->GenerateCategoryThumbnailsImage($image, $file_name);
+            $category->image = $file_name;
         }
+        
+        $category->save();
+        return redirect()->route('admin.categories')->with('status','Category has been updated successfully');
+    }
     
     
     
