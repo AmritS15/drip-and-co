@@ -1,13 +1,13 @@
-@extends('layouts.admin')
 
-@section('content')
+
+<?php $__env->startSection('content'); ?>
 <div class="main-content-inner">
     <div class="main-content-wrap">
         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-            <h3>Brand infomation</h3>
+            <h3>Category infomation</h3>
             <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                 <li>
-                    <a href="{{ route('admin.index') }}">
+                    <a href="<?php echo e(route('admin.index')); ?>">
                         <div class="text-tiny">Dashboard</div>
                     </a>
                 </li>
@@ -15,32 +15,46 @@
                     <i class="icon-chevron-right"></i>
                 </li>
                 <li>
-                    <a href="{{route('admin.brand')}}">
-                        <div class="text-tiny">Brands</div>
+                    <a href="<?php echo e(route('admin.categories')); ?>">
+                        <div class="text-tiny">Categories</div>
                     </a>
                 </li>
                 <li>
                     <i class="icon-chevron-right"></i>
                 </li>
                 <li>
-                    <div class="text-tiny">New Brand</div>
+                    <div class="text-tiny">New Category</div>
                 </li>
             </ul>
         </div>
         <!-- new-category -->
         <div class="wg-box">
-            <form class="form-new-product form-style-1" action="{{ route('admin.brand.store') }}" method="POST"  enctype="multipart/form-data">
-                @csrf
+            <form class="form-new-product form-style-1" action="<?php echo e(route('admin.category.store')); ?>" method="POST"  enctype="multipart/form-data">
+                <?php echo csrf_field(); ?>
                 <fieldset class="name">
-                    <div class="body-title">Brand Name <span class="tf-color-1">*</span></div>
-                    <input class="flex-grow" type="text" placeholder="Brand name" name="name" tabindex="0" value="{{ old('name') }}" aria-required="true" required="">
+                    <div class="body-title">Category Name <span class="tf-color-1">*</span></div>
+                    <input class="flex-grow" type="text" placeholder="Category name" name="name" tabindex="0" value="<?php echo e(old('name')); ?>" aria-required="true" required="">
                 </fieldset>
-                @error('name') <span class="alert alert-danger text-center">{{ $message }}</span> @enderror
+                <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="alert alert-danger text-center"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 <fieldset class="name">
-                    <div class="body-title">Brand Slug <span class="tf-color-1">*</span></div>
-                    <input class="flex-grow" type="text" placeholder="Brand Slug" name="slug" tabindex="0" value="{{ old('slug') }}" aria-required="true" required="">
+                    <div class="body-title">Category Slug <span class="tf-color-1">*</span></div>
+                    <input class="flex-grow" type="text" placeholder="Category Slug" name="slug" tabindex="0" value="<?php echo e(old('slug')); ?>" aria-required="true" required="">
                 </fieldset>
-                @error('slug') <span class="alert alert-danger text-center">{{ $message }}</span> @enderror
+                <?php $__errorArgs = ['slug'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="alert alert-danger text-center"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 <fieldset>
                     <div class="body-title">Upload images <span class="tf-color-1">*</span>
                     </div>
@@ -60,7 +74,14 @@
                         </div>
                     </div>
                 </fieldset>
-                @error('image') <span class="alert alert-danger text-center">{{ $message }}</span> @enderror
+                <?php $__errorArgs = ['image'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="alert alert-danger text-center"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
 
                 <div class="bot">
                     <div></div>
@@ -70,9 +91,9 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         $(function() {
             $("#myFile").on("change", function(e) {
@@ -98,4 +119,5 @@
             .replace(/ +/g,"-");
         }
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\drip-and-co-nahom-7\drip-and-co-nahom-7\resources\views/admin/category-add.blade.php ENDPATH**/ ?>
