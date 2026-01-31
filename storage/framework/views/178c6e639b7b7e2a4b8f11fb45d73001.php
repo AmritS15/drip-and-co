@@ -71,7 +71,7 @@
                                                 <i class="icon-edit-3"></i>
                                             </div>
                                         </a>
-                                        <form action="<?php echo e(route('admin.brand.delete',['id'=>$category->id])); ?>" method="POST">
+                                        <form action="<?php echo e(route('admin.category.delete',['id'=>$category->id])); ?>" method="POST">
                                             <?php echo csrf_field(); ?>
                                             <?php echo method_field('DELETE'); ?>
                                             <div class="item text-danger delete">
