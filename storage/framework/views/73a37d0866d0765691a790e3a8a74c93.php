@@ -64,8 +64,17 @@
                 <td>
                   <div class="qty-control position-relative">
                     <input type="number" name="quantity" value="<?php echo e($item->qty); ?>" min="1" class="qty-control__number text-center">
+                    <form method="POST" action="<?php echo e(route('cart.qty.decrease', ['rowId'=>$item->rowId])); ?>" >
+                      <?php echo csrf_field(); ?>
+                      <?php echo method_field('PUT'); ?>
                     <div class="qty-control__reduce">-</div>
+                    </form>
+                    
+                    <form method="POST" action="<?php echo e(route('cart.qty.increase', ['rowId'=>$item->rowId])); ?>" >
+                      <?php echo csrf_field(); ?>
+                      <?php echo method_field('PUT'); ?>
                     <div class="qty-control__increase">+</div>
+                    </form>
                   </div>
                 </td>
                 <td>
@@ -136,4 +145,20 @@
     </section>
   </main>
 <?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
+
+<script>
+$(function(){
+$(".qty-control__increase").on("click", function(){
+    $(this).closest('form').submit();
+  });
+
+  $(".qty-control__reduce").on("click", function(){
+    $(this).closest('form').submit();
+  });
+})
+  </script>
+
+<?php $__env->stopPush(); ?>
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /Users/amrit/Documents/Team17/drip-and-co-16/resources/views/cart.blade.php ENDPATH**/ ?>
