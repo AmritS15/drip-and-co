@@ -1,12 +1,12 @@
-@extends('layouts.admin')
-@section('content')
+
+<?php $__env->startSection('content'); ?>
 <div class="main-content-inner">
                             <div class="main-content-wrap">
                                 <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                                     <h3>All Products</h3>
                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                         <li>
-                                            <a href="{{ route('admin.index') }}">
+                                            <a href="<?php echo e(route('admin.index')); ?>">
                                                 <div class="text-tiny">Dashboard</div>
                                             </a>
                                         </li>
@@ -32,13 +32,13 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <a class="tf-button style-1 w208" href="{{ route('admin.product.add') }}"><i
+                                        <a class="tf-button style-1 w208" href="<?php echo e(route('admin.product.add')); ?>"><i
                                                 class="icon-plus"></i>Add new</a>
                                     </div>
                                     <div class="table-responsive">
-                                        @if(Session::has('status'))
-                                            <p class="alert alert-success">{{ Session::get('status') }}</p>
-                                        @endif
+                                        <?php if(Session::has('status')): ?>
+                                            <p class="alert alert-success"><?php echo e(Session::get('status')); ?></p>
+                                        <?php endif; ?>
                                         <table class="table table-striped table-bordered">
                                             <thead>
                                                 <tr>
@@ -56,26 +56,26 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($products as $product)
+                                                <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <tr>
-                                                    <td>{{$product->id}}</td>
+                                                    <td><?php echo e($product->id); ?></td>
                                                     <td class="pname">
                                                         <div class="image">
-                                                            <img src="{{ asset('uploads\products\thumbnails') }}/{{ $product->image }}" alt="{{ $product->name }}" class="image">
+                                                            <img src="<?php echo e(asset('uploads\products\thumbnails')); ?>/<?php echo e($product->image); ?>" alt="<?php echo e($product->name); ?>" class="image">
                                                         </div>
                                                         <div class="name">
-                                                            <a href="#" class="body-title-2">{{$product->name}}</a>
-                                                            <div class="text-tiny mt-3">{{$product->slug}}</div>
+                                                            <a href="#" class="body-title-2"><?php echo e($product->name); ?></a>
+                                                            <div class="text-tiny mt-3"><?php echo e($product->slug); ?></div>
                                                         </div>
                                                     </td>
-                                                    <td>{{$product->regular_price}}</td>
-                                                    <td>{{$product->sale_price}}</td>
-                                                    <td>{{$product->SKU}}</td>
-                                                    <td>{{$product->category->name}}</td>
-                                                    <td>{{$product->brand->name}}</td>
-                                                    <td>{{$product->featured == 0 ? "No":"Yes"}}</td>
-                                                    <td>{{$product->stock_status}}</td>
-                                                    <td>{{$product->quantity}}</td>
+                                                    <td><?php echo e($product->regular_price); ?></td>
+                                                    <td><?php echo e($product->sale_price); ?></td>
+                                                    <td><?php echo e($product->SKU); ?></td>
+                                                    <td><?php echo e($product->category->name); ?></td>
+                                                    <td><?php echo e($product->brand->name); ?></td>
+                                                    <td><?php echo e($product->featured == 0 ? "No":"Yes"); ?></td>
+                                                    <td><?php echo e($product->stock_status); ?></td>
+                                                    <td><?php echo e($product->quantity); ?></td>
                                                     <td>
                                                         <div class="list-icon-function">
                                                             <a href="#" target="_blank">
@@ -96,7 +96,7 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -104,9 +104,11 @@
                                     <div class="divider"></div>
                                     <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
 
-                                        {{ $products->links('pagination::bootstrap-5') }}
+                                        <?php echo e($products->links('pagination::bootstrap-5')); ?>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\drip-and-co-nahom-7\drip-and-co-nahom-7\resources\views/admin/products.blade.php ENDPATH**/ ?>
