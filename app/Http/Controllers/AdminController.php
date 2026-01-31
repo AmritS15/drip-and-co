@@ -190,4 +190,9 @@ class AdminController extends Controller
             return redirect()->route('admin.categories')->with('status','Category has been deleted successfully!');
     }
     
+    public function products()
+    {
+        $products = Product::orderBy('created_at','DESC')->paginate(10);
+        return view('admin.products',compact('products'));
+    }
 }
