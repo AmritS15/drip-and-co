@@ -388,7 +388,7 @@
                     </svg></span>
                 </div>
                 @if(Cart::instance('cart')->content()->where('id',$product->id)->count()>0)
-                <a href="{{route('cart.index')}}" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-warning mb-3">Go to Cart</a>
+                <a href="{{route('cart.index')}}" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-warning mb-3">View Cart</a>
                 @else
                 <form name="addtocart-form" method="post" action="{{route('cart.add')}}">
                 @csrf

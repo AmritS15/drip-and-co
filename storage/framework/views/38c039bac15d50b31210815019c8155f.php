@@ -111,7 +111,7 @@
             <p><?php echo e($product->short_description); ?></p>
           </div>
           <?php if(Cart::instance('cart')->content()->where('id',$product->id)->count()>0): ?>
-          <a href="<?php echo e(route('cart.index')); ?>" class="btn btn-warning mb-3">Go to Cart</a>
+          <a href="<?php echo e(route('cart.index')); ?>" class="btn btn-warning mb-3">View Cart</a>
           <?php else: ?>
           <form name="addtocart-form" method="post" action="<?php echo e(route('cart.add')); ?>">
             <?php echo csrf_field(); ?>
@@ -407,7 +407,7 @@
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </a>
                 <?php if(Cart::instance('cart')->content()->where('id',$rproduct->id)->count()>0): ?>
-                <a href="<?php echo e(route('cart.index')); ?>" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-warning mb-3">Go to Cart</a>
+                <a href="<?php echo e(route('cart.index')); ?>" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn-warning mb-3">View Cart</a>
                 <?php else: ?>
                 <form name="addtocart-form" method="post" action="<?php echo e(route('cart.add')); ?>">
                 <?php echo csrf_field(); ?>
