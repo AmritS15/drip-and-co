@@ -368,12 +368,12 @@
                 <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
                   <div class="swiper-wrapper">
                     <div class="swiper-slide">
-                      <a href="details.html"><img loading="lazy" src="<?php echo e(asset('uploads/products')); ?>/<?php echo e($product->image); ?>" width="330" height="400" alt="<?php echo e($product->name); ?>" class="pc__img"></a>
+                      <a href="<?php echo e(route('shop.product.details',['product_slug'=>$product->slug])); ?>"><img loading="lazy" src="<?php echo e(asset('uploads/products')); ?>/<?php echo e($product->image); ?>" width="330" height="400" alt="<?php echo e($product->name); ?>" class="pc__img"></a>
                     </div>
                     <div class="swiper-slide">
                         <?php $__currentLoopData = explode(",",$product->images); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gimg): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-                      <a href="details.html"><img loading="lazy" src="<?php echo e(asset('uploads/products')); ?>/<?php echo e($gimg); ?>" width="330" height="400" alt="<?php echo e($product->name); ?>" class="pc__img"></a>
+                      <a href="<?php echo e(route('shop.product.details',['product_slug'=>$product->slug])); ?>"><img loading="lazy" src="<?php echo e(asset('uploads/products')); ?>/<?php echo e($gimg); ?>" width="330" height="400" alt="<?php echo e($product->name); ?>" class="pc__img"></a>
                           <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                   </div>
@@ -393,7 +393,7 @@
 
               <div class="pc__info position-relative">
                 <p class="pc__category"><?php echo e($product->category->name); ?></p>
-                <h6 class="pc__title"><a href="details.html"><?php echo e($product->name); ?></a></h6>
+                <h6 class="pc__title"><a href="<?php echo e(route('shop.product.details',['product_slug'=>$product->slug])); ?>"><?php echo e($product->name); ?></a></h6>
                 <div class="product-card__price d-flex">
                   <span class="money price">
                     <?php if($product->sale_price): ?>
