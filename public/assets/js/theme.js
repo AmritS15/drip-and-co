@@ -613,29 +613,38 @@ function pureFadeOut(e) {
 
       _initMobileMenu: function() {
         const _this = this;
-        const $mobileMenuActivator = this.$header.querySelector(this.selectors.mobileMenuActivator);
         const $mobileDropdown = this.$header.querySelector(this.selectors.mobileMenu);
         let transformLeft = 0;
 
         if ($mobileDropdown) {
-          $mobileMenuActivator && $mobileMenuActivator.addEventListener('click', function(event) {
+          // Use a single delegated handler so resize doesn't add duplicate listeners (which make the menu toggle twice and appear not to open)
+          if (this._mobileMenuHeader && this._mobileMenuClickHandler) {
+            this._mobileMenuHeader.removeEventListener('click', this._mobileMenuClickHandler);
+          }
+          this._mobileMenuClickHandler = function(event) {
+            if (!event.target.closest(_this.selectors.mobileMenuActivator)) return;
             event.preventDefault();
+            event.stopPropagation();
+            var $dropdown = _this.$header.querySelector(_this.selectors.mobileMenu);
+            if (!$dropdown) return;
             if (document.body.classList.contains(_this.selectors.mobileMenuActiveClass)) {
               document.body.classList.remove(_this.selectors.mobileMenuActiveClass);
               _this.$header.style.paddingRight = '';
-              $mobileDropdown.style.paddingRight = '';
+              $dropdown.style.paddingRight = '';
             } else {
               document.body.classList.add(_this.selectors.mobileMenuActiveClass);
               _this.$header.style.paddingRight = UomoSelectors.scrollWidth;
-              $mobileDropdown.style.paddingRight = UomoSelectors.scrollWidth;
+              $dropdown.style.paddingRight = UomoSelectors.scrollWidth;
             }
-          });
+          };
+          this.$header.addEventListener('click', this._mobileMenuClickHandler);
+          this._mobileMenuHeader = this.$header;
 
           const $mobileMenu = $mobileDropdown.querySelector('.navigation__list');
           let menuMaxHeight = $mobileMenu.offsetHeight;
           $mobileMenu && $mobileMenu.querySelectorAll(_this.selectors.mobileSubNavOpen).forEach($btn => {
             $btn.addEventListener('click', function(event) {
-              event.preventDefault;
+              event.preventDefault();
               $btn.nextElementSibling.classList.remove(_this.selectors.mobileSubNavHiddenClass);
 
               transformLeft -= 100;
@@ -652,7 +661,7 @@ function pureFadeOut(e) {
 
           $mobileMenu && $mobileMenu.querySelectorAll(_this.selectors.mobileSubNavClose).forEach($btn => {
             $btn.addEventListener('click', function(event) {
-              event.preventDefault;
+              event.preventDefault();
               transformLeft += 100;
               $mobileMenu.style.transform = 'translateX(' + transformLeft.toString() + '%)';
               $btn.parentElement.classList.add(_this.selectors.mobileSubNavHiddenClass);

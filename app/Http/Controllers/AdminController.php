@@ -44,17 +44,16 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
                     IFNULL(D.TotalCanceledAmount,0) AS TotalCanceledAmount
                     FROM month_names M
                     LEFT JOIN (
-                        SELECT DATE_FORMAT(created_at, '%b') AS MonthName,
-                        MONTH(created_at) AS MonthNo,
+                        SELECT MONTH(created_at) AS MonthNo,
                         sum(total) AS TotalAmount,
                         sum(if(status='ordered', total, 0)) AS TotalOrderedAmount,
                         sum(if(status='delivered', total, 0)) AS TotalDeliveredAmount,
                         sum(if(status='canceled', total, 0)) AS TotalCanceledAmount
                         FROM orders
-                        WHERE YEAR(created_at) = YEAR(NOW())
-                        GROUP BY YEAR(created_at), MONTH(created_at), DATE_FORMAT(created_at, '%b')
-                        ORDER BY MONTH(created_at)
-                    ) D ON D.MonthNo = M.id");
+                        WHERE YEAR(created_at) = YEAR(CURDATE())
+                        GROUP BY MONTH(created_at)
+                    ) D ON D.MonthNo = M.id
+                    ORDER BY M.id");
 
         $AmountM = implode(',', collect($monthlyDatas)->pluck('TotalAmount')->toArray());
         $OrderedAmountM = implode(',', collect($monthlyDatas)->pluck('TotalOrderedAmount')->toArray());
@@ -265,10 +264,21 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         return redirect()->route('admin.categories')->with('status', 'Category has been deleted successfully!');
     }
 
-    public function products()
+    public function products(Request $request)
     {
-        $products = Product::orderBy('created_at', 'DESC')->paginate(10);
-        return view('admin.products', compact('products'));
+        $query = Product::query()->orderBy('created_at', 'DESC');
+
+        if ($request->filled('name')) {
+            $query->where('name', 'LIKE', '%' . $request->input('name') . '%');
+        }
+
+        if ($request->filled('collection')) {
+            $query->where('brand_id', (int) $request->input('collection'));
+        }
+
+        $brands = Brand::select('id', 'name')->orderBy('name')->get();
+        $products = $query->paginate(10)->withQueryString();
+        return view('admin.products', compact('products', 'brands'));
     }
 
     public function product_add()
@@ -760,9 +770,25 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         return redirect()->route('admin.coupons')->with('status', 'Coupon has been deleted successfully!');
     }
 
-    public function orders()
+    public function orders(Request $request)
     {
-        $orders = Order::orderBy('created_at', 'DESC')->paginate(12);
+        $query = Order::query()->orderBy('created_at', 'DESC');
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('name')) {
+            $search = $request->input('name');
+            $query->where(function ($q) use ($search) {
+                $q->where('orders.name', 'LIKE', '%' . $search . '%')
+                    ->orWhereHas('user', function ($q2) use ($search) {
+                        $q2->where('name', 'LIKE', '%' . $search . '%');
+                    });
+            });
+        }
+
+        $orders = $query->paginate(12)->withQueryString();
         return view('admin.orders', compact('orders'));
     }
 

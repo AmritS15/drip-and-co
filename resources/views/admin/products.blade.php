@@ -22,11 +22,21 @@
                                 <div class="wg-box">
                                     <div class="flex items-center justify-between gap10 flex-wrap">
                                         <div class="wg-filter flex-grow">
-                                            <form class="form-search">
+                                            <form class="form-search form-search-products" method="GET" action="{{ route('admin.products') }}">
                                                 <fieldset class="name">
-                                                
+                                                    <input type="text" id="products-search-name" placeholder="Search by product name..." name="name"
+                                                        value="{{ request('name') }}" autocomplete="off">
+                                                </fieldset>
+                                                <fieldset class="status">
+                                                    <select name="collection" id="products-filter-collection">
+                                                        <option value="">All collections</option>
+                                                        @foreach ($brands as $brand)
+                                                            <option value="{{ $brand->id }}" {{ request('collection') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </fieldset>
                                                 <div class="button-submit">
+                                                    <button type="submit" title="Search"><i class="icon-search"></i></button>
                                                 </div>
                                             </form>
                                         </div>
@@ -129,6 +139,47 @@
                     }
                 });
             });
+
+            (function() {
+                var form = document.querySelector('.form-search-products');
+                if (!form) return;
+                var searchInput = form.querySelector('#products-search-name');
+                var collectionSelect = form.querySelector('#products-filter-collection');
+                var debounceTimer = null;
+                var debounceMs = 200;
+
+                function applySearch() {
+                    var url = form.action || window.location.pathname;
+                    var params = new URLSearchParams();
+                    if (searchInput && searchInput.value.trim()) params.set('name', searchInput.value.trim());
+                    if (collectionSelect && collectionSelect.value) params.set('collection', collectionSelect.value);
+                    var qs = params.toString();
+                    window.location.href = qs ? url + '?' + qs : url;
+                }
+
+                if (collectionSelect) {
+                    collectionSelect.addEventListener('change', applySearch);
+                }
+
+                if (searchInput) {
+                    searchInput.addEventListener('input', function() {
+                        clearTimeout(debounceTimer);
+                        debounceTimer = setTimeout(applySearch, debounceMs);
+                    });
+                    searchInput.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            clearTimeout(debounceTimer);
+                            applySearch();
+                        }
+                    });
+                }
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    clearTimeout(debounceTimer);
+                    applySearch();
+                });
+            })();
         });
     </script>
 @endpush

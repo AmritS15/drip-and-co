@@ -266,23 +266,30 @@
     (function ($) {
 
         var tfLineChart = (function () {
+            var chart = null;
 
             var chartBar = function () {
+                var container = document.querySelector("#line-chart-8");
+                if (!container) return;
+                if (window.dashboardChart) {
+                    try { window.dashboardChart.destroy(); } catch (e) {}
+                    window.dashboardChart = null;
+                }
 
                 var options = {
                     series: [{
                         name: 'Total',
-                        data: [{{$AmountM}}]
+                        data: [{{ $AmountM }}]
                     }, {
                         name: 'Pending',
-                        data: [{{$OrderedAmountM}}]
+                        data: [{{ $OrderedAmountM }}]
                     },
                     {
                         name: 'Delivered',
-                        data: [{{$DeliveredAmountM}}]
+                        data: [{{ $DeliveredAmountM }}]
                     }, {
                         name: 'Canceled',
-                        data: [{{$CanceledAmountM}}]
+                        data: [{{ $CanceledAmountM }}]
                     }],
                     chart: {
                         type: 'bar',
@@ -331,13 +338,9 @@
                     }
                 };
 
-                chart = new ApexCharts(
-                    document.querySelector("#line-chart-8"),
-                    options
-                );
-                if ($("#line-chart-8").length > 0) {
-                    chart.render();
-                }
+                chart = new ApexCharts(container, options);
+                window.dashboardChart = chart;
+                chart.render();
             };
 
             /* Function ============ */
@@ -351,9 +354,7 @@
             };
         })();
 
-        jQuery(document).ready(function () { });
-
-        jQuery(window).on("load", function () {
+        jQuery(document).ready(function () {
             tfLineChart.load();
         });
 
