@@ -166,9 +166,33 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-    $query = $request->input('query');
-    $results = Product::where('name', 'LIKE', "%{$query}%")->get()->take(8);
-    return response()->json($results);
+        $query = trim((string) $request->input('query', ''));
+        if ($query === '') {
+            return response()->json(['products' => [], 'categories' => [], 'brands' => []]);
+        }
+
+        $term = '%' . $query . '%';
+
+        $products = Product::where('name', 'LIKE', $term)
+            ->select('id', 'name', 'slug', 'image')
+            ->take(6)
+            ->get();
+
+        $categories = Category::where('name', 'LIKE', $term)
+            ->select('id', 'name', 'image')
+            ->take(5)
+            ->get();
+
+        $brands = Brand::where('name', 'LIKE', $term)
+            ->select('id', 'name', 'category_id', 'image')
+            ->take(5)
+            ->get();
+
+        return response()->json([
+            'products' => $products,
+            'categories' => $categories,
+            'brands' => $brands,
+        ]);
     }
 
     public function about()

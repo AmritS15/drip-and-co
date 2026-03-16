@@ -22,14 +22,14 @@
             <div class="wg-box">
                 <div class="flex items-center justify-between gap10 flex-wrap">
                     <div class="wg-filter flex-grow">
-                        <form class="form-search" method="GET" action="{{ route('admin.orders') }}">
+                        <form class="form-search form-search-orders" method="GET" action="{{ route('admin.orders') }}">
                             <fieldset class="name">
-                                <input type="text" placeholder="Search here..." class="" name="name"
-                                    tabindex="2" value="{{ request('name') }}" aria-required="true">
+                                <input type="text" id="orders-search-name" placeholder="Search here..." class="" name="name"
+                                    tabindex="2" value="{{ request('name') }}" aria-required="true" autocomplete="off">
                             </fieldset>
 
                             <fieldset class="status">
-                                <select name="status">
+                                <select name="status" id="orders-filter-status">
                                     <option value="" {{ request('status') === null ? 'selected' : '' }}>All
                                     </option>
                                     <option value="ordered" {{ request('status') === 'ordered' ? 'selected' : '' }}>
@@ -110,4 +110,48 @@
         </div>
     </div>
 
+    <script>
+        (function() {
+            var form = document.querySelector('.form-search-orders');
+            if (!form) return;
+
+            var statusSelect = form.querySelector('#orders-filter-status');
+            var searchInput = form.querySelector('#orders-search-name');
+            var debounceTimer = null;
+            var debounceMs = 200;
+
+            function applyFilters() {
+                var url = form.action || window.location.pathname;
+                var params = new URLSearchParams();
+                if (searchInput && searchInput.value.trim()) params.set('name', searchInput.value.trim());
+                if (statusSelect && statusSelect.value) params.set('status', statusSelect.value);
+                var qs = params.toString();
+                window.location.href = qs ? url + '?' + qs : url;
+            }
+
+            if (statusSelect) {
+                statusSelect.addEventListener('change', applyFilters);
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(applyFilters, debounceMs);
+                });
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        clearTimeout(debounceTimer);
+                        applyFilters();
+                    }
+                });
+            }
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                clearTimeout(debounceTimer);
+                applyFilters();
+            });
+        })();
+    </script>
 @endsection
