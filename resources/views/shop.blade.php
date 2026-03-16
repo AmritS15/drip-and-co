@@ -241,6 +241,9 @@
                             class="btn btn-outline-secondary w-100 text-uppercase py-3">
                             Clear All Filters
                         </button>
+                        <button type="button" id="js-apply-filters-mobile" class="btn btn-primary w-100 text-uppercase py-3 mt-2 d-lg-none">
+                            Apply filters
+                        </button>
                     </div>
                 </div>
 
@@ -250,7 +253,8 @@
                 <div class="swiper-container js-swiper-slider slideshow slideshow_small slideshow_split"
                     data-settings='{
             "autoplay": {
-              "delay": 5000
+              "delay": 5000,
+              "disableOnInteraction": false
             },
             "slidesPerView": 1,
             "effect": "fade",
@@ -262,54 +266,51 @@
             }
           }'>
                     <div class="swiper-wrapper">
+                        {{-- Slide 1: Sale up to 80% off --}}
                         <div class="swiper-slide">
                             <div class="slide-split h-100 d-block d-md-flex overflow-hidden">
                                 <div class="slide-split_text position-relative d-flex align-items-center"
-                                    style="background-color: #f5e6e0;">
+                                    style="background-color: #e8d5d0;">
                                     <div class="slideshow-text container p-3 p-xl-5">
                                         <h2
                                             class="text-uppercase section-title fw-normal mb-3 animate animate_fade animate_btt animate_delay-2">
-                                            Women's <br /><strong>ACCESSORIES</strong></h2>
-                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5">Accessories are
-                                            the best way to
-                                            update your look. Add a title edge with new styles and new colors, or go for
-                                            timeless pieces.</h6>
+                                            Big <br /><strong>SALE</strong></h2>
+                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5">Selected styles at great prices. Limited time only—shop the best deals on clothing and accessories.</p>
                                     </div>
                                 </div>
                                 <div class="slide-split_media position-relative">
-                                    <div class="slideshow-bg" style="background-color: #f5e6e0;">
-                                        <img loading="lazy" src="assets/images/shop/shop_banner3.jpg" width="630"
-                                            height="450" alt="Women's accessories"
+                                    <div class="slideshow-bg" style="background-color: #e8d5d0;">
+                                        <img loading="lazy" src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=630&amp;h=450&amp;fit=crop" width="630"
+                                            height="450" alt="Sale"
                                             class="slideshow-bg__img object-fit-cover" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        {{-- Slide 2: Men's clothing --}}
                         <div class="swiper-slide">
                             <div class="slide-split h-100 d-block d-md-flex overflow-hidden">
                                 <div class="slide-split_text position-relative d-flex align-items-center"
-                                    style="background-color: #f5e6e0;">
+                                    style="background-color: #e0e8ec;">
                                     <div class="slideshow-text container p-3 p-xl-5">
                                         <h2
                                             class="text-uppercase section-title fw-normal mb-3 animate animate_fade animate_btt animate_delay-2">
-                                            Women's <br /><strong>ACCESSORIES</strong></h2>
-                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5">Accessories are
-                                            the best way to
-                                            update your look. Add a title edge with new styles and new colors, or go for
-                                            timeless pieces.</h6>
+                                            Men's <br /><strong>CLOTHING</strong></h2>
+                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5">Discover sharp, versatile pieces for every occasion. From casual essentials to refined looks.</p>
                                     </div>
                                 </div>
                                 <div class="slide-split_media position-relative">
-                                    <div class="slideshow-bg" style="background-color: #f5e6e0;">
-                                        <img loading="lazy" src="assets/images/shop/shop_banner3.jpg" width="630"
-                                            height="450" alt="Women's accessories"
+                                    <div class="slideshow-bg" style="background-color: #e0e8ec;">
+                                        <img loading="lazy" src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=630&amp;h=450&amp;fit=crop" width="630"
+                                            height="450" alt="Men's clothing"
                                             class="slideshow-bg__img object-fit-cover" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        {{-- Slide 3: Women's clothing --}}
                         <div class="swiper-slide">
                             <div class="slide-split h-100 d-block d-md-flex overflow-hidden">
                                 <div class="slide-split_text position-relative d-flex align-items-center"
@@ -317,17 +318,14 @@
                                     <div class="slideshow-text container p-3 p-xl-5">
                                         <h2
                                             class="text-uppercase section-title fw-normal mb-3 animate animate_fade animate_btt animate_delay-2">
-                                            Women's <br /><strong>ACCESSORIES</strong></h2>
-                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5">Accessories are
-                                            the best way to
-                                            update your look. Add a title edge with new styles and new colors, or go for
-                                            timeless pieces.</h6>
+                                            Women's <br /><strong>CLOTHING</strong></h2>
+                                        <p class="mb-0 animate animate_fade animate_btt animate_delay-5">Curated styles to express your look. New arrivals and timeless favourites for every season.</p>
                                     </div>
                                 </div>
                                 <div class="slide-split_media position-relative">
                                     <div class="slideshow-bg" style="background-color: #f5e6e0;">
-                                        <img loading="lazy" src="assets/images/shop/shop_banner3.jpg" width="630"
-                                            height="450" alt="Women's accessories"
+                                        <img loading="lazy" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=630&amp;h=450&amp;fit=crop" width="630"
+                                            height="450" alt="Women's clothing"
                                             class="slideshow-bg__img object-fit-cover" />
                                     </div>
                                 </div>
@@ -592,11 +590,25 @@
             }
 
             function applyFilters() {
-                
                 $("#frmfilter input[name='page']").val(1);
                 syncHiddenInputsFromUI();
                 $("#frmfilter").submit();
             }
+
+            function isMobileFilterView() {
+                return window.innerWidth < 992;
+            }
+
+            function onFilterChange() {
+                syncHiddenInputsFromUI();
+                if (!isMobileFilterView()) {
+                    applyFilters();
+                }
+            }
+
+            $("#js-apply-filters-mobile").on("click", function() {
+                applyFilters();
+            });
 
             $("#pagesize").on("change", function() {
                 $("#size").val($("#pagesize option:selected").val());
@@ -609,18 +621,21 @@
             });
 
             $("input[name='brands']").on("change", function() {
-                applyFilters();
+                onFilterChange();
             });
 
-
             $("input[name='categories']").on("change", function() {
-                applyFilters();
+                onFilterChange();
             });
 
             $("[name='price_range']").on("change", function() {
-                setTimeout(() => {
-                    applyFilters();
-                }, 2000);
+                if (isMobileFilterView()) {
+                    syncHiddenInputsFromUI();
+                } else {
+                    setTimeout(function() {
+                        applyFilters();
+                    }, 500);
+                }
             });
 
             $('.swatch-size').on('click', function(e) {
@@ -631,13 +646,12 @@
                 } else {
                     $(this).addClass('btn-outline-light');
                 }
-                applyFilters();
+                onFilterChange();
             });
 
             $('.swatch-color').on('click', function(e) {
                 e.preventDefault();
-                
-                applyFilters();
+                onFilterChange();
             });
 
 

@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
-use App\Models\Address;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -89,7 +88,8 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
     public function add_brand()
     {
-        return view('admin.brand-add');
+        $categories = Category::orderBy('name')->get();
+        return view('admin.brand-add', compact('categories'));
     }
 
     public function brand_store(Request $request)
@@ -97,12 +97,14 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         $request->validate([
             'name' => 'required',
             'slug' => 'required|unique:brands,slug',
+            'category_id' => 'required|exists:categories,id',
             'image' => 'mimes:png,jpg,jpeg|max:2048'
         ]);
 
         $brand = new Brand();
         $brand->name = $request->name;
         $brand->slug = Str::slug($request->name);
+        $brand->category_id = $request->category_id;
 
         $image = $request->file('image');
         $file_extension = $request->file('image')->extension();
@@ -116,20 +118,23 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
     public function brand_edit($id)
     {
         $brand = Brand::find($id);
-        return view('admin.brand-edit', compact('brand'));
+        $categories = Category::orderBy('name')->get();
+        return view('admin.brand-edit', compact('brand', 'categories'));
     }
 
     public function brand_update(Request $request)
     {
         $request->validate([
             'name' => 'required',
-            'slug' => 'required|unique:brands,slug',
-            'image' => 'mimes:png,jpg,jpeg|max:2048'
+            'slug' => 'required|' . Rule::unique('brands', 'slug')->ignore($request->id),
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|mimes:png,jpg,jpeg|max:2048'
         ]);
 
         $brand = Brand::find($request->id);
         $brand->name = $request->name;
         $brand->slug = Str::slug($request->name);
+        $brand->category_id = $request->category_id;
 
         if ($request->hasFile('image')) {
             if (File::exists(public_path('uploads/brands') . '/' . $brand->image)) {

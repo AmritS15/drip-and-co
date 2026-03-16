@@ -94,24 +94,6 @@
                                 <li class="menu-item has-children">
                                     <a href="javascript:void(0);" class="menu-item-button">
                                         <div class="icon"><i class="icon-layers"></i></div>
-                                        <div class="text">Collection</div>
-                                    </a>
-                                    <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <a href="{{route('admin.brand.add')}}" class="">
-                                                <div class="text">New Collection</div>
-                                            </a>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <a href="{{route('admin.brands')}}" class="">
-                                                <div class="text">Collections</div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-item has-children">
-                                    <a href="javascript:void(0);" class="menu-item-button">
-                                        <div class="icon"><i class="icon-layers"></i></div>
                                         <div class="text">Category</div>
                                     </a>
                                     <ul class="sub-menu">
@@ -123,6 +105,24 @@
                                         <li class="sub-menu-item">
                                             <a href="{{route('admin.categories')}}" class="">
                                                 <div class="text">Categories</div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="menu-item has-children">
+                                    <a href="javascript:void(0);" class="menu-item-button">
+                                        <div class="icon"><i class="icon-layers"></i></div>
+                                        <div class="text">Collection</div>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <li class="sub-menu-item">
+                                            <a href="{{route('admin.brand.add')}}" class="">
+                                                <div class="text">New Collection</div>
+                                            </a>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <a href="{{route('admin.brands')}}" class="">
+                                                <div class="text">Collections</div>
                                             </a>
                                         </li>
                                     </ul>

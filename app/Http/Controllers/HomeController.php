@@ -33,16 +33,12 @@ class HomeController extends Controller
             ->orderBy('id')
             ->get();
 
-        $womenCategoryIds = Category::whereRaw('LOWER(name) LIKE ?', ['%women%'])->pluck('id');
-        $menCategoryIds = Category::whereRaw("LOWER(name) LIKE '%men%' AND LOWER(name) NOT LIKE '%women%'")->pluck('id');
+        // Categories for section links: use "Womens" and "Mens" (exact name, case-insensitive)
+        $womenCategory = Category::whereRaw('LOWER(TRIM(name)) = ?', ['womens'])->first();
+        $menCategory = Category::whereRaw('LOWER(TRIM(name)) = ?', ['mens'])->first();
 
-        $womenCategory = $womenCategoryIds->isNotEmpty()
-            ? Category::find($womenCategoryIds->first())
-            : null;
-
-        $menCategory = $menCategoryIds->isNotEmpty()
-            ? Category::find($menCategoryIds->first())
-            : null;
+        $womenCategoryIds = $womenCategory ? collect([$womenCategory->id]) : collect();
+        $menCategoryIds = $menCategory ? collect([$menCategory->id]) : collect();
 
         $womenProducts = $womenCategoryIds->isNotEmpty()
             ? Product::whereIn('category_id', $womenCategoryIds)->orderBy('id', 'DESC')->get()
@@ -55,68 +51,78 @@ class HomeController extends Controller
         // All categories for homepage sliders (new categories appear as soon as they’re created)
         $categorySliders = Category::query()
             ->where('show_on_home', true)
-            ->with(['products' => fn ($q) => $q->orderBy('id', 'DESC')])
             ->orderBy('name')
-            ->get();
+            ->get()
+            ->map(function (Category $category) {
+                $directProductIds = Product::where('category_id', $category->id)->pluck('id');
+                $brandIdsInCategory = Brand::where('category_id', $category->id)->pluck('id');
+                $collectionProductIds = Product::whereIn('brand_id', $brandIdsInCategory)->pluck('id');
+                $allIds = $directProductIds->merge($collectionProductIds)->unique()->values();
+                $products = $allIds->isNotEmpty()
+                    ? Product::whereIn('id', $allIds)->orderBy('id', 'DESC')->get()
+                    : collect();
+                $category->setRelation('products', $products);
+                return $category;
+            });
 
         // Section banners: assign left (general shot) and right (close-up) from uploads/sections/
         // Place images in public/uploads/sections/ e.g. section1-general.jpg, section1-closeup.jpg
+        // Categories = Mens, Womens. Collections = "Womens [Type]" and "Mens [Type]" e.g. Womens Outerwear, Mens Outerwear.
         $sectionImg = function ($name, $fallback) {
             $path = public_path("uploads/sections/{$name}");
             return file_exists($path) ? asset("uploads/sections/{$name}") : asset($fallback);
         };
+
+        $resolveBrandIdByName = function ($name) {
+            if (empty($name)) {
+                return null;
+            }
+            $slug = \Illuminate\Support\Str::slug($name);
+            $brand = Brand::query()
+                ->whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($name))])
+                ->orWhereRaw('LOWER(slug) = ?', [strtolower($slug)])
+                ->first();
+            return $brand ? (string) $brand->id : null;
+        };
+
         $homeSections = [
             [
                 'kicker' => 'Shop by Category',
-                'title' => 'Shop the Hoodies Collection',
+                'title' => 'Shop the outerwear collection',
                 'left_image' => $sectionImg('section1-general.jpg', 'assets/images/home/demo3/category_9.jpg'),
                 'right_image' => $sectionImg('section1-closeup.jpg', 'assets/images/home/demo3/category_10.jpg'),
-                'collection_terms' => ['hoodie', 'hoodies'],
+                'women_collection_name' => 'Womens Outerwear',
+                'men_collection_name' => 'Mens Outerwear',
             ],
             [
                 'kicker' => 'New Arrivals',
-                'title' => 'Discover the Latest Shoes',
+                'title' => 'Discover the latest accessories',
                 'left_image' => $sectionImg('section2-general.jpg', 'assets/images/home/demo3/product-8.jpg'),
                 'right_image' => $sectionImg('section2-closeup.jpg', 'assets/images/home/demo3/category_9.jpg'),
-                'collection_terms' => ['shoe', 'shoes'],
+                'women_collection_name' => 'Womens Accessories',
+                'men_collection_name' => 'Mens Accessories',
             ],
             [
                 'kicker' => 'Explore More',
                 'title' => 'Shop the Trousers Collection',
                 'left_image' => $sectionImg('section3-general.jpg', 'assets/images/home/demo3/product-7.jpg'),
                 'right_image' => $sectionImg('section3-closeup.jpg', 'assets/images/home/demo3/category_10.jpg'),
-                'collection_terms' => ['trouser', 'trousers'],
+                'women_collection_name' => 'Womens Bottoms',
+                'men_collection_name' => 'Mens Bottoms',
             ],
             [
                 'kicker' => 'Tops',
                 'title' => 'Shirts',
                 'left_image' => $sectionImg('section4-general.jpg', 'assets/images/home/demo3/product-4.jpg'),
                 'right_image' => $sectionImg('section4-closeup.jpg', 'assets/images/home/demo3/product-5.jpg'),
-                'collection_terms' => ['shirt', 'shirts'],
+                'women_collection_name' => 'Womens Tops',
+                'men_collection_name' => 'Mens Tops',
             ],
         ];
 
-        $resolveCollectionBrandIds = function (array $terms) {
-            if (empty($terms)) {
-                return collect();
-            }
-
-            return Brand::query()
-                ->where(function ($query) use ($terms) {
-                    foreach ($terms as $term) {
-                        $needle = '%' . strtolower(trim($term)) . '%';
-                        $query->orWhereRaw('LOWER(name) LIKE ?', [$needle])
-                            ->orWhereRaw('LOWER(slug) LIKE ?', [$needle]);
-                    }
-                })
-                ->pluck('id')
-                ->unique()
-                ->values();
-        };
-
         foreach ($homeSections as &$section) {
-            $collectionIds = $resolveCollectionBrandIds($section['collection_terms'] ?? []);
-            $section['collection_brands'] = $collectionIds->implode(',');
+            $section['women_collection_brands'] = $resolveBrandIdByName($section['women_collection_name'] ?? '') ?? '';
+            $section['men_collection_brands'] = $resolveBrandIdByName($section['men_collection_name'] ?? '') ?? '';
         }
         unset($section);
 
