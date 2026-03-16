@@ -66,6 +66,14 @@
                 </fieldset>
                 @error('image') <span class="alert alert-danger text-center">{{ $message }}</span> @enderror
 
+                <fieldset class="name">
+                    <div class="body-title">Homepage</div>
+                    <label class="d-flex align-items-center gap-2">
+                        <input type="checkbox" name="show_on_home" value="1" {{ old('show_on_home', $category->show_on_home ?? true) ? 'checked' : '' }}>
+                        <span>Show this category on homepage slider</span>
+                    </label>
+                </fieldset>
+
                 <div class="bot">
                     <div></div>
                     <button class="tf-button w208" type="submit">Save</button>

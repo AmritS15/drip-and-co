@@ -26,6 +26,43 @@
         crossorigin="anonymous" referrerpolicy="no-referrer">
     @stack('styles')
 
+    <!-- Header visibility; on home page (body.page-home) mobile header is always transparent -->
+    <style>
+        @media (max-width: 1199.98px) {
+            #header.header { display: none !important; }
+            .header-mobile { display: block !important; }
+            /* Home page: header always transparent (including at top) */
+            body.page-home .header-mobile,
+            body.page-home .header-mobile.header_sticky,
+            body.page-home .header-mobile.header_sticky-active,
+            html[data-theme="light"] body.page-home .header-mobile,
+            html[data-theme="dark"] body.page-home .header-mobile {
+                background: transparent !important;
+                background-color: transparent !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                border-bottom: none !important;
+                box-shadow: none !important;
+            }
+            /* Other pages: transparent only when scrolled */
+            body:not(.page-home) .header-mobile.header_sticky-active,
+            body:not(.page-home) .header-mobile.header_sticky.header_sticky-active,
+            html[data-theme="light"] body:not(.page-home) .header-mobile.header_sticky-active,
+            html[data-theme="dark"] body:not(.page-home) .header-mobile.header_sticky-active {
+                background: transparent !important;
+                background-color: transparent !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                border-bottom: none !important;
+                box-shadow: none !important;
+            }
+        }
+        @media (min-width: 1200px) {
+            #header.header { display: block !important; }
+            .header-mobile { display: none !important; }
+        }
+    </style>
+
     <style>
         .footer-column-extra .sub-menu__title {
             color: #deefe7 !important;
@@ -439,7 +476,7 @@
 
 </head>
 
-<body class="gradient-bg">
+<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif">
     <svg class="d-none">
         <symbol id="icon_nav" viewBox="0 0 25 18">
             <rect width="25" height="2" />
@@ -659,9 +696,49 @@
         </symbol>
     </svg>
     <style>
+        /* Prevent horizontal scroll and keep header aligned on all viewport sizes */
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
         #header {
             padding-top: 8px;
             padding-bottom: 8px;
+            box-sizing: border-box;
+            max-width: 100%;
+        }
+
+        .header-transparent-bg {
+            left: 0;
+            right: 0;
+            margin-left: 0;
+            margin-right: 0;
+            box-sizing: border-box;
+        }
+
+        .header-transparent-bg .container {
+            max-width: 100%;
+            padding-left: var(--bs-gutter-x, 0.9375rem);
+            padding-right: var(--bs-gutter-x, 0.9375rem);
+        }
+
+        /* Use mobile header until 1200px so nav + icons don’t go off screen when minimised */
+        @media (max-width: 1199.98px) {
+            #header.header {
+                display: none !important;
+            }
+            .header-mobile {
+                display: block !important;
+            }
+        }
+        @media (min-width: 1200px) {
+            #header.header {
+                display: block !important;
+            }
+            .header-mobile {
+                display: none !important;
+            }
         }
 
         .logo__image {
@@ -811,63 +888,88 @@
             padding-top: 0;
         }
 
-        @media (max-width: 991.98px) {
-            .header-mobile.header_sticky {
-                background: transparent;
-                backdrop-filter: none;
-                -webkit-backdrop-filter: none;
-                border-bottom: none;
+        /* Mobile header: icon colours when transparent (home = always, other pages = when scrolled) */
+        @media (max-width: 1199.98px) {
+            /* Home page: transparent header icon colours always */
+            /* Home page light theme: dark icons */
+            html[data-theme="light"] body.page-home .header-mobile--transparent .header-mobile__icon svg,
+            html[data-theme="light"] body.page-home .header-mobile--transparent .header-tools__item,
+            html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolsitem,
+            html[data-theme="light"] body.page-home .header-mobile--transparent .nav-icon {
+                color: #1f2d2b;
+            }
+            /* Home page dark mode: keep icons black (only on homepage) */
+            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-mobile__icon svg,
+            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-tools__item,
+            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolsitem,
+            html[data-theme="dark"] body.page-home .header-mobile--transparent .nav-icon {
+                color: #111111;
+            }
+            /* Other pages: transparent header icon colours only when scrolled */
+            body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-mobile__icon svg,
+            body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-tools__item,
+            body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-toolsitem,
+            body:not(.page-home) .header-mobile--transparent.header_sticky-active .nav-icon {
+                color: #ffffff;
+            }
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-mobile__icon svg,
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-tools__item,
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-toolsitem,
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent.header_sticky-active .nav-icon {
+                color: #1f2d2b;
             }
 
-            html[data-theme="light"] .header-mobile.header_sticky {
-                background: transparent;
-                border-bottom-color: transparent;
+            .header-mobile__tools {
+                gap: 0.5rem;
             }
-
-            html[data-theme="dark"] .header-mobile.header_sticky {
-                background: transparent;
-                border-bottom-color: transparent;
-            }
-
-            .header-mobile.header_sticky.header_sticky-active,
-            html[data-theme="light"] .header-mobile.header_sticky.header_sticky-active,
-            html[data-theme="dark"] .header-mobile.header_sticky.header_sticky-active {
-                background: transparent !important;
-                box-shadow: none !important;
-                border-bottom: none !important;
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
+            .header-mobile__tools .header-tools__item,
+            .header-mobile__tools .header-toolsitem {
+                padding: 0.25rem 0.5rem;
             }
         }
     </style>
-    <div class="header-mobile header_sticky">
-        <div class="container d-flex align-items-center h-100">
-            <a class="mobile-nav-activator d-block position-relative" href="#">
+    <div class="header-mobile header_sticky header-mobile--transparent">
+        <div class="container d-flex align-items-center justify-content-between h-100">
+            <a class="mobile-nav-activator d-block position-relative header-mobile__icon" href="#" aria-label="Menu">
                 <svg class="nav-icon" width="25" height="18" viewBox="0 0 25 18"
                     xmlns="http://www.w3.org/2000/svg">
                     <use href="#icon_nav" />
                 </svg>
-                <button class="btn-close-lg position-absolute top-0 start-0 w-100"></button>
+                <button class="btn-close-lg position-absolute top-0 start-0 w-100" type="button" aria-label="Close"></button>
             </a>
 
-            <div class="logo">
+            <div class="logo flex-grow-1 text-center">
                 <a href="{{ route('home.index') }}">
-                    <img src="{{ asset('assets/images/logo.png') }}" alt="Uomo" class="logo__image d-block" />
+                    <img src="{{ asset('assets/images/logo.png') }}" alt="{{ config('app.name') }}" class="logo__image d-block mx-auto" />
                 </a>
             </div>
 
-              <a href="{{ route('cart.index') }}" class="header-tools__item header-tools__cart">
-                        <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <use href="#icon_cart" />
-                        </svg>
-                        @if (Cart::instance('cart')->content()->count() > 0)
-                            <span
-                                class="cart-amount d-block position-absolute js-cart-items-count">{{ Cart::instance('cart')->content()->count() }}</span>
-                        @endif
-                    </a>
-
-
+            <div class="header-mobile__tools d-flex align-items-center">
+                <a href="{{ route('wishlist.index') }}" class="header-tools__item header-tools__cart header-mobile__icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <use href="#icon_heart" />
+                    </svg>
+                    @if (Cart::instance('wishlist')->content()->count() > 0)
+                        <span class="cart-amount d-block position-absolute js-cart-items-count">{{ Cart::instance('wishlist')->content()->count() }}</span>
+                    @endif
+                </a>
+                <a href="{{ route('cart.index') }}" class="header-tools__item header-tools__cart header-mobile__icon">
+                    <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <use href="#icon_cart" />
+                    </svg>
+                    @if (Cart::instance('cart')->content()->count() > 0)
+                        <span class="cart-amount d-block position-absolute js-cart-items-count">{{ Cart::instance('cart')->content()->count() }}</span>
+                    @endif
+                </a>
+                <a href="#" class="header-toolsitem header-toolstheme header-mobile__icon js-theme-toggle" aria-label="Toggle theme">
+                    <svg class="theme-icon-sun" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 2a1 1 0 011 1v1a1 1 0 01-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1z" />
+                    </svg>
+                    <svg class="theme-icon-moon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                    </svg>
+                </a>
+            </div>
         </div>
 
         <nav
@@ -908,7 +1010,7 @@
                             <a href="{{ route('home.about') }}" class="navigation__link">About</a>
                         </li>
                         <li class="navigation__item">
-                            <a href="contact.html" class="navigation__link">Contact</a>
+                            <a href="{{ route('home.contact') }}" class="navigation__link">Contact</a>
                         </li>
                     </ul>
                 </div>
@@ -1201,7 +1303,7 @@
             </div>
 
             <div class="col-4">
-                <a href="{{ route('home.index') }}"
+                <a href="{{ route('shop.index') }}"
                     class="footer-mobile__link d-flex flex-column align-items-center">
                     <svg class="d-block" width="18" height="18" viewBox="0 0 18 18" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -1212,7 +1314,7 @@
             </div>
 
             <div class="col-4">
-                <a href="{{ route('home.index') }}"
+                <a href="{{ route('wishlist.index') }}"
                     class="footer-mobile__link d-flex flex-column align-items-center">
                     <div class="position-relative">
                         <svg class="d-block" width="18" height="18" viewBox="0 0 20 20" fill="none"
@@ -1312,35 +1414,33 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const html = document.documentElement;
-            const toggle = document.querySelector('.js-theme-toggle');
-            const sunIcon = document.querySelector('.theme-icon-sun');
-            const moonIcon = document.querySelector('.theme-icon-moon');
+            const toggles = document.querySelectorAll('.js-theme-toggle');
+            const sunIcons = document.querySelectorAll('.theme-icon-sun');
+            const moonIcons = document.querySelectorAll('.theme-icon-moon');
 
             function setTheme(theme) {
                 html.setAttribute('data-theme', theme);
                 localStorage.setItem('theme', theme);
 
-                // Swap icons: show SUN when dark (to "turn on lights"), MOON when light
-                if (theme === 'dark') {
-                    sunIcon.style.display = 'block';
-                    moonIcon.style.display = 'none';
-                } else {
-                    sunIcon.style.display = 'none';
-                    moonIcon.style.display = 'block';
-                }
+                sunIcons.forEach(function(el) {
+                    el.style.display = theme === 'dark' ? 'block' : 'none';
+                });
+                moonIcons.forEach(function(el) {
+                    el.style.display = theme === 'dark' ? 'none' : 'block';
+                });
             }
 
-            // Load saved or system preference
-            const savedTheme = localStorage.getItem('theme') ||
+            var savedTheme = localStorage.getItem('theme') ||
                 (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             setTheme(savedTheme);
 
-            // Toggle click
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                const current = html.getAttribute('data-theme');
-                const newTheme = current === 'dark' ? 'light' : 'dark';
-                setTheme(newTheme);
+            toggles.forEach(function(toggle) {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var current = html.getAttribute('data-theme');
+                    var newTheme = current === 'dark' ? 'light' : 'dark';
+                    setTheme(newTheme);
+                });
             });
         });
     </script>

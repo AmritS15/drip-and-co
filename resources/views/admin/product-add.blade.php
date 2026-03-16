@@ -353,7 +353,14 @@
                     input.value = '';
                 },
                 error: function(xhr) {
-                    alert(xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Upload failed. Please try again.');
+                    var msg = 'Upload failed. Please try again.';
+                    if (xhr.status === 413) msg = 'Upload too large. Try fewer or smaller images (e.g. one at a time, or under 2MB each).';
+                    else if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+                    else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        var first = Object.values(xhr.responseJSON.errors)[0];
+                        if (first && first[0]) msg = first[0];
+                    }
+                    alert(msg);
                     input.value = '';
                 }
             });

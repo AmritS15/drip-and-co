@@ -13,7 +13,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $slides = Slide::where('status', 1)->get()->take(5);
         $categories = Category::orderBy('name')->get();
         $sproducts = Product::whereNotNull('sale_price')
             ->where('sale_price', '<>', '')
@@ -22,10 +21,17 @@ class HomeController extends Controller
             ->take(8);
         $fproducts = Product::where('featured', 1)->get()->take(8);
 
-        $homeUrl = route('home.index');
-        $heroSlide = $slides->firstWhere('link', $homeUrl)
-            ?? $slides->firstWhere('link', '/')
-            ?? $slides->first();
+        // First active hero-type slide drives the top homepage hero (two images + overlay text)
+        $heroSlide = Slide::where('status', 1)
+            ->where('type', Slide::TYPE_HERO)
+            ->orderBy('id')
+            ->first();
+
+        // Standard slides for the optional slider below the hero (single image + tagline/title/subtitle/link)
+        $standardSlides = Slide::where('status', 1)
+            ->where('type', Slide::TYPE_STANDARD)
+            ->orderBy('id')
+            ->get();
 
         $womenCategoryIds = Category::whereRaw('LOWER(name) LIKE ?', ['%women%'])->pluck('id');
         $menCategoryIds = Category::whereRaw("LOWER(name) LIKE '%men%' AND LOWER(name) NOT LIKE '%women%'")->pluck('id');
@@ -45,6 +51,13 @@ class HomeController extends Controller
         $menProducts = $menCategoryIds->isNotEmpty()
             ? Product::whereIn('category_id', $menCategoryIds)->orderBy('id', 'DESC')->get()
             : collect();
+
+        // All categories for homepage sliders (new categories appear as soon as they’re created)
+        $categorySliders = Category::query()
+            ->where('show_on_home', true)
+            ->with(['products' => fn ($q) => $q->orderBy('id', 'DESC')])
+            ->orderBy('name')
+            ->get();
 
         // Section banners: assign left (general shot) and right (close-up) from uploads/sections/
         // Place images in public/uploads/sections/ e.g. section1-general.jpg, section1-closeup.jpg
@@ -108,13 +121,14 @@ class HomeController extends Controller
         unset($section);
 
         return view('index', compact(
-            'slides',
             'categories',
             'sproducts',
             'fproducts',
             'womenProducts',
             'menProducts',
+            'categorySliders',
             'heroSlide',
+            'standardSlides',
             'womenCategory',
             'menCategory',
             'homeSections'
