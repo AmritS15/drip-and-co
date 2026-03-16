@@ -43,6 +43,16 @@
                     <input class="flex-grow" type="text" placeholder="Collection Slug" name="slug" tabindex="0" value="{{ $brand->slug }}" aria-required="true" required="">
                 </fieldset>
                 @error('slug') <span class="alert alert-danger text-center">{{ $message }}</span> @enderror
+                <fieldset class="category">
+                    <div class="body-title">Category <span class="tf-color-1">*</span></div>
+                    <select class="flex-grow" name="category_id" required aria-required="true">
+                        <option value="">Choose category</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" {{ (old('category_id', $brand->category_id) == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </fieldset>
+                @error('category_id') <span class="alert alert-danger text-center">{{ $message }}</span> @enderror
                 <fieldset>
                     <div class="body-title">Upload images <span class="tf-color-1">*</span>
                     </div>

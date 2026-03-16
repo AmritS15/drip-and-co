@@ -131,6 +131,7 @@
 
     .home-collection {
         margin-top: 0;
+        margin-bottom: 3rem;
         background-color: #f7f5f1;
     }
 
@@ -329,8 +330,20 @@
         min-height: 670px;
     }
 
+    /* No gap between the collection image banners (outerwear, accessories, etc.) */
     .home-category-banner + .home-category-banner {
-        margin-top: 3rem;
+        margin-top: 0;
+    }
+
+    /* Scroll reveal: category slider and collection banners appear/disappear smoothly on scroll */
+    .js-scroll-reveal {
+        opacity: 0;
+        transform: translateY(32px);
+        transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+    }
+    .js-scroll-reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     .home-category-banner__pane {
@@ -364,7 +377,7 @@
 
     .home-category-banner__kicker {
         letter-spacing: 0.3em;
-        text-transform: uppercase;
+        text-transform: capitalize;
         font-size: 0.78rem;
         margin-bottom: 0.9rem;
         color: rgba(255, 255, 255, 0.9);
@@ -376,6 +389,7 @@
         letter-spacing: 0.14em;
         color: #ffffff;
         margin-bottom: 1.5rem;
+        text-transform: capitalize;
     }
 
     .home-category-banner__links {
@@ -384,7 +398,7 @@
         align-items: center;
         justify-content: center;
         gap: 1.5rem 2.5rem;
-        text-transform: uppercase;
+        text-transform: capitalize;
         letter-spacing: 0.2em;
         font-size: 0.9rem;
     }
@@ -422,6 +436,7 @@
         color: rgba(255, 255, 255, 0.9);
         margin-bottom: 1rem;
         max-width: 420px;
+        text-transform: capitalize;
     }
 
     .home-category-banner__cta {
@@ -516,7 +531,7 @@
 
     @media (max-width: 640px) {
         .home-category-banner + .home-category-banner {
-            margin-top: 2rem;
+            margin-top: 0;
         }
 
         .home-category-banner__links {
@@ -626,7 +641,7 @@
     @endif
 
     @if (count($categorySliders) > 0)
-    <section class="home-collection">
+    <section class="home-collection js-scroll-reveal">
         <div class="home-section-shell">
             <div class="home-collection__tabs">
                 @foreach ($categorySliders as $index => $category)
@@ -709,7 +724,7 @@
     @endif
 
     @foreach ($homeSections as $index => $section)
-        <section class="home-category-banner">
+        <section class="home-category-banner js-scroll-reveal">
             <div class="home-category-banner__pane"
                  style="background-image: url('{{ $section['left_image'] }}');"></div>
             <div class="home-category-banner__pane"
@@ -721,11 +736,11 @@
                     @php
                         $womenFilters = array_filter([
                             'categories' => optional($womenCategory)->id,
-                            'brands' => $section['collection_brands'] ?? null,
+                            'brands' => $section['women_collection_brands'] ?? null,
                         ], fn($value) => $value !== null && $value !== '');
                         $menFilters = array_filter([
                             'categories' => optional($menCategory)->id,
-                            'brands' => $section['collection_brands'] ?? null,
+                            'brands' => $section['men_collection_brands'] ?? null,
                         ], fn($value) => $value !== null && $value !== '');
                     @endphp
                     <a href="{{ route('shop.index', $womenFilters) }}"
@@ -774,6 +789,27 @@
                         swiper.autoplay.start();
                     }
                 }
+            });
+        }
+
+        // Scroll reveal: smoothly show/hide category slider and collection banners when they enter or leave the viewport
+        var revealEls = document.querySelectorAll('.js-scroll-reveal');
+        if (revealEls.length && 'IntersectionObserver' in window) {
+            var revealObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    } else {
+                        entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
+            revealEls.forEach(function (el) {
+                revealObserver.observe(el);
+            });
+        } else {
+            revealEls.forEach(function (el) {
+                el.classList.add('is-visible');
             });
         }
     });

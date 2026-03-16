@@ -113,12 +113,14 @@
             border-top-color: rgba(255, 255, 255, 0.1);
         }
 
-        #box-content-search {
+        #box-content-search,
+        #box-content-search-mobile {
             max-height: 320px;
             overflow-y: auto;
         }
 
-        #box-content-search .product-item {
+        #box-content-search .product-item,
+        #box-content-search-mobile .product-item {
             padding: 8px 4px;
             border-radius: 8px;
             background: transparent;
@@ -128,8 +130,12 @@
             background: #f5f7fb;
         }
 
-        html[data-theme="dark"] #box-content-search .product-item:hover {
+        html[data-theme="dark"] #box-content-search .product-item:hover,
+        html[data-theme="dark"] #box-content-search-mobile .product-item:hover {
             background: #1f2229;
+        }
+        html[data-theme="light"] #box-content-search-mobile .product-item:hover {
+            background: #f5f7fb;
         }
 
         /* Mobile search dropdown results */
@@ -280,11 +286,11 @@
             }
         }
 
-        /* Chat widget - bottom right, not shown on admin */
+        /* Chat widget - bottom right, not overlapping back-to-top (#scrollTop is 45px wide at right: 0) */
         .chat-widget-trigger {
             position: fixed;
             bottom: 24px;
-            right: 24px;
+            right: 60px; /* left of back-to-top button */
             z-index: 9998;
             width: 56px;
             height: 56px;
@@ -298,6 +304,11 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
         }
+        @media (max-width: 767.98px) {
+            .chat-widget-trigger {
+                bottom: 88px; /* above mobile bottom area / back-to-top zone */
+            }
+        }
         .chat-widget-trigger:hover {
             transform: scale(1.05);
             box-shadow: 0 6px 24px rgba(43, 94, 89, 0.5);
@@ -309,7 +320,7 @@
         .chat-widget-panel {
             position: fixed;
             bottom: 90px;
-            right: 24px;
+            right: 60px; /* align with trigger, clear of back-to-top */
             z-index: 9999;
             width: 380px;
             max-width: calc(100vw - 48px);
@@ -324,6 +335,11 @@
         }
         .chat-widget-panel.is-open {
             display: flex;
+        }
+        @media (max-width: 767.98px) {
+            .chat-widget-panel {
+                bottom: 156px; /* above raised trigger (88px + 56px + 12px) */
+            }
         }
         html[data-theme="dark"] .chat-widget-panel {
             background: #1a1a1a;
@@ -709,6 +725,30 @@
             max-width: 100%;
         }
 
+        /* Center nav links in header (Shop, Cart, About, Contact) */
+        .header-desk_type_1 .header-nav-centered {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Extra space between last content and footer (not too much) */
+        .footer-spaced {
+            margin-top: 2rem;
+            padding-top: 0.5rem;
+        }
+        /* Homepage: gap between last image/content and footer */
+        body.page-home .layout-content--home {
+            padding-bottom: 1.25rem;
+        }
+        body.page-home .content-footer-separator {
+            margin-top: 1.5rem;
+        }
+        body.page-home .footer-spaced {
+            margin-top: 1.5rem;
+            padding-top: 0.5rem;
+        }
+
         .header-transparent-bg {
             left: 0;
             right: 0;
@@ -767,11 +807,13 @@
             background: #EFF4F8;
         }
 
-        #box-content-search li {
+        #box-content-search li,
+        #box-content-search-mobile li {
             list-style: none;
         }
 
-        #box-content-search .product-item {
+        #box-content-search .product-item,
+        #box-content-search-mobile .product-item {
             margin-bottom: 10px;
         }
 
@@ -975,10 +1017,10 @@
         <nav
             class="header-mobile__navigation navigation d-flex flex-column w-100 position-absolute top-100 bg-body overflow-auto">
             <div class="container">
-                <form action="#" method="GET" class="search-field position-relative mt-4 mb-3">
+                <form action="#" method="GET" class="search-field position-relative mt-4 mb-3" id="mobile-search-form">
                     <div class="position-relative">
                         <input class="search-field__input w-100 border rounded-1" type="text"
-                            name="search-keyword" placeholder="Search products" />
+                            name="search-keyword" id="search-input-mobile" placeholder="Search products" autocomplete="off" />
                         <button class="btn-icon search-popup__submit pb-0 me-2" type="submit">
                             <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -989,7 +1031,7 @@
                     </div>
 
                     <div class="position-absolute start-0 top-100 m-0 w-100">
-                        <div class="search-result"></div>
+                        <ul id="box-content-search-mobile" class="search-result list-unstyled mb-0"></ul>
                     </div>
                 </form>
             </div>
@@ -1018,14 +1060,25 @@
 
             <div class="border-top mt-auto pb-2">
                 <div class="customer-links container mt-4 mb-2 pb-1">
-                    <svg class="d-inline-block align-middle" width="20" height="20" viewBox="0 0 20 20"
-                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <use href="#icon_user" />
-                    </svg>
-                    <span class="d-inline-block ms-2 text-uppercase align-middle fw-medium">My Account</span>
+                    @guest
+                        <a href="{{ route('login') }}" class="d-flex align-items-center text-decoration-none text-body">
+                            <svg class="d-inline-block align-middle" width="20" height="20" viewBox="0 0 20 20"
+                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#icon_user" />
+                            </svg>
+                            <span class="d-inline-block ms-2 text-uppercase align-middle fw-medium">Log in</span>
+                        </a>
+                    @else
+                        <a href="{{ Auth::user()->utype === 'ADM' ? route('admin.index') : route('user.index') }}"
+                            class="d-flex align-items-center text-decoration-none text-body">
+                            <svg class="d-inline-block align-middle me-1" width="20" height="20" viewBox="0 0 20 20"
+                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#icon_user" />
+                            </svg>
+                            <span class="d-inline-block ms-2 text-uppercase align-middle fw-medium">{{ Auth::user()->name }}</span>
+                        </a>
+                    @endguest
                 </div>
-
-
 
                 <ul class="container social-links list-unstyled d-flex flex-wrap mb-0">
 
@@ -1070,11 +1123,8 @@
                     </a>
                 </div>
 
-                <nav class="navigation">
-                    <ul class="navigation__list list-unstyled d-flex">
-                        <li class="navigation__item">
-                            <a href="{{ route('home.index') }}" class="navigation__link">Home</a>
-                        </li>
+                <nav class="navigation header-nav-centered">
+                    <ul class="navigation__list list-unstyled d-flex justify-content-center">
                         <li class="navigation__item">
                             <a href="{{ route('shop.index') }}" class="navigation__link">Shop</a>
                         </li>
@@ -1186,10 +1236,12 @@
         </div>
     </header>
 
-    @yield('content')
+    <div class="layout-content @if(request()->routeIs('home.index')) layout-content--home @endif">
+        @yield('content')
+    </div>
 
-    <hr class="mt-5 text-secondary" />
-    <footer class="footer footer_type_2">
+    <hr class="content-footer-separator mt-5 mb-0 text-secondary" />
+    <footer class="footer footer_type_2 footer-spaced">
         <div class="footer-middle container">
             <div class="row row-cols-lg-5 row-cols-2">
                 <div class="footer-column footer-store-info col-12 mb-4 mb-lg-0">
@@ -1321,7 +1373,9 @@
                             xmlns="http://www.w3.org/2000/svg">
                             <use href="#icon_heart" />
                         </svg>
-                        <span class="wishlist-amount d-block position-absolute js-wishlist-count">3</span>
+                        @if (Cart::instance('wishlist')->content()->count() > 0)
+                            <span class="wishlist-amount d-block position-absolute js-wishlist-count">{{ Cart::instance('wishlist')->content()->count() }}</span>
+                        @endif
                     </div>
                     <span>Wishlist</span>
                 </a>
@@ -1365,48 +1419,45 @@
     <script src="{{ asset('assets/js/plugins/countdown.js') }}"></script>
     <script>
         $(function() {
-            $("#search-input").on("keyup", function() {
-                var searchQuery = $(this).val();
-                if (searchQuery.length > 2) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('home.search') }}",
-                        data: {
-                            query: searchQuery
-                        },
-                        dataType: "json",
-                        success: function(data) {
-                            $("#box-content-search").html('');
-                            $.each(data, function(index, item) {
-                                var url =
-                                    "{{ route('shop.product.details', ['product_slug' => 'product_slug_pls']) }}";
-                                var link = url.replace('product_slug_pls', item.slug);
+            function bindSearch(inputId, resultsId) {
+                $(inputId).on("keyup", function() {
+                    var searchQuery = $(this).val();
+                    var $results = $(resultsId);
+                    if (searchQuery.length > 2) {
+                        $.ajax({
+                            type: "GET",
+                            url: "{{ route('home.search') }}",
+                            data: { query: searchQuery },
+                            dataType: "json",
+                            success: function(data) {
+                                $results.html('');
+                                var productUrl = "{{ route('shop.product.details', ['product_slug' => 'product_slug_pls']) }}";
+                                var thumbBase = "{{ asset('uploads/products/thumbnails') }}/";
+                                $.each(data, function(index, item) {
+                                    var link = productUrl.replace('product_slug_pls', item.slug);
+                                    $results.append(
+                                        '<li><ul><li class="product-item gap14 mb-10">' +
+                                        '<div class="image no-bg"><img src="' + thumbBase + '/' + item.image + '" alt="' + (item.name || '') + '"></div>' +
+                                        '<div class="flex items-center justify-between gap20 flex-grow"><div class="name">' +
+                                        '<a href="' + link + '" class="body-text">' + (item.name || '') + '</a></div></div>' +
+                                        '</li><li class="mb-10"><div class="divider"></div></li></ul></li>'
+                                    );
+                                });
+                            }
+                        });
+                    } else {
+                        $results.html('');
+                    }
+                });
+            }
+            bindSearch("#search-input", "#box-content-search");
+            bindSearch("#search-input-mobile", "#box-content-search-mobile");
 
-                                $("#box-content-search").append(`
-                <li>
-                  <ul>
-                     <li class="product-item gap14 mb-10">
-                         <div class="image no-bg">
-                            <img src="{{ asset('uploads/products/thumbnails') }}/${item.image}" alt="${item.name}">
-                          </div>
-                          <div class="flex items-center justify-between gap20 flex-grow">
-                          <div class="name">
-                            <a href="${link}" class="body-text">${item.name}</a>
-                          </div>
-                       </div>
-                    </li>
-                    <li class="mb-10">
-                       <div class="divider"></div>
-                    </li>
-                  </ul>
-               </li>`);
-                            });
-                        }
-
-                    });
-
-                }
-
+            $("#mobile-search-form").on("submit", function(e) {
+                e.preventDefault();
+            });
+            $("#mobile-search-form .search-popup__reset").on("click", function() {
+                $("#box-content-search-mobile").html('');
             });
         });
     </script>
