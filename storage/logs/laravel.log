@@ -8696,5 +8696,4 @@
 #62 /Users/amrit/Documents/GitHub/drip-and-co/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1220): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #63 /Users/amrit/Documents/GitHub/drip-and-co/public/index.php(20): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #64 /Users/amrit/Documents/GitHub/drip-and-co/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(23): require_once('/Users/amrit/Do...')
-#65 {main}
-"} 
+#65 {main}"} 
