@@ -72,11 +72,11 @@
                                     <sapn class="alert alert-danger text-center">{{ $message }}
                                     @enderror
                                     <fieldset class="brand">
-                                        <div class="body-title mb-10">Brand <span class="tf-color-1">*</span>
+                                        <div class="body-title mb-10">Collection <span class="tf-color-1">*</span>
                                         </div>
                                         <div class="select">
                                             <select class="" name="brand_id">
-                                                <option>Choose Brand</option>
+                                                <option>Choose Collection</option>
                                                 @foreach ($brands as $brand)
                                                     <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                                 @endforeach
@@ -353,7 +353,14 @@
                     input.value = '';
                 },
                 error: function(xhr) {
-                    alert(xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Upload failed. Please try again.');
+                    var msg = 'Upload failed. Please try again.';
+                    if (xhr.status === 413) msg = 'Upload too large. Try fewer or smaller images (e.g. one at a time, or under 2MB each).';
+                    else if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+                    else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        var first = Object.values(xhr.responseJSON.errors)[0];
+                        if (first && first[0]) msg = first[0];
+                    }
+                    alert(msg);
                     input.value = '';
                 }
             });

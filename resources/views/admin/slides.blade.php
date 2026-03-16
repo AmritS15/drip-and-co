@@ -32,8 +32,9 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Image</th>
-                            <th>Tagline</th>
+                            <th>Type</th>
+                            <th>Image(s)</th>
+                            <th>Tagline / Kicker</th>
                             <th>Title</th>
                             <th>Subtitle</th>
                             <th>Link</th>
@@ -44,15 +45,25 @@
                         @foreach ($slides as $slide)
                         <tr>
                             <td>{{$slide->id}}</td>
+                            <td>
+                                @if($slide->type === 'hero')
+                                    <span class="badge bg-info">Home hero</span>
+                                @else
+                                    <span class="badge bg-secondary">Standard</span>
+                                @endif
+                            </td>
                             <td class="pname">
-                                <div class="image">
-                                    <img src="{{ asset('uploads/slides') }}/{{ $slide->image }}" alt="" class="{{$slide->title}}">
+                                <div class="image d-flex gap-1 flex-wrap">
+                                    <img src="{{ asset('uploads/slides') }}/{{ $slide->image }}" alt="" class="{{ $slide->title }}" style="max-height:60px;object-fit:cover;">
+                                    @if($slide->image_right ?? null)
+                                        <img src="{{ asset('uploads/slides') }}/{{ $slide->image_right }}" alt="" style="max-height:60px;object-fit:cover;">
+                                    @endif
                                 </div>
                             </td>
-                            <td>{{$slide->tagline}}</td>
-                            <td>{{$slide->title}}</td>
-                            <td>{{$slide->subtitle}}</td>
-                            <td>{{$slide->link}}</td>
+                            <td>{{ $slide->tagline }}</td>
+                            <td>{{ $slide->title }}</td>
+                            <td>{{ $slide->subtitle ?? '—' }}</td>
+                            <td>{{ $slide->link ?: '—' }}</td>
                             <td>
                                 <div class="list-icon-function">
                                     <a href="{{ route('admin.slide.edit',['id'=>$slide->id]) }}">

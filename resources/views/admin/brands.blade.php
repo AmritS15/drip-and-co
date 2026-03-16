@@ -3,7 +3,7 @@
 <div class="main-content-inner">
     <div class="main-content-wrap">
         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-            <h3>Brands</h3>
+            <h3>Collections</h3>
             <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                 <li>
                     <a href="{{route('admin.index')}}">
@@ -14,7 +14,7 @@
                     <i class="icon-chevron-right"></i>
                 </li>
                 <li>
-                    <div class="text-tiny">Brands</div>
+                    <div class="text-tiny">Collections</div>
                 </li>
             </ul>
         </div>
@@ -31,7 +31,7 @@
                     </form>
                 </div>
                 <a class="tf-button style-1 w208" href="{{route('admin.brand.add')}}"><i
-                        class="icon-plus"></i>Add new</a>
+                        class="icon-plus"></i>Add New Collection</a>
             </div>
             <div class="wg-table table-all-user">
                 <div class="table-responsive">

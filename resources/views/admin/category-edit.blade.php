@@ -4,7 +4,7 @@
 <div class="main-content-inner">
     <div class="main-content-wrap">
         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-            <h3>Brand infomation</h3>
+            <h3>Category Information</h3>
             <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                 <li>
                     <a href="{{ route('admin.index') }}">
@@ -65,6 +65,14 @@
                     </div>
                 </fieldset>
                 @error('image') <span class="alert alert-danger text-center">{{ $message }}</span> @enderror
+
+                <fieldset class="name">
+                    <div class="body-title">Homepage</div>
+                    <label class="d-flex align-items-center gap-2">
+                        <input type="checkbox" name="show_on_home" value="1" {{ old('show_on_home', $category->show_on_home ?? true) ? 'checked' : '' }}>
+                        <span>Show this category on homepage slider</span>
+                    </label>
+                </fieldset>
 
                 <div class="bot">
                     <div></div>

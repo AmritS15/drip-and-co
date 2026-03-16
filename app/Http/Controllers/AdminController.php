@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
+use App\Models\Address;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -107,8 +110,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         $this->GenerateBrandThumbnailsImage($image, $file_name);
         $brand->image = $file_name;
         $brand->save();
-
-        return redirect()->route('admin.brands')->with('status', 'Brand has been added successfully');
+        return redirect()->route('admin.brands')->with('status', 'Collection has been added successfully');
     }
 
     public function brand_edit($id)
@@ -142,7 +144,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         }
 
         $brand->save();
-        return redirect()->route('admin.brands')->with('status', 'Brand has been updated successfully');
+        return redirect()->route('admin.brands')->with('status', 'Collection has been updated successfully');
     }
 
     public function GenerateBrandThumbnailsImage($image, $imageName)
@@ -164,7 +166,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         }
 
         $brand->delete();
-        return redirect()->route('admin.brands')->with('status', 'Brand has been deleted successfully!');
+        return redirect()->route('admin.brands')->with('status', 'Collection has been deleted successfully!');
     }
 
     public function categories()
@@ -195,6 +197,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         $file_name = Carbon::now()->timestamp . '.' . $file_extension;
         $this->GenerateCategoryThumbnailsImage($image, $file_name);
         $category->image = $file_name;
+        $category->show_on_home = $request->boolean('show_on_home', true);
         $category->save();
 
         return redirect()->route('admin.categories')->with('status', 'Category has been added successfully');
@@ -220,8 +223,8 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
     {
         $request->validate([
             'name' => 'required',
-            'slug' => 'required|unique:categories,slug',
-            'image' => 'mimes:png,jpg,jpeg|max:2048'
+            'slug' => ['required', Rule::unique('categories', 'slug')->ignore($request->id)],
+            'image' => 'nullable|mimes:png,jpg,jpeg|max:2048'
         ]);
 
         $category = Category::find($request->id);
@@ -240,6 +243,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             $category->image = $file_name;
         }
 
+        $category->show_on_home = $request->boolean('show_on_home');
         $category->save();
         return redirect()->route('admin.categories')->with('status', 'Category has been updated successfully');
     }
@@ -282,9 +286,9 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'stock_status' => 'required|in:instock,outofstock',
             'featured' => 'required',
             'quantity' => 'nullable|integer|min:0',
-            'image' => 'required|mimes:png,jpg,jpeg|max:2048',
+            'image' => 'required|image|mimes:png,jpg,jpeg|max:5120',
             'images' => 'nullable',
-            'images.*' => 'mimes:jpg,jpeg,png|max:2048',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:5120',
             'category_id' => 'required',
             'brand_id' => 'required',
             'sizes' => 'nullable|array',
@@ -422,10 +426,22 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
     public function uploadVariantGallery(Request $request)
     {
-        $request->validate([
-            'images' => 'required',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:5120'
-        ]);
+        try {
+            $request->validate([
+                'images' => 'required',
+                'images.*' => 'image|mimes:jpeg,png,jpg|max:5120',
+            ], [
+                'images.required' => 'No images selected.',
+                'images.*.image' => 'Each file must be an image (JPG or PNG).',
+                'images.*.mimes' => 'Each file must be JPG or PNG.',
+                'images.*.max' => 'Each image must be under 5MB. If upload still fails, your server may limit total request size (post_max_size).',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => $e->validator->errors()->first() ?: 'Upload failed. Use JPG/PNG under 5MB each.',
+                'errors' => $e->errors(),
+            ], 422);
+        }
 
         $files = $request->file('images');
         if (!is_array($files)) {
@@ -440,10 +456,15 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             if (!$file || !in_array(strtolower($file->getClientOriginalExtension()), $allowedExt)) {
                 continue;
             }
-
-            $gname = $prefix . '-g' . $i . '.' . $file->getClientOriginalExtension();
-            $this->GenerateProductThumbnailImage($file, $gname);
-            $filenames[] = $gname;
+            try {
+                $gname = $prefix . '-g' . $i . '.' . $file->getClientOriginalExtension();
+                $this->GenerateProductThumbnailImage($file, $gname);
+                $filenames[] = $gname;
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Image could not be processed. Try saving as JPG or a smaller PNG.',
+                ], 422);
+            }
         }
 
         return response()->json(['filenames' => $filenames]);
@@ -497,7 +518,9 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'stock_status' => 'required|in:instock,outofstock',
             'featured' => 'required',
             'quantity' => 'nullable|integer|min:0',
-            'image' => '|mimes:png,jpg,jpeg|max:2048',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg|max:5120',
+            'images' => 'nullable',
+            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
             'category_id' => 'required',
             'brand_id' => 'required',
             'sizes' => 'nullable|array',
@@ -854,27 +877,74 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
     public function slide_store(Request $request)
     {
-        $request->validate([
-            'tagline' => 'required',
-            'title' => 'required',
-            'subtitle' => 'required',
-            'link' => 'required',
-            'status' => 'required',
-            'image' => 'required|mimes:png,jpg,jpeg|max:2048'
-        ]);
+        $type = $request->input('type', 'standard');
+
+        if ($type === Slide::TYPE_HERO) {
+            $request->validate([
+                'type' => 'required|in:hero,standard',
+                'tagline' => 'required|string|max:255',
+                'title' => 'required|string|max:255',
+                'image' => 'required|image|mimes:png,jpg,jpeg|max:5120',
+                'image_right' => 'required|image|mimes:png,jpg,jpeg|max:5120',
+                'status' => 'required|in:0,1',
+            ]);
+        } else {
+            $request->validate([
+                'type' => 'required|in:hero,standard',
+                'tagline_std' => 'required|string|max:255',
+                'title_std' => 'required|string|max:255',
+                'subtitle' => 'required|string|max:255',
+                'link_std' => 'required|string|max:255',
+                'status' => 'required|in:0,1',
+                'image_std' => 'required|image|mimes:png,jpg,jpeg|max:5120',
+            ]);
+        }
 
         $slide = new Slide();
-        $slide->tagline = $request->tagline;
-        $slide->title = $request->title;
-        $slide->subtitle = $request->subtitle;
-        $slide->link = $request->link;
-        $slide->status = $request->status;
+        $slide->type = $type;
+        $slide->status = (bool) $request->status;
 
-        $image = $request->file('image');
-        $file_extension = $request->file('image')->extension();
-        $file_name = Carbon::now()->timestamp . '.' . $file_extension;
-        $this->GenerateSlideThumbnailsImage($image, $file_name);
-        $slide->image = $file_name;
+        try {
+            if ($type === Slide::TYPE_HERO) {
+                $slide->tagline = $request->tagline;
+                $slide->title = $request->title;
+                $slide->subtitle = null;
+                $slide->link = $request->link ?? '';
+                $slide->link_right = $request->link_right ?? '';
+                $slide->link_left_text = $request->link_left_text ?? '';
+                $slide->link_right_text = $request->link_right_text ?? '';
+
+                $image = $request->file('image');
+                $file_name = Carbon::now()->timestamp . '_left.' . $image->extension();
+                $this->GenerateSlideThumbnailsImage($image, $file_name);
+                $slide->image = $file_name;
+
+                $imageRight = $request->file('image_right');
+                $file_name_right = Carbon::now()->timestamp . '_right.' . $imageRight->extension();
+                $this->GenerateSlideThumbnailsImage($imageRight, $file_name_right);
+                $slide->image_right = $file_name_right;
+            } else {
+                $slide->tagline = $request->tagline ?? $request->tagline_std;
+                $slide->title = $request->title ?? $request->title_std;
+                $slide->subtitle = $request->subtitle;
+                $slide->link = $request->link ?? $request->link_std;
+                $slide->link_right = null;
+                $slide->link_left_text = null;
+                $slide->link_right_text = null;
+                $slide->image_right = null;
+
+                $image = $request->file('image_std') ?: $request->file('image');
+                $file_extension = $image->extension();
+                $file_name = Carbon::now()->timestamp . '.' . $file_extension;
+                $this->GenerateSlideThumbnailsImage($image, $file_name);
+                $slide->image = $file_name;
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Image could not be processed. Try a JPG or a smaller PNG (under 5MB). If it still fails, save the image as JPG.');
+        }
+
         $slide->save();
 
         return redirect()->route('admin.slides')->with("status", "Slide added successfully!");
@@ -898,32 +968,85 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
     public function slide_update(Request $request)
     {
-        $request->validate([
-            'tagline' => 'required',
-            'title' => 'required',
-            'subtitle' => 'required',
-            'link' => 'required',
-            'status' => 'required',
-            'image' => 'mimes:png,jpg,jpeg|max:2048'
-        ]);
+        $slide = Slide::findOrFail($request->id);
+        $type = $request->input('type', $slide->type);
 
-        $slide = Slide::find($request->id);
-        $slide->tagline = $request->tagline;
-        $slide->title = $request->title;
-        $slide->subtitle = $request->subtitle;
-        $slide->link = $request->link;
-        $slide->status = $request->status;
+        if ($type === Slide::TYPE_HERO) {
+            $request->validate([
+                'type' => 'required|in:hero,standard',
+                'tagline' => 'required|string|max:255',
+                'title' => 'required|string|max:255',
+                'image' => 'nullable|image|mimes:png,jpg,jpeg|max:5120',
+                'image_right' => 'nullable|image|mimes:png,jpg,jpeg|max:5120',
+                'status' => 'required|in:0,1',
+            ]);
+        } else {
+            $request->validate([
+                'type' => 'required|in:hero,standard',
+                'tagline_std' => 'required|string|max:255',
+                'title_std' => 'required|string|max:255',
+                'subtitle' => 'required|string|max:255',
+                'link_std' => 'required|string|max:255',
+                'status' => 'required|in:0,1',
+                'image_std' => 'nullable|image|mimes:png,jpg,jpeg|max:5120',
+            ]);
+        }
 
-        if ($request->hasFile('image')) {
-            if (File::exists(public_path('uploads/slides') . '/' . $slide->image)) {
-                File::delete(public_path('uploads/slides') . '/' . $slide->image);
+        $slide->type = $type;
+        $slide->status = (bool) $request->status;
+
+        try {
+            if ($type === Slide::TYPE_HERO) {
+                $slide->tagline = $request->tagline;
+                $slide->title = $request->title;
+                $slide->subtitle = null;
+                $slide->link = $request->link ?? '';
+                $slide->link_right = $request->link_right ?? '';
+                $slide->link_left_text = $request->link_left_text ?? '';
+                $slide->link_right_text = $request->link_right_text ?? '';
+
+                if ($request->hasFile('image')) {
+                    if (File::exists(public_path('uploads/slides') . '/' . $slide->image)) {
+                        File::delete(public_path('uploads/slides') . '/' . $slide->image);
+                    }
+                    $image = $request->file('image');
+                    $file_name = Carbon::now()->timestamp . '_left.' . $image->extension();
+                    $this->GenerateSlideThumbnailsImage($image, $file_name);
+                    $slide->image = $file_name;
+                }
+                if ($request->hasFile('image_right')) {
+                    if ($slide->image_right && File::exists(public_path('uploads/slides') . '/' . $slide->image_right)) {
+                        File::delete(public_path('uploads/slides') . '/' . $slide->image_right);
+                    }
+                    $imageRight = $request->file('image_right');
+                    $file_name_right = Carbon::now()->timestamp . '_right.' . $imageRight->extension();
+                    $this->GenerateSlideThumbnailsImage($imageRight, $file_name_right);
+                    $slide->image_right = $file_name_right;
+                }
+            } else {
+                $slide->tagline = $request->tagline_std ?? $request->tagline;
+                $slide->title = $request->title_std ?? $request->title;
+                $slide->subtitle = $request->subtitle;
+                $slide->link = $request->link_std ?? $request->link;
+                $slide->link_right = null;
+                $slide->link_left_text = null;
+                $slide->link_right_text = null;
+                $slide->image_right = null;
+
+                $image = $request->file('image_std') ?: $request->file('image');
+                if ($image) {
+                    if (File::exists(public_path('uploads/slides') . '/' . $slide->image)) {
+                        File::delete(public_path('uploads/slides') . '/' . $slide->image);
+                    }
+                    $file_name = Carbon::now()->timestamp . '.' . $image->extension();
+                    $this->GenerateSlideThumbnailsImage($image, $file_name);
+                    $slide->image = $file_name;
+                }
             }
-
-            $image = $request->file('image');
-            $file_extension = $request->file('image')->extension();
-            $file_name = Carbon::now()->timestamp . '.' . $file_extension;
-            $this->GenerateSlideThumbnailsImage($image, $file_name);
-            $slide->image = $file_name;
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Image could not be processed. Try a JPG or a smaller PNG (under 5MB). If it still fails, save the image as JPG.');
         }
 
         $slide->save();
@@ -937,7 +1060,9 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         if (File::exists(public_path('uploads/slides') . '/' . $slide->image)) {
             File::delete(public_path('uploads/slides') . '/' . $slide->image);
         }
-
+        if ($slide->image_right && File::exists(public_path('uploads/slides') . '/' . $slide->image_right)) {
+            File::delete(public_path('uploads/slides') . '/' . $slide->image_right);
+        }
         $slide->delete();
         return redirect()->route('admin.slides')->with("status", "Slide deleted successfully!");
     }
