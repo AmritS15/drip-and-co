@@ -1,300 +1,781 @@
 @extends('layouts.app')
 @section('content')
-<main>
 
-    <section class="swiper-container js-swiper-slider swiper-number-pagination slideshow" data-settings='{
-        "autoplay": {
-          "delay": 5000
-        },
-        "slidesPerView": 1,
-        "effect": "fade",
-        "loop": true
-      }'>
-      <div class="swiper-wrapper">
-        @foreach($slides as $slide)
-        <div class="swiper-slide">
-          <div class="overflow-hidden position-relative h-100">
-            <div class="slideshow-character position-absolute bottom-0 pos_right-center">
-              <img loading="lazy" src="{{ asset('uploads/slides') }}/{{ $slide->image }}" width="542" height="733"
-                alt="Woman Fashion 1"
-                class="slideshow-character__img animate animate_fade animate_btt animate_delay-9 w-auto h-auto" />
-              <div class="character_markup type2">
-                <p
-                  class="text-uppercase font-sofia mark-grey-color animate animate_fade animate_btt animate_delay-10 mb-0">
-                  {{$slide->tagline}}</p>
-              </div>
-            </div>
-            <div class="slideshow-text container position-absolute start-50 top-50 translate-middle">
-              <h6 class="text_dash text-uppercase fs-base fw-medium animate animate_fade animate_btt animate_delay-3">
-                New Arrivals</h6>
-              <h2 class="h1 fw-normal mb-0 animate animate_fade animate_btt animate_delay-5">{{$slide->title}}</h2>
-              <h2 class="h1 fw-bold animate animate_fade animate_btt animate_delay-5">{{$slide->subtitle}}</h2>
-              <a href="{{$slide->link}}"
-                class="btn-link btn-link_lg default-underline fw-medium animate animate_fade animate_btt animate_delay-7">Shop
-                Now</a>
-            </div>
-          </div>
-        </div>
-        @endforeach
-      </div>
+@push('styles')
+<style>
+    .home-page {
+        min-height: 100vh;
+        background-color: #f4f3f0;
+        color: #050608;
+    }
 
-      <div class="container">
-        <div
-          class="slideshow-pagination slideshow-number-pagination d-flex align-items-center position-absolute bottom-0 mb-5">
-        </div>
-      </div>
-    </section>
-    <div class="container mw-1620 bg-white border-radius-10">
-      <div class="mb-3 mb-xl-5 pt-1 pb-4"></div>
-      <section class="category-carousel container">
-        <h2 class="section-title text-center mb-3 pb-xl-2 mb-xl-4">You Might Like</h2>
+    html[data-theme="dark"] .home-page {
+        background-color: #383B3C;
+        color: #f9fafb;
+    }
 
-        <div class="position-relative">
-          <div class="swiper-container js-swiper-slider" data-settings='{
-              "autoplay": {
-                "delay": 5000
-              },
-              "slidesPerView": 8,
-              "slidesPerGroup": 1,
-              "effect": "none",
-              "loop": true,
-              "navigation": {
-                "nextEl": ".products-carousel__next-1",
-                "prevEl": ".products-carousel__prev-1"
-              },
-              "breakpoints": {
-                "320": {
-                  "slidesPerView": 2,
-                  "slidesPerGroup": 2,
-                  "spaceBetween": 15
-                },
-                "768": {
-                  "slidesPerView": 4,
-                  "slidesPerGroup": 4,
-                  "spaceBetween": 30
-                },
-                "992": {
-                  "slidesPerView": 6,
-                  "slidesPerGroup": 1,
-                  "spaceBetween": 45,
-                  "pagination": false
-                },
-                "1200": {
-                  "slidesPerView": 8,
-                  "slidesPerGroup": 1,
-                  "spaceBetween": 60,
-                  "pagination": false
-                }
-              }
-            }'>
-            <div class="swiper-wrapper">
-              @foreach ($categories as $category)
-              <div class="swiper-slide">
-                <img loading="lazy" class="w-100 h-auto mb-3" src="{{ asset('uploads/categories') }}/{{$category->image}}" width="124"
-                  height="124" alt="" />
-                <div class="text-center">
-                  <a href="{{route('shop.index',['categories'=>$category->id])}}" class="menu-link fw-medium">{{$category->name}}</a>
-                </div>
-              </div>
-              @endforeach
-            </div><!-- /.swiper-wrapper -->
-          </div><!-- /.swiper-container js-swiper-slider -->
+    .home-hero-split {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        height: calc(100vh - 80px);
+        min-height: 670px;
+        width: 100%;
+        overflow: hidden;
+        animation: heroFadeIn 0.8s ease-out forwards;
+        opacity: 0;
+        
+    }
 
-          <div
-            class="products-carousel__prev products-carousel__prev-1 position-absolute top-50 d-flex align-items-center justify-content-center">
-            <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
-              <use href="#icon_prev_md" />
-            </svg>
-          </div><!-- /.products-carousel__prev -->
-          <div
-            class="products-carousel__next products-carousel__next-1 position-absolute top-50 d-flex align-items-center justify-content-center">
-            <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
-              <use href="#icon_next_md" />
-            </svg>
-          </div><!-- /.products-carousel__next -->
-        </div><!-- /.position-relative -->
-      </section>
+    .home-hero-split__pane {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transform: scale(1.03);
+        transition: transform 1.2s ease-out;
+    }
 
-      <div class="mb-3 mb-xl-5 pt-1 pb-4"></div>
+    .home-hero-split::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.24), transparent 55%),
+                    radial-gradient(circle at 80% 90%, rgba(0, 0, 0, 0.25), transparent 60%);
+        pointer-events: none;
+    }
 
-      <section class="hot-deals container">
-        <h2 class="section-title text-center mb-3 pb-xl-3 mb-xl-4">Hot Deals</h2>
-        <div class="row">
-          <div
-            class="col-md-6 col-lg-4 col-xl-20per d-flex align-items-center flex-column justify-content-center py-4 align-items-md-start">
-            <h2>Summer Sale</h2>
-            <h2 class="fw-bold">Up to 60% Off</h2>
+    .home-hero-split__overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        z-index: 2;
+        padding: 0 1.5rem;
+    }
 
-            <div class="position-relative d-flex align-items-center text-center pt-xxl-4 js-countdown mb-3"
-              data-date="18-3-2024" data-time="06:50">
-              <div class="day countdown-unit">
-                <span class="countdown-num d-block"></span>
-                <span class="countdown-word text-uppercase text-secondary">Days</span>
-              </div>
+    .home-hero-kicker {
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        font-weight: 500;
+        margin-bottom: 0.75rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
 
-              <div class="hour countdown-unit">
-                <span class="countdown-num d-block"></span>
-                <span class="countdown-word text-uppercase text-secondary">Hours</span>
-              </div>
+    .home-hero-title {
+        font-size: clamp(2.8rem, 5vw, 4rem);
+        letter-spacing: 0.14em;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 1.75rem;
+    }
 
-              <div class="min countdown-unit">
-                <span class="countdown-num d-block"></span>
-                <span class="countdown-word text-uppercase text-secondary">Mins</span>
-              </div>
+    .home-hero-links {
+        display: inline-flex;
+        align-items: center;
+        gap: 2.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+    }
 
-              <div class="sec countdown-unit">
-                <span class="countdown-num d-block"></span>
-                <span class="countdown-word text-uppercase text-secondary">Sec</span>
-              </div>
-            </div>
+    .home-hero-link {
+        position: relative;
+        color: #ffffff;
+        text-decoration: none;
+        padding-bottom: 0.2rem;
+    }
 
-            <a href="{{route('shop.index')}}" class="btn-link default-underline text-uppercase fw-medium mt-3">View All</a>
-          </div>
-          <div class="col-md-6 col-lg-8 col-xl-80per">
-            <div class="position-relative">
-              <div class="swiper-container js-swiper-slider" data-settings='{
-                  "autoplay": {
-                    "delay": 5000
-                  },
-                  "slidesPerView": 4,
-                  "slidesPerGroup": 4,
-                  "effect": "none",
-                  "loop": false,
-                  "breakpoints": {
-                    "320": {
-                      "slidesPerView": 2,
-                      "slidesPerGroup": 2,
-                      "spaceBetween": 14
-                    },
-                    "768": {
-                      "slidesPerView": 2,
-                      "slidesPerGroup": 3,
-                      "spaceBetween": 24
-                    },
-                    "992": {
-                      "slidesPerView": 3,
-                      "slidesPerGroup": 1,
-                      "spaceBetween": 30,
-                      "pagination": false
-                    },
-                    "1200": {
-                      "slidesPerView": 4,
-                      "slidesPerGroup": 1,
-                      "spaceBetween": 30,
-                      "pagination": false
-                    }
-                  }
-                }'>
+    .home-hero-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #ffffff;
+        transform-origin: left;
+        transform: scaleX(0);
+        transition: transform 220ms ease-out;
+    }
+
+    .home-hero-link:hover::after {
+        transform: scaleX(1);
+    }
+
+    .home-hero-link:hover {
+        color: #ffffff;
+    }
+
+    @keyframes heroFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(22px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .home-section-shell {
+        max-width: 1620px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 5rem;
+    }
+
+    .home-collection {
+        margin-top: 0;
+        background-color: #f7f5f1;
+    }
+
+    html[data-theme="dark"] .home-collection {
+        background-color: rgb(155, 179, 171);
+    }
+
+    .home-collection__tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+    }
+
+    html[data-theme="dark"] .home-collection__tabs {
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .home-collection__tab {
+        position: relative;
+        padding: 0 0 0.75rem;
+        border: none;
+        background: none;
+        font-weight: 500;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    .home-collection__tab::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #111111;
+        transform-origin: left;
+        transform: scaleX(0);
+        transition: transform 220ms ease-out;
+    }
+
+    html[data-theme="dark"] .home-collection__tab::after {
+        background-color: #ffffff;
+    }
+
+    .home-collection__tab.is-active::after {
+        transform: scaleX(1);
+    }
+
+    .home-collection__panel {
+        display: none;
+    }
+
+    .home-collection__panel.is-active {
+        display: block;
+    }
+
+    .home-collection__slider-wrap {
+        padding: 0 2.5rem;
+    }
+
+    .home-collection__swiper .swiper-slide {
+        height: auto;
+    }
+
+    /* Compact product cards in category sliders (e-commerce style) */
+    .home-collection__swiper .product-card-modern__media {
+        aspect-ratio: 1 / 1.15;
+    }
+
+    .home-collection__swiper .product-card-modern__body {
+        padding: 0.65rem 0.85rem 0.9rem;
+    }
+
+    .home-collection__swiper .product-card-modern__title {
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.25rem;
+        line-height: 1.3;
+    }
+
+    .home-collection__swiper .product-card-modern__meta {
+        font-size: 0.7rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .home-collection__swiper .product-card-modern__price {
+        font-size: 0.8rem;
+    }
+
+    .home-collection__swiper .product-card-modern:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    @media (max-width: 992px) {
+        .home-hero-split {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
+
+        .home-hero-split__pane {
+            min-height: 320px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .home-collection__slider-wrap {
+            padding: 0 2rem;
+        }
+
+        .home-hero-links {
+            gap: 1.5rem;
+        }
+    }
+
+    .product-card-modern {
+        cursor: pointer;
+        transition: transform 300ms ease, box-shadow 300ms ease, background-color 300ms ease;
+        border-radius: 5px;
+        overflow: hidden;
+        background-color: #fdfcf9;
+    }
+
+    html[data-theme="dark"] .product-card-modern {
+        background-color:rgb(213, 213, 213);
+    }
+
+    .product-card-modern__media {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 3 / 3;
+    }
+
+    .product-card-modern__media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 300ms ease;
+    }
+
+    .product-card-modern__body {
+        padding: 1.1rem 1.25rem 1.4rem;
+    }
+
+    .product-card-modern__title {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .product-card-modern__meta {
+        font-size: 0.8rem;
+        color: #8b8b86;
+        margin-bottom: 0.6rem;
+    }
+
+    html[data-theme="dark"] .product-card-modern__meta {
+        color:rgb(249, 249, 247);
+    }
+
+    .product-card-modern__price {
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .product-card-modern:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+    }
+
+    html[data-theme="dark"] .product-card-modern:hover {
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75);
+    }
+
+    .product-card-modern:hover .product-card-modern__media img {
+        transform: scale(1.05);
+    }
+
+    .home-category-banner {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        min-height: 420px;
+        overflow: hidden;
+        margin-top: 0;
+    }
+
+    .home-category-banner--hero {
+        height: 670px;
+        min-height: 670px;
+    }
+
+    .home-category-banner + .home-category-banner {
+        margin-top: 3rem;
+    }
+
+    .home-category-banner__pane {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transform: scale(1.02);
+    }
+
+    .home-category-banner::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 25% 50%, rgba(0, 0, 0, 0.2), transparent 50%),
+                    radial-gradient(circle at 75% 50%, rgba(0, 0, 0, 0.2), transparent 50%);
+        pointer-events: none;
+    }
+
+    .home-category-banner__overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        z-index: 2;
+        padding: 3rem 1.5rem;
+    }
+
+    .home-category-banner__kicker {
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        font-size: 0.78rem;
+        margin-bottom: 0.9rem;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .home-category-banner__title {
+        font-size: clamp(2rem, 3.5vw, 2.8rem);
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        color: #ffffff;
+        margin-bottom: 1.5rem;
+    }
+
+    .home-category-banner__links {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 0.9rem;
+    }
+
+    .home-category-banner__link {
+        position: relative;
+        color: #ffffff;
+        text-decoration: none;
+        padding-bottom: 0.2rem;
+    }
+
+    .home-category-banner__link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #ffffff;
+        transform-origin: left;
+        transform: scaleX(0);
+        transition: transform 220ms ease-out;
+    }
+
+    .home-category-banner__link:hover::after {
+        transform: scaleX(1);
+    }
+
+    .home-category-banner__link:hover {
+        color: #ffffff;
+    }
+
+    .home-category-banner__subtitle {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 1rem;
+        max-width: 420px;
+    }
+
+    .home-category-banner__cta {
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 0.9rem;
+        color: #fff;
+        text-decoration: none;
+        padding-bottom: 0.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .home-hero-slideshow {
+        height: 670px;
+        min-height: 670px;
+        overflow: hidden;
+    }
+
+    .home-hero-slideshow__swiper {
+        height: 100%;
+    }
+
+    .home-hero-slideshow__swiper .swiper-wrapper {
+        height: 100%;
+    }
+
+    .home-hero-slideshow__slide {
+        height: 100%;
+    }
+
+    .home-hero-slideshow__slide .home-category-banner {
+        height: 100%;
+        min-height: 100%;
+    }
+
+    .home-category-banner--in-slider {
+        margin-top: 0;
+    }
+
+    .home-category-banner--single {
+        grid-template-columns: 1fr;
+    }
+
+    .home-category-banner--single .home-category-banner__pane--full {
+        position: absolute;
+        inset: 0;
+        background-image: var(--slide-bg-image);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transform: scale(1.02);
+    }
+
+    .home-hero-slideshow__standard-slide {
+        display: block;
+        height: 100%;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .home-hero-slideshow__standard-slide .home-category-banner {
+        height: 100%;
+    }
+
+    .home-hero-slideshow__pagination {
+        bottom: 0.75rem !important;
+    }
+
+    .home-hero-slideshow__pagination .swiper-pagination-bullet {
+        width: 4px;
+        height: 4px;
+        background: rgba(0, 0, 0, 0.35);
+        opacity: 1;
+    }
+
+    .home-hero-slideshow__pagination .swiper-pagination-bullet-active {
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    @media (max-width: 768px) {
+        .home-category-banner {
+            grid-template-columns: 1fr;
+            min-height: 520px;
+        }
+
+        .home-hero-slideshow {
+            height: 520px;
+            min-height: 520px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .home-category-banner + .home-category-banner {
+            margin-top: 2rem;
+        }
+
+        .home-category-banner__links {
+            gap: 1rem 1.5rem;
+        }
+    }
+</style>
+@endpush
+
+<main class="home-page">
+    @php
+        $staticHero = count($homeSections ?? []) ? $homeSections[0] : null;
+        $hasAdminHero = isset($heroSlide) && $heroSlide && $heroSlide->type === 'hero';
+        $hasStandardSlides = isset($standardSlides) && $standardSlides->count() > 0;
+        $slideCount = ($staticHero ? 1 : 0) + ($hasAdminHero ? 1 : 0) + ($hasStandardSlides ? $standardSlides->count() : 0);
+        $showSlideshow = $slideCount > 0;
+    @endphp
+
+    @if ($showSlideshow)
+        <section class="home-hero-slideshow position-relative">
+            <div class="swiper-container js-swiper-slider home-hero-slideshow__swiper"
+                 data-settings='{
+                    "autoplay": { "delay": 5000 },
+                    "slidesPerView": 1,
+                    "effect": "fade",
+                    "loop": {{ $slideCount > 1 ? 'true' : 'false' }},
+                    "pagination": { "el": ".home-hero-slideshow__pagination", "type": "bullets", "clickable": true }
+                 }'>
                 <div class="swiper-wrapper">
-
-                  @foreach ($sproducts as $sproduct)
-
-                  <div class="swiper-slide product-card product-card_style3">
-                    <div class="pc__img-wrapper">
-                      <a href="{{route('shop.product.details',['product_slug'=>$sproduct->slug])}}">
-                        <img loading="lazy" src="{{ asset('uploads/products') }}/{{$sproduct->image}}" width="258" height="313"
-                          alt="{{$sproduct->name}}" class="pc__img">
-                        </a>
-                    </div>
-
-                    <div class="pc__info position-relative">
-                      <h6 class="pc__title"><a href="{{route('shop.product.details',['product_slug'=>$sproduct->slug])}}">{{$sproduct->name}}</a></h6>
-                      <div class="product-card__price d-flex">
-                        <span class="money price text-secondary">
-                          @if($sproduct->sale_price)
-                            <s>£{{$sproduct->regular_price}} </s> £{{$sproduct->sale_price}}
-                          @else
-                            £{{$sproduct->regular_price}}
-                          @endif
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  @endforeach
-                  
-                </div><!-- /.swiper-wrapper -->
-              </div><!-- /.swiper-container js-swiper-slider -->
-            </div><!-- /.position-relative -->
-          </div>
-        </div>
-      </section>
-
-      <div class="mb-3 mb-xl-5 pt-1 pb-4"></div>
-
-      <section class="category-banner container">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="category-banner__item border-radius-10 mb-5">
-              <img loading="lazy" class="h-auto" src="{{ asset('assets/images/home/demo3/category_9.jpg') }}" width="690" height="665"
-                alt="" />
-              <div class="category-banner__item-mark">
-                Starting at £19
-              </div>
-              <div class="category-banner__item-content">
-                <h3 class="mb-0">Blazers</h3>
-                <a href="#" class="btn-link default-underline text-uppercase fw-medium">Shop Now</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="category-banner__item border-radius-10 mb-5">
-              <img loading="lazy" class="h-auto" src="{{ asset('assets/images/home/demo3/category_10.jpg') }}" width="690" height="665"
-                alt="" />
-              <div class="category-banner__item-mark">
-                Starting at £19
-              </div>
-              <div class="category-banner__item-content">
-                <h3 class="mb-0">Sportswear</h3>
-                <a href="#" class="btn-link default-underline text-uppercase fw-medium">Shop Now</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="mb-3 mb-xl-5 pt-1 pb-4"></div>
-
-      <section class="products-grid container">
-        <h2 class="section-title text-center mb-3 pb-xl-3 mb-xl-4">Featured Products</h2>
-
-        <div class="row">
-          @foreach ($fproducts as $fproduct)
-
-          <div class="col-6 col-md-4 col-lg-3">
-            <div class="product-card product-card_style3 mb-3 mb-md-4 mb-xxl-5">
-              <div class="pc__img-wrapper">
-                <a href="{{route('shop.product.details',['product_slug'=>$fproduct->slug])}}">
-                  <img loading="lazy" src="{{ asset('uploads/products') }}/{{$fproduct->image}}" width="330" height="400"
-                    alt="{{$fproduct->name}}" class="pc__img">
-                </a>
-              </div>
-
-              <div class="pc__info position-relative">
-                <h6 class="pc__title"><a href="{{route('shop.product.details',['product_slug'=>$fproduct->slug])}}">{{$fproduct->name}}</a></h6>
-                <div class="product-card__price d-flex align-items-center">
-                  <span class="money price text-secondary">
-                    @if($fproduct->sale_price)
-                      <s>£{{$fproduct->regular_price}} </s> £{{$fproduct->sale_price}}
-                    @else
-                      £{{$fproduct->regular_price}}
+                    {{-- First slide: always the static original hero (two images + overlay) --}}
+                    @if ($staticHero)
+                        <div class="swiper-slide home-hero-slideshow__slide">
+                            <div class="home-category-banner home-category-banner--hero home-category-banner--in-slider">
+                                <div class="home-category-banner__pane"
+                                     style="background-image: url('{{ $staticHero['left_image'] }}');"></div>
+                                <div class="home-category-banner__pane"
+                                     style="background-image: url('{{ $staticHero['right_image'] }}');"></div>
+                                <div class="home-category-banner__overlay">
+                                    <p class="home-category-banner__kicker">{{ $staticHero['kicker'] }}</p>
+                                    <h2 class="home-category-banner__title">{{ $staticHero['title'] }}</h2>
+                                    <div class="home-category-banner__links">
+                                        @php
+                                            $heroWomenFilters = array_filter([
+                                                'categories' => optional($womenCategory)->id,
+                                            ], fn($value) => $value !== null && $value !== '');
+                                            $heroMenFilters = array_filter([
+                                                'categories' => optional($menCategory)->id,
+                                            ], fn($value) => $value !== null && $value !== '');
+                                        @endphp
+                                        <a href="{{ route('shop.index', $heroWomenFilters) }}"
+                                           class="home-category-banner__link">Women</a>
+                                        <a href="{{ route('shop.index', $heroMenFilters) }}"
+                                           class="home-category-banner__link">Men</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @endif
-                  </span>
+                    @if ($hasAdminHero)
+                        <div class="swiper-slide home-hero-slideshow__slide">
+                            <div class="home-category-banner home-category-banner--hero home-category-banner--in-slider">
+                                <div class="home-category-banner__pane"
+                                     style="background-image: url('{{ asset('uploads/slides') }}/{{ $heroSlide->image }}');"></div>
+                                <div class="home-category-banner__pane"
+                                     style="background-image: url('{{ $heroSlide->image_right ? asset('uploads/slides') . "/" . $heroSlide->image_right : asset('uploads/slides') . "/" . $heroSlide->image }}');"></div>
+                                <div class="home-category-banner__overlay">
+                                    <p class="home-category-banner__kicker">{{ $heroSlide->tagline }}</p>
+                                    <h2 class="home-category-banner__title">{{ $heroSlide->title }}</h2>
+                                    <div class="home-category-banner__links">
+                                        @if ($heroSlide->link_left_text && $heroSlide->link)
+                                            <a href="{{ $heroSlide->link }}" class="home-category-banner__link">{{ $heroSlide->link_left_text }}</a>
+                                        @endif
+                                        @if ($heroSlide->link_right_text && $heroSlide->link_right)
+                                            <a href="{{ $heroSlide->link_right }}" class="home-category-banner__link">{{ $heroSlide->link_right_text }}</a>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    @if ($hasStandardSlides)
+                        @foreach ($standardSlides as $slide)
+                            <div class="swiper-slide home-hero-slideshow__slide">
+                                <a href="{{ $slide->link ?: '#' }}" class="home-hero-slideshow__standard-slide">
+                                    <div class="home-category-banner home-category-banner--hero home-category-banner--single home-category-banner--in-slider"
+                                         style="--slide-bg-image: url('{{ asset('uploads/slides') }}/{{ $slide->image }}');">
+                                        <div class="home-category-banner__pane home-category-banner__pane--full"></div>
+                                        <div class="home-category-banner__overlay">
+                                            <p class="home-category-banner__kicker">{{ $slide->tagline }}</p>
+                                            <h2 class="home-category-banner__title">{{ $slide->title }}</h2>
+                                            @if ($slide->subtitle)
+                                                <p class="home-category-banner__subtitle">{{ $slide->subtitle }}</p>
+                                            @endif
+                                            @if ($slide->link)
+                                                <span class="home-category-banner__cta">Shop now</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
-              </div>
+                <div class="home-hero-slideshow__pagination swiper-pagination"></div>
             </div>
-          </div>
+        </section>
+    @endif
 
-          @endforeach
+    @if (count($categorySliders) > 0)
+    <section class="home-collection">
+        <div class="home-section-shell">
+            <div class="home-collection__tabs">
+                @foreach ($categorySliders as $index => $category)
+                    <button class="home-collection__tab {{ $index === 0 ? 'is-active' : '' }}" type="button" data-category-id="{{ $category->id }}">{{ $category->name }}</button>
+                @endforeach
+            </div>
 
-        </div><!-- /.row -->
-
-        <div class="text-center mt-2">
-          <a class="btn-link btn-link_lg default-underline text-uppercase fw-medium" href="#">Load More</a>
+            <div class="home-collection__panels">
+                @foreach ($categorySliders as $index => $category)
+                    <div class="home-collection__panel {{ $index === 0 ? 'is-active' : '' }}" data-panel="{{ $category->id }}">
+                        @if ($category->products->count() > 0)
+                        <div id="category-slider-{{ $category->id }}" class="home-collection__slider-wrap position-relative">
+                            <div class="swiper-container js-swiper-slider home-collection__swiper"
+                                 data-settings='{
+                                "autoplay": false,
+                                "slidesPerView": 4,
+                                "slidesPerGroup": 4,
+                                "spaceBetween": 16,
+                                "effect": "none",
+                                "loop": {{ $category->products->count() > 4 ? 'true' : 'false' }},
+                                "navigation": {
+                                    "nextEl": "#category-slider-{{ $category->id }} .products-carousel__next",
+                                    "prevEl": "#category-slider-{{ $category->id }} .products-carousel__prev"
+                                },
+                                "breakpoints": {
+                                    "320": { "slidesPerView": 2, "slidesPerGroup": 2, "spaceBetween": 12 },
+                                    "640": { "slidesPerView": 3, "slidesPerGroup": 3, "spaceBetween": 14 },
+                                    "992": { "slidesPerView": 4, "slidesPerGroup": 4, "spaceBetween": 16 }
+                                }
+                            }'>
+                                <div class="swiper-wrapper">
+                                    @foreach ($category->products as $product)
+                                        @php
+                                            $material = $product->material ?? optional($product->category)->name ?? 'Premium materials';
+                                        @endphp
+                                        <div class="swiper-slide">
+                                            <article class="product-card-modern">
+                                                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
+                                                   class="product-card-modern__media d-block">
+                                                    <img loading="lazy"
+                                                         src="{{ asset('uploads/products') }}/{{ $product->image }}"
+                                                         alt="{{ $product->name }}">
+                                                </a>
+                                                <div class="product-card-modern__body">
+                                                    <h3 class="product-card-modern__title">
+                                                        <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
+                                                           class="stretched-link text-reset text-decoration-none">
+                                                            {{ strtoupper($product->name) }}
+                                                        </a>
+                                                    </h3>
+                                                    <p class="product-card-modern__meta">{{ $material }}</p>
+                                                    <div class="product-card-modern__price">
+                                                        @if ($product->sale_price)
+                                                            <span><s>£{{ $product->regular_price }}</s> £{{ $product->sale_price }}</span>
+                                                        @else
+                                                            <span>£{{ $product->regular_price }}</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </article>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="products-carousel__prev position-absolute top-50 start-0 d-flex align-items-center justify-content-center">
+                                <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_md" /></svg>
+                            </div>
+                            <div class="products-carousel__next position-absolute top-50 end-0 d-flex align-items-center justify-content-center">
+                                <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_md" /></svg>
+                            </div>
+                        </div>
+                        @else
+                        <p class="home-collection__empty text-muted small mb-0">No products in this category yet.</p>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
         </div>
-      </section>
-    </div>
+    </section>
+    @endif
 
-    <div class="mb-3 mb-xl-5 pt-1 pb-4"></div>
+    @foreach ($homeSections as $index => $section)
+        <section class="home-category-banner">
+            <div class="home-category-banner__pane"
+                 style="background-image: url('{{ $section['left_image'] }}');"></div>
+            <div class="home-category-banner__pane"
+                 style="background-image: url('{{ $section['right_image'] }}');"></div>
+            <div class="home-category-banner__overlay">
+                <p class="home-category-banner__kicker">{{ $section['kicker'] }}</p>
+                <h2 class="home-category-banner__title">{{ $section['title'] }}</h2>
+                <div class="home-category-banner__links">
+                    @php
+                        $womenFilters = array_filter([
+                            'categories' => optional($womenCategory)->id,
+                            'brands' => $section['collection_brands'] ?? null,
+                        ], fn($value) => $value !== null && $value !== '');
+                        $menFilters = array_filter([
+                            'categories' => optional($menCategory)->id,
+                            'brands' => $section['collection_brands'] ?? null,
+                        ], fn($value) => $value !== null && $value !== '');
+                    @endphp
+                    <a href="{{ route('shop.index', $womenFilters) }}"
+                       class="home-category-banner__link">Women</a>
+                    <a href="{{ route('shop.index', $menFilters) }}"
+                       class="home-category-banner__link">Men</a>
+                </div>
+            </div>
+        </section>
+    @endforeach
 
-  </main>
+</main>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var tabs = document.querySelectorAll('.home-collection__tab');
+        var panels = document.querySelectorAll('.home-collection__panel');
+
+        if (!tabs.length || !panels.length) return;
+
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                var categoryId = tab.getAttribute('data-category-id') || '';
+
+                tabs.forEach(function (t) {
+                    t.classList.toggle('is-active', t === tab);
+                });
+
+                panels.forEach(function (panel) {
+                    var panelId = panel.getAttribute('data-panel') || '';
+                    panel.classList.toggle('is-active', String(panelId) === String(categoryId));
+                });
+            });
+        });
+
+        // Hero slideshow: reset autoplay timer to 5s when a pagination bullet is clicked
+        var heroSlideshow = document.querySelector('.home-hero-slideshow__swiper');
+        if (heroSlideshow) {
+            heroSlideshow.addEventListener('click', function (e) {
+                if (e.target.classList.contains('swiper-pagination-bullet') || e.target.closest('.swiper-pagination-bullet')) {
+                    var swiper = heroSlideshow.swiper;
+                    if (swiper && swiper.autoplay) {
+                        swiper.autoplay.stop();
+                        swiper.autoplay.start();
+                    }
+                }
+            });
+        }
+    });
+</script>
+@endpush

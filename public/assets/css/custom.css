@@ -17,3 +17,30 @@
 .form-floating>.form-select {
     height: 48px;
 }
+
+/* Mobile view: on home page header always transparent; other pages transparent only when scrolled */
+@media (max-width: 1199.98px) {
+    body.page-home .header-mobile,
+    body.page-home .header-mobile.header_sticky,
+    body.page-home .header-mobile.header_sticky-active,
+    html[data-theme="light"] body.page-home .header-mobile,
+    html[data-theme="dark"] body.page-home .header-mobile {
+        background: transparent !important;
+        background-color: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+    }
+    body:not(.page-home) .header-mobile.header_sticky-active,
+    body:not(.page-home) .header-mobile.header_sticky.header_sticky-active,
+    html[data-theme="light"] body:not(.page-home) .header-mobile.header_sticky-active,
+    html[data-theme="dark"] body:not(.page-home) .header-mobile.header_sticky-active {
+        background: transparent !important;
+        background-color: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+    }
+}

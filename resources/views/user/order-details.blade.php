@@ -171,7 +171,7 @@
                                         <th class="text-center">Price</th>
                                         <th class="text-center">Quantity</th>
                                         <th class="text-center">Category</th>
-                                        <th class="text-center">Brand</th>
+                                        <th class="text-center">Collection</th>
                                         <th class="text-center">Options</th>
                                         <th class="text-center">Return Status</th>
                                         <th class="text-center">Action</th>
