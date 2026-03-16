@@ -104,7 +104,7 @@
         }
 
         html[data-theme="dark"] .search-result {
-            background: rgba(10, 10, 10, 0.98);
+            background: rgba(45, 69, 65, 0.98);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
         }
 
@@ -696,6 +696,148 @@
 
         #box-content-search .product-item {
             margin-bottom: 10px;
+        }
+
+        .header-transparent-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1040;
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border-bottom: none;
+        }
+
+        html[data-theme="light"] .header-transparent-bg {
+            background: transparent;
+            border-bottom-color: transparent;
+        }
+
+        html[data-theme="dark"] .header-transparent-bg {
+            background: transparent;
+            border-bottom-color: transparent;
+        }
+
+        .header-transparent-bg .header-desk {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .header-transparent-bg .navigation__list {
+            display: flex;
+            align-items: center;
+            gap: 2.75rem;
+        }
+
+        .header-transparent-bg .navigation__link {
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #ffffff;
+            position: relative;
+            padding-bottom: 0.1rem;
+        }
+
+        html[data-theme="light"] .header-transparent-bg .navigation__link {
+            color: #1f2d2b;
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.28);
+        }
+
+        html[data-theme="light"] .header-transparent-bg .navigation__link:hover,
+        html[data-theme="light"] .header-transparent-bg .navigation__link:focus-visible {
+            color: #2b5e59;
+        }
+
+        .header-transparent-bg .navigation__link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #ffffff;
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 180ms ease-out;
+        }
+
+        html[data-theme="light"] .header-transparent-bg .navigation__link::after {
+            background-color: #1f2d2b;
+        }
+
+        .header-transparent-bg .navigation__link:hover::after,
+        .header-transparent-bg .navigation__link:focus-visible::after {
+            transform: scaleX(1);
+        }
+
+        .header-transparent-bg .header-tools__item svg {
+            color: #ffffff;
+        }
+
+        html[data-theme="light"] .header-transparent-bg .header-tools__item svg {
+            color: #1f2d2b;
+        }
+
+        .header-transparent-bg .header-tools__item,
+        .header-transparent-bg .header-toolsitem {
+            color: #ffffff;
+        }
+
+        html[data-theme="light"] .header-transparent-bg .header-tools__item,
+        html[data-theme="light"] .header-transparent-bg .header-toolsitem {
+            color: #1f2d2b;
+        }
+
+        .header-transparent-bg.header_sticky-active {
+            background: transparent !important;
+            box-shadow: none !important;
+            border-bottom: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        html[data-theme="dark"] .header-transparent-bg.header_sticky-active {
+            background: transparent !important;
+            box-shadow: none !important;
+            border-bottom: none !important;
+        }
+
+        body.gradient-bg {
+            padding-top: 0;
+        }
+
+        @media (max-width: 991.98px) {
+            .header-mobile.header_sticky {
+                background: transparent;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                border-bottom: none;
+            }
+
+            html[data-theme="light"] .header-mobile.header_sticky {
+                background: transparent;
+                border-bottom-color: transparent;
+            }
+
+            html[data-theme="dark"] .header-mobile.header_sticky {
+                background: transparent;
+                border-bottom-color: transparent;
+            }
+
+            .header-mobile.header_sticky.header_sticky-active,
+            html[data-theme="light"] .header-mobile.header_sticky.header_sticky-active,
+            html[data-theme="dark"] .header-mobile.header_sticky.header_sticky-active {
+                background: transparent !important;
+                box-shadow: none !important;
+                border-bottom: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
         }
     </style>
     <div class="header-mobile header_sticky">

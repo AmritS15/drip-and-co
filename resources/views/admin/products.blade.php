@@ -46,7 +46,7 @@
                                                     <th>SalePrice</th>
                                                     <th>SKU</th>
                                                     <th>Category</th>
-                                                    <th>Brand</th>
+                                                    <th>Collection</th>
                                                     <th>Featured</th>
                                                     <th>Stock</th>
                                                     <th>Quantity</th>

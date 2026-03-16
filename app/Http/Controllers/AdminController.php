@@ -92,7 +92,7 @@ class AdminController extends Controller
         $this->GenerateBrandThumbnailsImage($image, $file_name);
         $brand->image = $file_name;
         $brand->save();
-        return redirect()->route('admin.brands')->with('status', 'Brand has been added successfully');
+        return redirect()->route('admin.brands')->with('status', 'Collection has been added successfully');
     }
 
     public function brand_edit($id)
@@ -124,7 +124,7 @@ class AdminController extends Controller
         }
 
         $brand->save();
-        return redirect()->route('admin.brands')->with('status', 'Brand has been updated successfully');
+        return redirect()->route('admin.brands')->with('status', 'Collection has been updated successfully');
     }
 
     public function GenerateBrandThumbnailsImage($image, $imageName)
@@ -144,7 +144,7 @@ class AdminController extends Controller
             File::delete(public_path('uploads/brands') . '/' . $brand->image);
         }
         $brand->delete();
-        return redirect()->route('admin.brands')->with('status', 'Brand has been deleted successfully!');
+        return redirect()->route('admin.brands')->with('status', 'Collection has been deleted successfully!');
     }
 
     public function categories()

@@ -76,11 +76,11 @@
                                     <sapn class="alert alert-danger text-center">{{ $message }}
                                     @enderror
                                     <fieldset class="brand">
-                                        <div class="body-title mb-10">Brand <span class="tf-color-1">*</span>
+                                        <div class="body-title mb-10">Collection <span class="tf-color-1">*</span>
                                         </div>
                                         <div class="select">
                                             <select class="" name="brand_id">
-                                                <option>Choose Brand</option>
+                                                <option>Choose Collection</option>
                                                 @foreach ($brands as $brand)
                                                     <option value="{{ $brand->id }}"
                                                         {{ $product->brand_id == $brand->id ? 'selected' : '' }}>

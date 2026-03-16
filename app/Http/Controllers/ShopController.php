@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Review;
+use Illuminate\Support\Facades\Schema;
 
 class ShopController extends Controller
 {
@@ -54,8 +55,10 @@ class ShopController extends Controller
         $min_price = is_numeric($min_price) ? (float) $min_price : 1;
         $max_price = is_numeric($max_price) ? (float) $max_price : 500;
 
-        $products = Product::query()
-            ->with(['reviews', 'variants'])
+        $hasVariants = Schema::hasTable('product_variants');
+
+        $productsQuery = Product::query()
+            ->with('reviews')
             ->when($brandIds, function ($query) use ($brandIds) {
                 $query->whereIn('brand_id', $brandIds);
             })
@@ -65,33 +68,43 @@ class ShopController extends Controller
             ->where(function ($query) use ($min_price, $max_price) {
                 $query->whereBetween('regular_price', [$min_price, $max_price])
                     ->orWhereBetween('sale_price', [$min_price, $max_price]);
-            })
+            });
+
+        if ($hasVariants) {
             // require that product (or its variants) actually has stock
-            ->where(function ($query) {
+            $productsQuery->where(function ($query) {
                 $query->where('quantity', '>', 0)
-                      ->orWhereHas('variants', function ($q) {
-                          $q->where('quantity', '>', 0);
-                      });
-            })
-            ->when($colors, function ($query) use ($colors) {
-                // when filtering by colors we should make sure at least one variant matching color has stock
-                $query->whereHas('variants', function ($q) use ($colors) {
-                    $q->where(function ($q2) use ($colors) {
-                        foreach ($colors as $color) {
-                            $q2->orWhere('color', $color);
-                        }
-                    })->where('quantity', '>', 0);
+                    ->orWhereHas('variants', function ($q) {
+                        $q->where('quantity', '>', 0);
+                    });
+            });
+
+            // color & size filters only when variants table exists
+            $productsQuery
+                ->when($colors, function ($query) use ($colors) {
+                    $query->whereHas('variants', function ($q) use ($colors) {
+                        $q->where(function ($q2) use ($colors) {
+                            foreach ($colors as $color) {
+                                $q2->orWhere('color', $color);
+                            }
+                        })->where('quantity', '>', 0);
+                    });
+                })
+                ->when($sizes, function ($query) use ($sizes) {
+                    $query->whereHas('variants', function ($q) use ($sizes) {
+                        $q->where(function ($q2) use ($sizes) {
+                            foreach ($sizes as $s) {
+                                $q2->orWhere('size', $s);
+                            }
+                        })->where('quantity', '>', 0);
+                    });
                 });
-            })
-            ->when($sizes, function ($query) use ($sizes) {
-                $query->whereHas('variants', function ($q) use ($sizes) {
-                    $q->where(function ($q2) use ($sizes) {
-                        foreach ($sizes as $s) {
-                            $q2->orWhere('size', $s);
-                        }
-                    })->where('quantity', '>', 0);
-                });
-            })
+        } else {
+            // fallback: basic stock filter without variants
+            $productsQuery->where('quantity', '>', 0);
+        }
+
+        $products = $productsQuery
             ->orderBy($o_column, $o_order)
             ->paginate($size);
 
