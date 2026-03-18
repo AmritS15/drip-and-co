@@ -283,9 +283,8 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
     public function product_add()
     {
-        $categories = Category::select('id', 'name')->orderBy('name')->get();
         $brands = Brand::select('id', 'name')->orderBy('name')->get();
-        return view('admin.product-add', compact('categories', 'brands'));
+        return view('admin.product-add', compact('brands'));
     }
 
     public function product_store(Request $request)
@@ -296,14 +295,13 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'variants' => 'required|array|min:1',
             'short_description' => 'required',
             'description' => 'required',
-            'regular_price' => 'required',
-            'sale_price' => 'required',
+            'regular_price' => 'required|numeric|min:0',
+            'sale_price' => 'nullable|numeric|min:0',
             'SKU' => 'nullable|string',
             'stock_status' => 'required|in:instock,outofstock',
             'featured' => 'required',
             'quantity' => 'nullable|integer|min:0',
-            'category_id' => 'required',
-            'brand_id' => 'required',
+            'brand_id' => 'required|exists:brands,id',
             'sizes' => 'nullable|array',
             'colors' => 'nullable|array',
             'variants.*.size' => 'nullable|string',
@@ -326,18 +324,20 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             }
         }
 
+        $brand = Brand::findOrFail($request->brand_id);
+
         $product = new Product();
         $product->name = $request->name;
         $product->slug = Str::slug($request->name);
         $product->short_description = $request->short_description;
         $product->description = $request->description;
         $product->regular_price = $request->regular_price;
-        $product->sale_price = $request->sale_price;
+        $product->sale_price = $request->filled('sale_price') ? $request->sale_price : null;
         $product->SKU = 'PROD-' . time();
         $product->stock_status = $request->stock_status;
         $product->featured = $request->featured;
         $product->quantity = 0;
-        $product->category_id = $request->category_id;
+        $product->category_id = $brand->category_id;
         $product->brand_id = $request->brand_id;
         $product->sizes = [];
         $product->colors = [];
@@ -510,10 +510,9 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
     public function product_edit($id)
     {
         $product = Product::find($id);
-        $categories = Category::select('id', 'name')->orderBy('name')->get();
         $brands = Brand::select('id', 'name')->orderBy('name')->get();
 
-        return view('admin.product-edit', compact('product', 'categories', 'brands'));
+        return view('admin.product-edit', compact('product', 'brands'));
     }
 
     public function product_update(Request $request)
@@ -523,15 +522,14 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'slug' => 'required|unique:products,slug,' . $request->id,
             'short_description' => 'required',
             'description' => 'required',
-            'regular_price' => 'required',
-            'sale_price' => 'required',
+            'regular_price' => 'required|numeric|min:0',
+            'sale_price' => 'nullable|numeric|min:0',
             'SKU' => 'nullable|string',
             'stock_status' => 'required|in:instock,outofstock',
             'featured' => 'required',
             'quantity' => 'nullable|integer|min:0',
             'gallery_filenames' => 'nullable|string',
-            'category_id' => 'required',
-            'brand_id' => 'required',
+            'brand_id' => 'required|exists:brands,id',
             'sizes' => 'nullable|array',
             'colors' => 'nullable|array',
             'variants' => 'nullable|array',
@@ -555,16 +553,18 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             }
         }
 
+        $brand = Brand::findOrFail($request->brand_id);
+
         $product = Product::find($request->id);
         $product->name = $request->name;
         $product->slug = Str::slug($request->name);
         $product->short_description = $request->short_description;
         $product->description = $request->description;
         $product->regular_price = $request->regular_price;
-        $product->sale_price = $request->sale_price;
+        $product->sale_price = $request->filled('sale_price') ? $request->sale_price : null;
         $product->stock_status = $request->stock_status;
         $product->featured = $request->featured;
-        $product->category_id = $request->category_id;
+        $product->category_id = $brand->category_id;
         $product->brand_id = $request->brand_id;
 
         if ($request->filled('variants')) {

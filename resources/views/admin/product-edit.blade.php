@@ -58,40 +58,21 @@
                             @enderror
 
                             <div class="gap22 cols">
-                                <fieldset class="category">
-                                    <div class="body-title mb-10">Category <span class="tf-color-1">*</span>
-                                    </div>
+                                <fieldset class="brand">
+                                    <div class="body-title mb-10">Collection <span class="tf-color-1">*</span></div>
                                     <div class="select">
-                                        <select class="" name="category_id">
-                                            <option>Choose category</option>
-                                            @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}"
-                                                    {{ $product->category_id == $category->id ? 'selected' : '' }}>
-                                                    {{ $category->name }}</option>
+                                        <select class="" name="brand_id" required>
+                                            <option value="">Choose Collection</option>
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}" {{ (old('brand_id', $product->brand_id) == $brand->id) ? 'selected' : '' }}>{{ $brand->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="text-tiny text-muted mt-1">Category is set automatically from the collection.</div>
                                 </fieldset>
-                                @error('category_id')
-                                    <sapn class="alert alert-danger text-center">{{ $message }}
-                                    @enderror
-                                    <fieldset class="brand">
-                                        <div class="body-title mb-10">Collection <span class="tf-color-1">*</span>
-                                        </div>
-                                        <div class="select">
-                                            <select class="" name="brand_id">
-                                                <option>Choose Collection</option>
-                                                @foreach ($brands as $brand)
-                                                    <option value="{{ $brand->id }}"
-                                                        {{ $product->brand_id == $brand->id ? 'selected' : '' }}>
-                                                        {{ $brand->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </fieldset>
-                                    @error('brand_id')
-                                        <sapn class="alert alert-danger text-center">{{ $message }}
-                                        @enderror
+                                @error('brand_id')
+                                    <span class="alert alert-danger text-center">{{ $message }}</span>
+                                @enderror
                             </div>
                             <fieldset class="shortdescription">
                                 <div class="body-title mb-10">Short Description <span class="tf-color-1">*</span></div>
@@ -200,21 +181,20 @@
                                 <fieldset class="name">
                                     <div class="body-title mb-10">Regular Price <span class="tf-color-1">*</span></div>
                                     <input class="mb-10" type="text" placeholder="Enter regular price"
-                                        name="regular_price" tabindex="0" value="{{ $product->regular_price }}"
-                                        aria-required="true" required="">
+                                        name="regular_price" tabindex="0" value="{{ old('regular_price', $product->regular_price) }}"
+                                        aria-required="true" required>
                                 </fieldset>
                                 @error('regular_price')
-                                    <sapn class="alert alert-danger text-center">{{ $message }}
-                                    @enderror
-                                    <fieldset class="name">
-                                        <div class="body-title mb-10">Sale Price <span class="tf-color-1">*</span></div>
-                                        <input class="mb-10" type="text" placeholder="Enter sale price"
-                                            name="sale_price" tabindex="0" value="{{ $product->sale_price }}"
-                                            aria-required="true" required="">
-                                    </fieldset>
-                                    @error('sale_price')
-                                        <sapn class="alert alert-danger text-center">{{ $message }}
-                                        @enderror
+                                    <span class="alert alert-danger text-center">{{ $message }}</span>
+                                @enderror
+                                <fieldset class="name">
+                                    <div class="body-title mb-10">Sale Price <span class="text-muted small">(optional)</span></div>
+                                    <input class="mb-10" type="text" placeholder="Leave blank for regular price only"
+                                        name="sale_price" tabindex="0" value="{{ old('sale_price', $product->sale_price) }}">
+                                </fieldset>
+                                @error('sale_price')
+                                    <span class="alert alert-danger text-center">{{ $message }}</span>
+                                @enderror
                             </div>
 
 
