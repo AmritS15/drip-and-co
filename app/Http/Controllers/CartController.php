@@ -64,7 +64,14 @@ class CartController extends Controller
         $options
     )->associate('App\Models\Product');
 
-    return redirect()->back();
+    $redirect = redirect()->back();
+    if ($request->has('size')) {
+        $redirect->with('added_variant_size', $request->size);
+    }
+    if ($request->has('color')) {
+        $redirect->with('added_variant_color', $request->color);
+    }
+    return $redirect;
     }
 
     public function increase_cart_quantity($rowId)

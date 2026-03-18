@@ -160,6 +160,18 @@
                         $firstVariant = $hasVariants ? $product->variants->first() : null;
                         $defaultVariantSize = $firstVariant ? trim((string) $firstVariant->size) : '';
                         $defaultVariantColor = $firstVariant ? trim((string) $firstVariant->color) : '';
+                        if ($hasVariants && session()->has('added_variant_size')) {
+                            $fromSession = trim((string) session('added_variant_size'));
+                            if (in_array($fromSession, $variantSizes)) {
+                                $defaultVariantSize = $fromSession;
+                            }
+                        }
+                        if ($hasVariants && session()->has('added_variant_color')) {
+                            $fromSession = trim((string) session('added_variant_color'));
+                            if (in_array($fromSession, $variantColors)) {
+                                $defaultVariantColor = $fromSession;
+                            }
+                        }
                     @endphp
                     <form name="addtocart-form" method="post" action="{{ route('cart.add') }}">
                         @csrf
