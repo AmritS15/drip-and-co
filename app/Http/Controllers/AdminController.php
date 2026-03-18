@@ -1163,12 +1163,17 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         'name' => 'required|string|max:255',
         'mobile' => 'nullable|string|max:50',
         'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-        'password' => 'nullable|string|min:8|confirmed',
+        'password' => ['nullable', 'string', 'min:8', 'contains_number', 'contains_uppercase', 'confirmed'],
         'address' => 'nullable|string|max:255',
         'city' => 'nullable|string|max:255',
         'county' => 'nullable|string|max:255',
         'country' => 'nullable|string|max:255',
         'postcode' => 'nullable|string|max:50',
+    ], [
+        'password.min' => 'Password must be at least 8 characters.',
+        'password.contains_number' => 'Password must include at least 1 number.',
+        'password.contains_uppercase' => 'Password must include at least 1 capital letter.',
+        'password.confirmed' => 'Password confirmation does not match.',
     ]);
 
     $user->name = $request->name;

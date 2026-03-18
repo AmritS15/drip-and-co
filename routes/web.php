@@ -69,6 +69,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/change-password', [UserPasswordController::class, 'edit'])->name('user.password.edit');
     Route::post('/change-password', [UserPasswordController::class, 'update'])->name('user.password.update');
+
+    Route::get('/account-delete', [UserController::class, 'account_delete'])->name('user.account.delete');
+    Route::delete('/account-delete', [UserController::class, 'account_destroy'])->name('user.account.destroy');
 });
 
 Route::middleware(['auth',AuthAdmin::class])->group(function () {

@@ -3,7 +3,7 @@
             <li><a href="{{route('user.orders') }}" class="menu-link menu-link_us-s">Orders</a></li>
             <li><a href="{{ route('user.address') }}" class="menu-link menu-link_us-s">Addresses</a></li>
             <li><a href="{{ route('user.details') }}" class="menu-link menu-link_us-s">Account Details</a></li>
-            <li><a href="account-wislist.html" class="menu-link menu-link_us-s">Wishlist</a></li>
+            <li><a href="{{ route('wishlist.index') }}" class="menu-link menu-link_us-s">Wishlist</a></li>
 
             <li>
                <form method="POST" action="{{route('logout') }}" id="logout-form">
@@ -11,4 +11,5 @@
                <a href="{{route('logout') }}" class="menu-link menu-link_us-s" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                  </form>
              </li>
+            <li><a href="{{ route('user.account.delete') }}" class="menu-link menu-link_us-s text-danger fw-bold">DELETE ACCOUNT</a></li>
           </ul>

@@ -60,9 +60,12 @@ class UserController extends Controller
         $request->validate(
         [
             'name'   => 'required|string|max:255',
-            'mobile' => 'required|digits:10|unique:users,mobile,' . $user->id ,
+            'mobile' => 'required|digits:11|unique:users,mobile,' . $user->id ,
             'email'  => 'required|email|max:255|unique:users,email,' . $user->id,
         ],
+        [
+            'mobile.digits' => 'The phone number must be 11 digits.',
+        ]
         );
 
         $user->name = $request->name;
@@ -94,12 +97,14 @@ class UserController extends Controller
 
         $request->validate([
         'name' => 'required|max:100',
-        'phone' => 'required|numeric|digits:10',
+        'phone' => 'required|numeric|digits:11',
         'zip' => ['required', 'regex:/^([A-Z]{1,2}[0-9]{1,2}[A-Z]?(?:\s?[0-9][A-Z]{2})?)$/i'],
         'state' => 'required',
         'city' => 'required',
         'address' => 'required',
         'locality' => 'required',
+    ], [
+        'phone.digits' => 'The phone number must be 11 digits.',
     ]);
 
     $address = Address::where('user_id', $user_id)->where('id', $request->id)->first();
@@ -130,12 +135,14 @@ class UserController extends Controller
 
         $request->validate([
         'name' => 'required|max:100',
-        'phone' => 'required|numeric|digits:10',
+        'phone' => 'required|numeric|digits:11',
         'zip' => ['required', 'regex:/^([A-Z]{1,2}[0-9]{1,2}[A-Z]?(?:\s?[0-9][A-Z]{2})?)$/i'],
         'state' => 'required',
         'city' => 'required',
         'address' => 'required',
         'locality' => 'required',
+    ], [
+        'phone.digits' => 'The phone number must be 11 digits.',
     ]);
 
     $address = new Address();
@@ -170,5 +177,37 @@ class UserController extends Controller
             }
         }
         return back()->with('status', 'Address deleted successfully.');
+    }
+
+    public function account_delete()
+    {
+        return view('user.account-delete');
+    }
+
+    public function account_destroy(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'confirm_name' => ['required', 'string', 'in:' . $user->name],
+        ], [
+            'confirm_name.in' => 'The confirmation does not match your account name. Please type your exact account name.',
+        ]);
+
+        $userId = $user->id;
+
+        // Orders and transactions keep user_id as null (migration changes FK to set null on delete)
+        Order::where('user_id', $userId)->update(['user_id' => null]);
+        Transaction::where('user_id', $userId)->update(['user_id' => null]);
+
+        Address::where('user_id', $userId)->delete();
+
+        Auth::logout();
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home.index')->with('status', 'Your account has been permanently deleted.');
     }
 }

@@ -451,8 +451,8 @@
     }
 
     .home-hero-slideshow {
-        height: 670px;
-        min-height: 670px;
+        height: 100vh;
+        min-height: 500px;
         overflow: hidden;
     }
 
@@ -524,8 +524,8 @@
         }
 
         .home-hero-slideshow {
-            height: 520px;
-            min-height: 520px;
+            height: 100vh;
+            min-height: 400px;
         }
     }
 
@@ -544,9 +544,9 @@
 <main class="home-page">
     @php
         $staticHero = count($homeSections ?? []) ? $homeSections[0] : null;
-        $hasAdminHero = isset($heroSlide) && $heroSlide && $heroSlide->type === 'hero';
+        $heroSlides = $heroSlides ?? collect();
         $hasStandardSlides = isset($standardSlides) && $standardSlides->count() > 0;
-        $slideCount = ($staticHero ? 1 : 0) + ($hasAdminHero ? 1 : 0) + ($hasStandardSlides ? $standardSlides->count() : 0);
+        $slideCount = ($staticHero ? 1 : 0) + $heroSlides->count() + ($hasStandardSlides ? $standardSlides->count() : 0);
         $showSlideshow = $slideCount > 0;
     @endphp
 
@@ -590,7 +590,7 @@
                             </div>
                         </div>
                     @endif
-                    @if ($hasAdminHero)
+                    @foreach ($heroSlides as $heroSlide)
                         <div class="swiper-slide home-hero-slideshow__slide">
                             <div class="home-category-banner home-category-banner--hero home-category-banner--in-slider">
                                 <div class="home-category-banner__pane"
@@ -611,7 +611,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    @endforeach
                     @if ($hasStandardSlides)
                         @foreach ($standardSlides as $slide)
                             <div class="swiper-slide home-hero-slideshow__slide">

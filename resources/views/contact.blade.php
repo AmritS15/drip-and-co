@@ -13,7 +13,6 @@
       </div>
     </section>
 
-    <hr class="mt-2 text-secondary " />
     <div class="mb-4 pb-4"></div>
 
     <section class="contact-us container">

@@ -95,6 +95,7 @@
                         <fieldset class="name">
                             <div class="body-title pb-3">New password</div>
                             <input class="flex-grow" type="password" name="password" placeholder="New password">
+                            <small class="text-muted d-block mt-1">Password must be at least 8 characters and include a number and a capital letter.</small>
                         </fieldset>
                     </div>
 

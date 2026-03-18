@@ -1,5 +1,12 @@
 @extends('layouts.app')
 @section('content')
+<style>
+    html[data-theme="dark"] .btn-order-back {
+        background-color: #2B5E59 !important;
+        border-color: #2B5E59 !important;
+        color: #fff !important;
+    }
+</style>
  <main class="pt-90">
     <div class="mb-4 pb-4"></div>
     <section class="my-account container">
@@ -11,10 +18,9 @@
         <div class="col-lg-9">
           <div class="page-content my-account__edit">
             <div class="my-account__edit-form">
-                  <div class="col-md-12">
-                    <div class="my-3">
-                      <h5 class="text-uppercase mb-0">Change Password</h5>
-                    </div>
+                  <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="text-uppercase mb-0">Change Password</h5>
+                    <a class="btn btn-sm btn-danger btn-order-back" href="{{ route('user.details') }}">Back</a>
                   </div>
                   @if (session('status'))
                       <div class="alert alert-success">{{ session('status') }}</div>

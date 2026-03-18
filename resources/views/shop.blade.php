@@ -37,6 +37,13 @@
             border-color: #f5e6e0 !important;
             box-shadow: 0 0 0 2px #f5e6e0;
         }
+
+        /* Low stock badge – more visible amber in dark mode */
+        html[data-theme="dark"] .low-stock-badge {
+            background-color: #b45309 !important;
+            border: 1px solid #f59e0b;
+            color: #fffbeb !important;
+        }
     </style>
 
     <main class="pt-90">
@@ -410,7 +417,7 @@
                                     </div>
                                 @elseif ($product->quantity <= 10)
                                     <div class="position-absolute top-0 start-0 m-2" style="z-index:10;">
-                                        <span class="badge bg-warning text-dark" style="font-size:0.7rem; letter-spacing:0.03em;">Low Stock</span>
+                                        <span class="badge bg-warning text-dark low-stock-badge" style="font-size:0.7rem; letter-spacing:0.03em;">Low Stock</span>
                                     </div>
                                 @endif
                                 @php

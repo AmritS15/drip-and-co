@@ -218,13 +218,15 @@ class CartController extends Controller
         if (!$address) {
             $request->validate([
                 'name' => 'required|max:100',
-                'phone' => 'required|numeric|digits:10',
+                'phone' => 'required|numeric|digits:11',
                 'zip' => ['required', 'regex:/^([A-Z]{1,2}[0-9]{1,2}[A-Z]?(?:\s?[0-9][A-Z]{2})?)$/i'],
                 'state' => 'required',
                 'city' => 'required',
                 'address' => 'required',
                 'locality' => 'required',
                 'mode' => 'required|in:card,paypal,cod'
+            ], [
+                'phone.digits' => 'The phone number must be 11 digits.',
             ]);
 
             $address = new Address();

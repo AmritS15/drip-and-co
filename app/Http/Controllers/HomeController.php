@@ -21,13 +21,13 @@ class HomeController extends Controller
             ->take(8);
         $fproducts = Product::where('featured', 1)->get()->take(8);
 
-        // First active hero-type slide drives the top homepage hero (two images + overlay text)
-        $heroSlide = Slide::where('status', 1)
+        // All active hero-type slides for the homepage slideshow (two images + overlay text each)
+        $heroSlides = Slide::where('status', 1)
             ->where('type', Slide::TYPE_HERO)
             ->orderBy('id')
-            ->first();
+            ->get();
 
-        // Standard slides for the optional slider below the hero (single image + tagline/title/subtitle/link)
+        // Standard slides for the optional slider (single image + tagline/title/subtitle/link)
         $standardSlides = Slide::where('status', 1)
             ->where('type', Slide::TYPE_STANDARD)
             ->orderBy('id')
@@ -133,7 +133,7 @@ class HomeController extends Controller
             'womenProducts',
             'menProducts',
             'categorySliders',
-            'heroSlide',
+            'heroSlides',
             'standardSlides',
             'womenCategory',
             'menCategory',
@@ -151,8 +151,10 @@ class HomeController extends Controller
         $request->validate([
             'name'=>'required|max:100',
             'email'=>'required|email',
-            'phone'=>'required|numeric|digits:10',
+            'phone'=>'required|numeric|digits:11',
             'comment'=>'required'
+        ], [
+            'phone.digits' => 'The phone number must be 11 digits.',
         ]);
 
         $contact = new Contact();
