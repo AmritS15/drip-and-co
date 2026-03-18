@@ -46,6 +46,22 @@
             color: #000;
         }
 
+        html[data-theme="dark"] .cancel-order {
+            color: #fff !important;
+        }
+
+        html[data-theme="dark"] .btn-order-back {
+            background-color: #2B5E59 !important;
+            border-color: #2B5E59 !important;
+            color: #fff !important;
+        }
+
+        html[data-theme="dark"] .btn-return {
+            background-color: #856404 !important;
+            border-color: #856404 !important;
+            color: #fffbeb !important;
+        }
+
         .table-transaction>tbody>tr:nth-of-type(odd) {
             --bs-table-accent-bg: #fff !important;
 
@@ -114,7 +130,7 @@
                                     <h5>Ordered Details</h5>
                                 </div>
                                 <div class="col-6 text-right">
-                                    <a class="btn btn-sm btn-danger" href="{{ route('user.orders') }}">Back</a>
+                                    <a class="btn btn-sm btn-danger btn-order-back" href="{{ route('user.orders') }}">Back</a>
                                 </div>
                             </div>
                         </div>
@@ -229,7 +245,7 @@
                                             <td class="text-center">
                                                 @if ($order->status === 'delivered' && !$item->rstatus)
                                                     <a href="{{ route('user.return.show', [$order->id, $item->id]) }}"
-                                                       class="btn btn-sm btn-warning">
+                                                       class="btn btn-sm btn-warning btn-return">
                                                         Return
                                                     </a>
                                                 @else

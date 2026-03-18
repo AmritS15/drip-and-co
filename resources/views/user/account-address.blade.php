@@ -21,6 +21,10 @@
             padding: 0 !important;
             vertical-align: middle;
         }
+        html[data-theme="light"] .my-account__address-item__title .address-actions button.text-danger,
+        html[data-theme="light"] .my-account__address-item__title .address-actions .btn-link.text-danger {
+            color: #000 !important;
+        }
     </style>
     <main class="pt-90">
         <div class="mb-4 pb-4"></div>

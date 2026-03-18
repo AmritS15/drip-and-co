@@ -27,6 +27,15 @@
             border: 1px solid #e1e1e1;
         }
         .return-product-info { display: flex; gap: 16px; align-items: center; }
+        .btn-return-cancel {
+            border-color: #1e3a5f !important;
+            color: #1e3a5f !important;
+        }
+        .btn-return-cancel:hover {
+            background-color: #1e3a5f !important;
+            border-color: #1e3a5f !important;
+            color: #fff !important;
+        }
     </style>
 
     <main class="pt-90" style="padding-top: 0px;">
@@ -107,7 +116,7 @@
 
                             <div class="d-flex gap-3">
                                 <button type="submit" class="btn btn-primary">Submit Return Request</button>
-                                <a href="{{ route('user.order.details', $order->id) }}" class="btn btn-outline-secondary">Cancel</a>
+                                <a href="{{ route('user.order.details', $order->id) }}" class="btn btn-outline-secondary btn-return-cancel">Cancel</a>
                             </div>
                         </form>
                     </div>

@@ -7,10 +7,11 @@
       display: flex; 
       flex-direction: column; 
     }
-    main { flex: 1; }
-    .container { margin-top: 100px; } 
+    main { flex: 1; min-height: 50vh; }
   </style>
-<div class="container">
+<main class="pt-90 pb-5">
+    <div class="mb-4 pb-4"></div>
+    <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -74,4 +75,5 @@
         </div>
     </div>
 </div>
+</main>
 @endsection

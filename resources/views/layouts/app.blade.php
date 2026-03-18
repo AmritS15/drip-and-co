@@ -26,17 +26,28 @@
         crossorigin="anonymous" referrerpolicy="no-referrer">
     @stack('styles')
 
-    <!-- Header visibility; on home page (body.page-home) mobile header is always transparent -->
+    <!-- Mobile header: fixed overlay + transparent on all pages (same as desktop) -->
     <style>
         @media (max-width: 1199.98px) {
             #header.header { display: none !important; }
             .header-mobile { display: block !important; }
-            /* Home page: header always transparent (including at top) */
+            /* All pages: mobile header fixed so it overlays content (not above/pushing down) */
+            .header-mobile {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                z-index: 1040;
+            }
+            /* All pages: mobile header always transparent (home + shop, cart, etc.) */
+            .header-mobile,
+            .header-mobile.header_sticky,
+            .header-mobile.header_sticky-active,
             body.page-home .header-mobile,
-            body.page-home .header-mobile.header_sticky,
-            body.page-home .header-mobile.header_sticky-active,
-            html[data-theme="light"] body.page-home .header-mobile,
-            html[data-theme="dark"] body.page-home .header-mobile {
+            body:not(.page-home) .header-mobile,
+            html[data-theme="light"] .header-mobile,
+            html[data-theme="dark"] .header-mobile {
                 background: transparent !important;
                 background-color: transparent !important;
                 backdrop-filter: none !important;
@@ -44,17 +55,13 @@
                 border-bottom: none !important;
                 box-shadow: none !important;
             }
-            /* Other pages: transparent only when scrolled */
-            body:not(.page-home) .header-mobile.header_sticky-active,
-            body:not(.page-home) .header-mobile.header_sticky.header_sticky-active,
-            html[data-theme="light"] body:not(.page-home) .header-mobile.header_sticky-active,
-            html[data-theme="dark"] body:not(.page-home) .header-mobile.header_sticky-active {
-                background: transparent !important;
-                background-color: transparent !important;
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
-                border-bottom: none !important;
-                box-shadow: none !important;
+            /* Home page: no top gap – slideshow starts at viewport top, header overlays */
+            body.page-home .layout-content,
+            body.page-home .layout-content--home,
+            body.page-home main.home-page,
+            body.page-home .home-hero-slideshow {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
             }
         }
         @media (min-width: 1200px) {
@@ -832,7 +839,37 @@
 
         .logo__image {
             max-width: 220px;
+            transition: filter 0.25s ease;
         }
+        /* Logo highlight: soft teal glow, complements logo colour in both themes */
+        .header-transparent-bg .logo .logo__image,
+        .header-desk .logo .logo__image,
+        .header-mobile .logo .logo__image {
+            filter: drop-shadow(0 0 6px rgba(0, 139, 125, 0.35)) drop-shadow(0 0 12px rgba(0, 139, 125, 0.18));
+        }
+        html[data-theme="dark"] .header-transparent-bg .logo .logo__image,
+        html[data-theme="dark"] .header-desk .logo .logo__image,
+        html[data-theme="dark"] .header-mobile .logo .logo__image {
+            filter: drop-shadow(0 0 8px rgba(0, 139, 125, 0.5)) drop-shadow(0 0 20px rgba(0, 139, 125, 0.28));
+        }
+        .header-transparent-bg .logo a:hover .logo__image,
+        .header-desk .logo a:hover .logo__image,
+        .header-mobile .logo a:hover .logo__image {
+            filter: drop-shadow(0 0 8px rgba(0, 139, 125, 0.45)) drop-shadow(0 0 16px rgba(0, 139, 125, 0.28));
+        }
+        html[data-theme="dark"] .header-transparent-bg .logo a:hover .logo__image,
+        html[data-theme="dark"] .header-desk .logo a:hover .logo__image,
+        html[data-theme="dark"] .header-mobile .logo a:hover .logo__image {
+            filter: drop-shadow(0 0 12px rgba(0, 139, 125, 0.6)) drop-shadow(0 0 24px rgba(0, 139, 125, 0.35));
+        }
+        /* Footer logo: lighter highlight */
+        .footer-middle .logo .logo__image {
+            filter: drop-shadow(0 0 4px rgba(0, 139, 125, 0.25));
+        }
+        html[data-theme="dark"] .footer-middle .logo .logo__image {
+            filter: drop-shadow(0 0 6px rgba(0, 139, 125, 0.35));
+        }
+
 
         .product-item {
             display: flex;
@@ -909,11 +946,12 @@
             color: #ffffff;
             position: relative;
             padding-bottom: 0.1rem;
+            text-shadow: 0 0 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9);
         }
 
         html[data-theme="light"] .header-transparent-bg .navigation__link {
             color: #1f2d2b;
-            text-shadow: 0 0 6px rgba(255, 255, 255, 0.28);
+            text-shadow: 0 0 2px rgba(255,255,255,0.95), 0 0 4px rgba(255,255,255,0.8), 0 1px 2px rgba(255,255,255,0.9);
         }
 
         html[data-theme="light"] .header-transparent-bg .navigation__link:hover,
@@ -945,20 +983,52 @@
 
         .header-transparent-bg .header-tools__item svg {
             color: #ffffff;
+            filter: drop-shadow(0 0 1px rgba(0,0,0,0.9)) drop-shadow(0 0 2px rgba(0,0,0,0.8));
+        }
+        .header-transparent-bg .header-toolstheme svg {
+            filter: none;
         }
 
         html[data-theme="light"] .header-transparent-bg .header-tools__item svg {
             color: #1f2d2b;
+            filter: drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 2px rgba(255,255,255,0.8));
+        }
+        html[data-theme="light"] .header-transparent-bg .header-toolstheme svg {
+            filter: none;
         }
 
         .header-transparent-bg .header-tools__item,
         .header-transparent-bg .header-toolsitem {
             color: #ffffff;
+            text-shadow: 0 0 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.8);
+        }
+        .header-transparent-bg .header-toolstheme {
+            text-shadow: none;
+            padding: 0.35rem;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.25);
+        }
+        .header-transparent-bg .header-toolstheme:hover {
+            background: rgba(0,0,0,0.35);
+        }
+        .header-transparent-bg .header-toolstheme:hover .theme-icon-moon {
+            color: #2c5282 !important;
         }
 
         html[data-theme="light"] .header-transparent-bg .header-tools__item,
         html[data-theme="light"] .header-transparent-bg .header-toolsitem {
             color: #1f2d2b;
+            text-shadow: 0 0 2px rgba(255,255,255,0.95), 0 0 4px rgba(255,255,255,0.8);
+        }
+        html[data-theme="light"] .header-transparent-bg .header-toolstheme {
+            text-shadow: none;
+            background: rgba(255,255,255,0.4);
+        }
+        html[data-theme="light"] .header-transparent-bg .header-toolstheme:hover {
+            background: rgba(255,255,255,0.55);
+        }
+        html[data-theme="light"] .header-transparent-bg .header-toolstheme:hover .theme-icon-moon {
+            color: #2c5282 !important;
         }
 
         .header-transparent-bg.header_sticky-active {
@@ -988,26 +1058,78 @@
             html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolsitem,
             html[data-theme="light"] body.page-home .header-mobile--transparent .nav-icon {
                 color: #1f2d2b;
+                filter: drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 2px rgba(255,255,255,0.8));
             }
-            /* Home page dark mode: keep icons black (only on homepage) */
+            html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolstheme svg {
+                filter: none;
+            }
+            html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolstheme {
+                padding: 0.35rem;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.4);
+            }
+            html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolstheme:hover {
+                background: rgba(255,255,255,0.55);
+            }
+            html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolstheme:hover .theme-icon-moon,
+            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolstheme:hover .theme-icon-moon {
+                color: #2c5282 !important;
+            }
+            /* Home page dark mode: light icons with dark outline */
             html[data-theme="dark"] body.page-home .header-mobile--transparent .header-mobile__icon svg,
             html[data-theme="dark"] body.page-home .header-mobile--transparent .header-tools__item,
             html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolsitem,
             html[data-theme="dark"] body.page-home .header-mobile--transparent .nav-icon {
-                color: #111111;
-            }
-            /* Other pages: transparent header icon colours only when scrolled */
-            body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-mobile__icon svg,
-            body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-tools__item,
-            body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-toolsitem,
-            body:not(.page-home) .header-mobile--transparent.header_sticky-active .nav-icon {
                 color: #ffffff;
+                filter: drop-shadow(0 0 1px rgba(0,0,0,0.9)) drop-shadow(0 0 2px rgba(0,0,0,0.8));
             }
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-mobile__icon svg,
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-tools__item,
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent.header_sticky-active .header-toolsitem,
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent.header_sticky-active .nav-icon {
+            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolstheme svg {
+                filter: none;
+            }
+            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolstheme {
+                padding: 0.35rem;
+                border-radius: 50%;
+                background: rgba(0,0,0,0.25);
+            }
+            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolstheme:hover {
+                background: rgba(0,0,0,0.35);
+            }
+            /* Other pages: transparent header icon colours (always, since header is always transparent) */
+            body:not(.page-home) .header-mobile--transparent .header-mobile__icon svg,
+            body:not(.page-home) .header-mobile--transparent .header-tools__item,
+            body:not(.page-home) .header-mobile--transparent .header-toolsitem,
+            body:not(.page-home) .header-mobile--transparent .nav-icon {
+                color: #ffffff;
+                filter: drop-shadow(0 0 1px rgba(0,0,0,0.9)) drop-shadow(0 0 2px rgba(0,0,0,0.8));
+            }
+            body:not(.page-home) .header-mobile--transparent .header-toolstheme svg {
+                filter: none;
+            }
+            body:not(.page-home) .header-mobile--transparent .header-toolstheme {
+                padding: 0.35rem;
+                border-radius: 50%;
+                background: rgba(0,0,0,0.25);
+            }
+            body:not(.page-home) .header-mobile--transparent .header-toolstheme:hover {
+                background: rgba(0,0,0,0.35);
+            }
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-mobile__icon svg,
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-tools__item,
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-toolsitem,
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .nav-icon {
                 color: #1f2d2b;
+                filter: drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 2px rgba(255,255,255,0.8));
+            }
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-toolstheme svg {
+                filter: none;
+            }
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-toolstheme {
+                padding: 0.35rem;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.4);
+            }
+            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-toolstheme:hover {
+                background: rgba(255,255,255,0.55);
             }
 
             .header-mobile__tools {
@@ -1277,7 +1399,7 @@
                     </a>
 
                     <a href="#" class="header-toolsitem header-toolstheme js-theme-toggle"
-                        data-bs-toggle="tooltip" title="Toggle theme">
+                        aria-label="Toggle theme">
                         <svg class="theme-icon-sun" width="20" height="20" viewBox="0 0 20 20"
                             fill="currentColor">
                             <path

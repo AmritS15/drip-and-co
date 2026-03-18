@@ -53,7 +53,7 @@ class RegisterController extends Controller
             [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'mobile' => ['required', 'digits:10', 'unique:users'],
+                'mobile' => ['required', 'digits:11', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'contains_number', 'contains_uppercase', 'confirmed'],
             ],
             [
@@ -61,6 +61,7 @@ class RegisterController extends Controller
                 'password.contains_number' => 'Password must include at least 1 number.',
                 'password.contains_uppercase' => 'Password must include at least 1 capital letter.',
                 'password.confirmed' => 'Password confirmation does not match.',
+                'mobile.digits' => 'The phone number must be 11 digits.',
             ]
         );
     }

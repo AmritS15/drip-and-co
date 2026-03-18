@@ -2,6 +2,11 @@ body {
     zoom: 90% !important;
 }
 
+/* Theme toggle: moon turns dark blue on hover */
+.header-toolstheme:hover .theme-icon-moon {
+    color: #2c5282 !important;
+}
+
 #logo_header_mobile {
     max-width: 190px;
 }
