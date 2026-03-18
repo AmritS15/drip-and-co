@@ -1,3 +1,5 @@
+<?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -6,27 +8,20 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('product_variants', function (Blueprint $table) {
-            if (!Schema::hasColumn('product_variants', 'image')) {
-                $table->string('image')->nullable()->after('stock_status');
-            }
-
-            if (!Schema::hasColumn('product_variants', 'images')) {
-                $table->json('images')->nullable()->after('image');
-            }
+        Schema::create('product_variants', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('product_id');
+            $table->string('size')->nullable();
+            $table->string('color')->nullable();
+            $table->string('SKU')->nullable();
+            $table->integer('quantity')->default(0);
+            $table->string('stock_status')->default('instock');
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::table('product_variants', function (Blueprint $table) {
-            if (Schema::hasColumn('product_variants', 'images')) {
-                $table->dropColumn('images');
-            }
-
-            if (Schema::hasColumn('product_variants', 'image')) {
-                $table->dropColumn('image');
-            }
-        });
+        Schema::dropIfExists('product_variants');
     }
 };
