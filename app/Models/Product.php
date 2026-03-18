@@ -49,9 +49,10 @@ class Product extends Model
 
     /**
      * Variants allow independent stock by size/color combination.
+     * Ordered by id so first() matches the top row in the admin variants table.
      */
     public function variants()
     {
-        return $this->hasMany(ProductVariant::class);
+        return $this->hasMany(ProductVariant::class)->orderBy('id');
     }
 }

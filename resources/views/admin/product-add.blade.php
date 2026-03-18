@@ -112,57 +112,13 @@
                                         @enderror
                             </div>
                             <div class="wg-box">
-                                <fieldset>
-                                    <div class="body-title">Upload images <span class="tf-color-1">*</span>
-                                    </div>
-                                    <div class="upload-image flex-grow">
-                                        <div class="item" id="imgpreview" style="display:none">
-                                            <img src="../../../localhost_8000/images/upload/upload-1.png" class="effect8"
-                                                alt="">
-                                        </div>
-                                        <div id="upload-file" class="item up-load">
-                                            <label class="uploadfile" for="myFile">
-                                                <span class="icon">
-                                                    <i class="icon-upload-cloud"></i>
-                                                </span>
-                                                <span class="body-text">Drop your images here or select <span
-                                                        class="tf-color">click to browse</span></span>
-                                                <input type="file" id="myFile" name="image" accept="image/*">
-                                            </label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                                @error('image')
-                                    <sapn class="alert alert-danger text-center">{{ $message }}
-                                    @enderror
-
-                                    <fieldset>
-                                        <div class="body-title mb-10">Upload Gallery Images</div>
-                                        <div class="upload-image mb-16">
-                                            <!-- <div class="item">
-                                    <img src="images/upload/upload-1.png" alt="">
-                                </div>                                                 -->
-                                            <div id="galUpload" class="item up-load">
-                                                <label class="uploadfile" for="gFile">
-                                                    <span class="icon">
-                                                        <i class="icon-upload-cloud"></i>
-                                                    </span>
-                                                    <span class="text-tiny">Drop your images here or select <span
-                                                            class="tf-color">click to browse</span></span>
-                                                    <input type="file" id="gFile" name="images[]"
-                                                        accept="image/*" multiple="">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                    @error('images')
-                                        <sapn class="alert alert-danger text-center">{{ $message }}
-                                        @enderror
-
-                                        <!-- variant manager: size, color, sku, qty, gallery only -->
+                                        <!-- variant manager: size, color, sku, qty, main image, gallery -->
                                         <fieldset class="variants">
-                                            <div class="body-title mb-10">Variants (size / color / SKU / qty / gallery)</div>
-                                            <p class="text-tiny text-secondary mb-2">Add at least one variant per size+colour combination. Each variant has its own SKU, quantity, and optional gallery images (you can add multiple gallery images at once per variant). Total quantity is the sum of all variant quantities.</p>
+                                            <div class="body-title mb-10">Variants (size / color / SKU / qty / main image / gallery)</div>
+                                            @foreach(array_filter(array_keys($errors->toArray()), fn($k) => str_starts_with($k ?? '', 'variants.') && str_contains($k ?? '', 'main_image')) as $errKey)
+                                                <div class="alert alert-danger py-2">{{ $errors->first($errKey) }}</div>
+                                            @endforeach
+                                            <p class="text-tiny text-secondary mb-2">Add at least one variant per size+colour combination. Each variant has its own SKU, quantity, main image, and optional gallery images.</p>
                                             <p class="text-tiny mb-2"><strong>Total quantity (from variants):</strong> <span id="variantTotalQty">0</span></p>
                                             <table class="table table-bordered" id="variantTable">
                                                 <thead>
@@ -171,12 +127,59 @@
                                                         <th>Color</th>
                                                         <th>SKU</th>
                                                         <th>Qty</th>
+                                                        <th>Main Image</th>
                                                         <th>Gallery</th>
                                                         <th><button type="button" class="btn btn-sm btn-success" id="addVariant">+</button></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {{-- rows added via JS or leave blank --}}
+                                                    @php $oldVariants = old('variants', []); @endphp
+                                                    @foreach($oldVariants as $i => $v)
+                                                        @if(isset($v['quantity']))
+                                                        <tr>
+                                                            <td><select name="variants[{{ $i }}][size]" class="form-select form-select-sm">
+                                                                <option value="">—</option>
+                                                                @foreach(['S','M','L','XL'] as $s)
+                                                                    <option value="{{ $s }}" {{ ($v['size'] ?? '') == $s ? 'selected' : '' }}>{{ $s }}</option>
+                                                                @endforeach
+                                                            </select></td>
+                                                            <td><select name="variants[{{ $i }}][color]" class="form-select form-select-sm">
+                                                                <option value="">—</option>
+                                                                @foreach(['White','Black','Grey','Green','Pink'] as $c)
+                                                                    <option value="{{ $c }}" {{ ($v['color'] ?? '') == $c ? 'selected' : '' }}>{{ $c }}</option>
+                                                                @endforeach
+                                                            </select></td>
+                                                            <td><input type="text" name="variants[{{ $i }}][SKU]" value="{{ $v['SKU'] ?? '' }}" class="form-control form-control-sm" placeholder="SKU" /></td>
+                                                            <td><input type="number" name="variants[{{ $i }}][quantity]" value="{{ $v['quantity'] ?? '' }}" class="form-control form-control-sm" min="0" /></td>
+                                                            <td class="variant-main-image-cell">
+                                                                <input type="hidden" name="variants[{{ $i }}][main_image_filename]" value="{{ $v['main_image_filename'] ?? '' }}" class="variant-main-image-filename" />
+                                                                <div class="variant-main-image-preview mb-2" style="min-height: 52px;">
+                                                                    @if(!empty($v['main_image_filename']))
+                                                                        <img src="{{ asset('uploads/products/thumbnails/' . $v['main_image_filename']) }}" alt="" width="52" height="52" class="rounded border" style="object-fit: cover;" />
+                                                                    @else
+                                                                        <img src="" alt="" width="52" height="52" class="rounded border" style="display: none;" />
+                                                                        <div class="text-danger text-tiny">Main image required</div>
+                                                                    @endif
+                                                                </div>
+                                                                <input type="file" name="variants[{{ $i }}][main_image]" accept="image/*" class="form-control form-control-sm variant-main-image-upload" data-index="{{ $i }}" />
+                                                            </td>
+                                                            <td class="variant-gallery-cell">
+                                                                <input type="hidden" name="variants[{{ $i }}][gallery_filenames]" value="{{ $v['gallery_filenames'] ?? '' }}" class="variant-gallery-filenames" />
+                                                                <div class="variant-gallery-thumbs mb-2 d-flex flex-wrap gap-1" style="min-height: 52px;">
+                                                                    @foreach(array_filter(explode(',', $v['gallery_filenames'] ?? '')) as $gimg)
+                                                                        @php $gimg = trim($gimg); @endphp
+                                                                        @if($gimg)
+                                                                            <span class="variant-gallery-thumb-wrap position-relative d-inline-block"><img data-filename="{{ $gimg }}" src="{{ asset('uploads/products/thumbnails/' . $gimg) }}" alt="" width="52" height="52" class="rounded border" style="object-fit: cover;" /><button type="button" class="variant-gallery-remove btn btn-sm btn-danger position-absolute top-0 end-0" style="padding:0 4px; line-height:1; font-size:10px; transform:translate(50%,-50%);" title="Remove image">×</button></span>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </div>
+                                                                <input type="file" name="variants[{{ $i }}][images][]" accept="image/*" multiple class="form-control form-control-sm variant-gallery-upload" data-index="{{ $i }}" />
+                                                                <div class="text-tiny text-muted mt-1">Gallery images</div>
+                                                            </td>
+                                                            <td><button type="button" class="btn btn-sm btn-danger removeVariant">−</button></td>
+                                                        </tr>
+                                                        @endif
+                                                    @endforeach
                                                 </tbody>
                                             </table>
                                         </fieldset>
@@ -247,28 +250,10 @@
         window.uploadVariantGalleryUrl = "{{ route('admin.product.upload.variant.gallery') }}";
         window.csrfToken = "{{ csrf_token() }}";
         $(function() {
-            $("#myFile").on("change", function(e) {
-                const photoInp = $("#myFile");
-                const [file] = this.files;
-                if (file) {
-                    $("#imgpreview img").attr('src', URL.createObjectURL(file));
-                    $("#imgpreview").show();
-                }
-            });
-
-            $("#gFile").on("change", function(e) {
-                const photoInp = $("#gFile");
-                const gphotos = this.files;
-                $.each(gphotos, function(key, val) {
-                    $("#galUpload").prepend(
-                        `<div class="item gitems"><img src="${URL.createObjectURL(val)}"/></div>`
-                        );
-                });
-            });
-
             $("input[name='name']").on("change", function() {
                 $("input[name='slug']").val(StringToSlug($(this).val()));
             });
+            updateVariantTotalQty();
         });
 
         function StringToSlug(Text) {
@@ -279,6 +264,7 @@
         /* variant table helper: size, color, SKU, qty, image, gallery */
         function addVariantRow(data = {}) {
             const index = $('#variantTable tbody tr').length;
+            const thumbBase = "{{ asset('uploads/products/thumbnails') }}".replace(/\/?$/, '') + '/';
             const row = `<tr>
                         <td><select name="variants[${index}][size]" class="form-select form-select-sm">
                                 <option value="">—</option>
@@ -297,7 +283,8 @@
                             </select></td>
                         <td><input type="text" name="variants[${index}][SKU]" value="${data.SKU||''}" class="form-control form-control-sm" placeholder="SKU" /></td>
                         <td><input type="number" name="variants[${index}][quantity]" value="${data.quantity!==undefined?data.quantity:''}" class="form-control form-control-sm" min="0" placeholder="0" /></td>
-                        <td class="variant-gallery-cell"><input type="hidden" name="variants[${index}][gallery_filenames]" value="" class="variant-gallery-filenames" /><div class="variant-gallery-thumbs mb-2 d-flex flex-wrap gap-1" style="min-height: 52px;"></div><input type="file" name="variants[${index}][images][]" accept="image/*" multiple class="form-control form-control-sm variant-gallery-upload" data-index="${index}" title="Select one or more images; they upload immediately" /><div class="text-tiny text-muted mt-1">Select images to upload into gallery (one at a time or multiple)</div></td>
+                        <td class="variant-main-image-cell"><input type="hidden" name="variants[${index}][main_image_filename]" value="${data.main_image_filename||''}" class="variant-main-image-filename" /><div class="variant-main-image-preview mb-2" style="min-height: 52px;"><img src="${data.main_image_filename ? thumbBase + data.main_image_filename : ''}" alt="" width="52" height="52" class="rounded border" style="object-fit: cover; display: ${data.main_image_filename ? 'inline-block' : 'none'};" /></div><input type="file" name="variants[${index}][main_image]" accept="image/*" class="form-control form-control-sm variant-main-image-upload" data-index="${index}" /></td>
+                        <td class="variant-gallery-cell"><input type="hidden" name="variants[${index}][gallery_filenames]" value="${data.gallery_filenames||''}" class="variant-gallery-filenames" /><div class="variant-gallery-thumbs mb-2 d-flex flex-wrap gap-1" style="min-height: 52px;"></div><input type="file" name="variants[${index}][images][]" accept="image/*" multiple class="form-control form-control-sm variant-gallery-upload" data-index="${index}" title="Select one or more images; they upload immediately" /><div class="text-tiny text-muted mt-1">Gallery images</div></td>
                         <td><button type="button" class="btn btn-sm btn-danger removeVariant">−</button></td>
                     </tr>`;
             $('#variantTable tbody').append(row);
@@ -319,10 +306,66 @@
 
         $(document).on('click', '.removeVariant', function() {
             $(this).closest('tr').remove();
+            renumberVariantRows();
             updateVariantTotalQty();
         });
 
+        function renumberVariantRows() {
+            $('#variantTable tbody tr').each(function(idx) {
+                $(this).find('input, select').filter(function() { return $(this).attr('name') && $(this).attr('name').match(/^variants\[\d+\]/); }).each(function() {
+                    var name = $(this).attr('name');
+                    $(this).attr('name', name.replace(/^variants\[\d+\]/, 'variants[' + idx + ']'));
+                });
+                $(this).find('.variant-main-image-upload, .variant-gallery-upload').attr('data-index', idx);
+            });
+        }
+
         $(document).on('input', '#variantTable input[name*="[quantity]"]', updateVariantTotalQty);
+
+        $(document).on('change', '.variant-main-image-upload', function() {
+            var input = this;
+            var file = input.files && input.files[0];
+            if (!file) return;
+            var $row = $(input).closest('tr');
+            var $hidden = $row.find('.variant-main-image-filename');
+            var $preview = $row.find('.variant-main-image-preview img');
+            var formData = new FormData();
+            formData.append('_token', window.csrfToken);
+            formData.append('images[]', file);
+            $.ajax({
+                url: window.uploadVariantGalleryUrl,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    if (res.filenames && res.filenames.length) {
+                        var fn = res.filenames[0];
+                        $hidden.val(fn);
+                        var base = "{{ asset('uploads/products/thumbnails') }}".replace(/\/?$/, '') + '/';
+                        $preview.attr('src', base + fn).show();
+                    }
+                    input.value = '';
+                },
+                error: function(xhr) {
+                    var msg = 'Upload failed. Please try again.';
+                    if (xhr.status === 413) msg = 'Upload too large. Try smaller image (under 5MB).';
+                    else if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+                    alert(msg);
+                    input.value = '';
+                }
+            });
+        });
+
+        $(document).on('click', '.variant-gallery-remove', function() {
+            var $wrap = $(this).closest('.variant-gallery-thumb-wrap');
+            var fn = $wrap.find('img').data('filename');
+            var $cell = $wrap.closest('.variant-gallery-cell');
+            var $hidden = $cell.find('.variant-gallery-filenames');
+            var cur = ($hidden.val() || '').split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+            $hidden.val(cur.filter(function(f) { return f !== fn; }).join(','));
+            $wrap.remove();
+        });
 
         $(document).on('change', '.variant-gallery-upload', function() {
             var input = this;
@@ -347,7 +390,7 @@
                         $hidden.val(current ? current + ',' + added : added);
                         var base = "{{ asset('uploads/products/thumbnails') }}".replace(/\/?$/, '') + '/';
                         $.each(res.filenames, function(_, fn) {
-                            $thumbs.append('<img src="' + base + fn + '" alt="" width="52" height="52" class="rounded border" style="object-fit: cover;" />');
+                            $thumbs.append('<span class="variant-gallery-thumb-wrap position-relative d-inline-block"><img data-filename="' + fn + '" src="' + base + fn + '" alt="" width="52" height="52" class="rounded border" style="object-fit: cover;" /><button type="button" class="variant-gallery-remove btn btn-sm btn-danger position-absolute top-0 end-0" style="padding:0 4px; line-height:1; font-size:10px; transform:translate(50%,-50%);" title="Remove image">×</button></span>');
                         });
                     }
                     input.value = '';

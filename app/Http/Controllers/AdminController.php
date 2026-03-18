@@ -97,7 +97,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'name' => 'required',
             'slug' => 'required|unique:brands,slug',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'mimes:png,jpg,jpeg|max:2048'
+            'image' => 'mimes:png,jpg,jpeg|max:5120'
         ]);
 
         $brand = new Brand();
@@ -127,7 +127,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'name' => 'required',
             'slug' => 'required|' . Rule::unique('brands', 'slug')->ignore($request->id),
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|mimes:png,jpg,jpeg|max:2048'
+            'image' => 'nullable|mimes:png,jpg,jpeg|max:5120'
         ]);
 
         $brand = Brand::find($request->id);
@@ -189,7 +189,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         $request->validate([
             'name' => 'required',
             'slug' => 'required|unique:categories,slug',
-            'image' => 'mimes:png,jpg,jpeg|max:2048'
+            'image' => 'mimes:png,jpg,jpeg|max:5120'
         ]);
 
         $category = new Category();
@@ -228,7 +228,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         $request->validate([
             'name' => 'required',
             'slug' => ['required', Rule::unique('categories', 'slug')->ignore($request->id)],
-            'image' => 'nullable|mimes:png,jpg,jpeg|max:2048'
+            'image' => 'nullable|mimes:png,jpg,jpeg|max:5120'
         ]);
 
         $category = Category::find($request->id);
@@ -293,6 +293,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         $request->validate([
             'name' => 'required',
             'slug' => 'required|unique:products,slug',
+            'variants' => 'required|array|min:1',
             'short_description' => 'required',
             'description' => 'required',
             'regular_price' => 'required',
@@ -301,19 +302,29 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'stock_status' => 'required|in:instock,outofstock',
             'featured' => 'required',
             'quantity' => 'nullable|integer|min:0',
-            'image' => 'required|image|mimes:png,jpg,jpeg|max:5120',
-            'images' => 'nullable',
-            'images.*' => 'image|mimes:jpg,jpeg,png|max:5120',
             'category_id' => 'required',
             'brand_id' => 'required',
             'sizes' => 'nullable|array',
             'colors' => 'nullable|array',
-            'variants' => 'nullable|array',
             'variants.*.size' => 'nullable|string',
             'variants.*.color' => 'nullable|string',
             'variants.*.quantity' => 'required_with:variants.*|integer|min:0',
             'variants.*.SKU' => 'nullable|string',
+            'variants.*.main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'variants.*.main_image_filename' => 'nullable|string',
         ]);
+
+        if ($request->filled('variants')) {
+            foreach ($request->variants as $i => $vdata) {
+                if (!isset($vdata['quantity'])) {
+                    continue;
+                }
+                $hasMainImage = trim($vdata['main_image_filename'] ?? '') !== '' || $request->hasFile("variants.{$i}.main_image");
+                if (!$hasMainImage) {
+                    return redirect()->back()->withInput()->withErrors(["variants.{$i}.main_image_filename" => "Variant " . ($i + 1) . " must have a main image."]);
+                }
+            }
+        }
 
         $product = new Product();
         $product->name = $request->name;
@@ -333,7 +344,6 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         $product->save();
 
         if ($request->filled('variants')) {
-            $product->variants()->delete();
             $current_timestamp = Carbon::now()->timestamp;
             $allowedExt = ['jpg', 'png', 'jpeg'];
 
@@ -360,6 +370,16 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
                     $variantGalleryStr = $variantGallery ? implode(',', $variantGallery) : null;
                 }
 
+                $variantMainImage = trim($vdata['main_image_filename'] ?? '') ?: null;
+                if (!$variantMainImage && $request->hasFile("variants.{$i}.main_image")) {
+                    $mainFile = $request->file("variants.{$i}.main_image");
+                    if ($mainFile && in_array(strtolower($mainFile->getClientOriginalExtension()), $allowedExt)) {
+                        $mainName = $current_timestamp . '-v' . $i . '-main.' . $mainFile->getClientOriginalExtension();
+                        $this->GenerateProductThumbnailImage($mainFile, $mainName);
+                        $variantMainImage = $mainName;
+                    }
+                }
+
                 \App\Models\ProductVariant::create([
                     'product_id'   => $product->id,
                     'size'         => $vdata['size'] ?? null,
@@ -367,7 +387,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
                     'SKU'          => $vdata['SKU'] ?? null,
                     'quantity'     => $vdata['quantity'],
                     'stock_status' => $vdata['quantity'] > 0 ? 'instock' : 'outofstock',
-                    'image'        => null,
+                    'image'        => $variantMainImage,
                     'images'       => $variantGalleryStr,
                 ]);
             }
@@ -377,47 +397,20 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             $product->stock_status = $product->variants()->where('stock_status', 'instock')->exists() ? 'instock' : 'outofstock';
 
             $first = $product->variants()->first();
-            if ($first && $first->SKU) {
-                $product->SKU = $first->SKU;
+            if ($first) {
+                if ($first->SKU) {
+                    $product->SKU = $first->SKU;
+                }
+                if ($first->image) {
+                    $product->image = $first->image;
+                }
             }
 
             $product->sizes = $product->variants()->pluck('size')->filter()->unique()->values()->implode(',');
             $product->colors = $product->variants()->pluck('color')->filter()->unique()->values()->implode(',');
         }
 
-        $current_timestamp = Carbon::now()->timestamp;
-
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = $current_timestamp . '.' . $image->extension();
-            $this->GenerateProductThumbnailImage($image, $imageName);
-            $product->image = $imageName;
-        }
-
-        $gallery_arr = [];
-        $gallery_images = "";
-        $counter = 1;
-
-        if ($request->hasFile('images')) {
-            $allowedfileExtion = ['jpg', 'png', 'jpeg'];
-            $files = $request->file('images');
-
-            foreach ($files as $file) {
-                $gextension = $file->getClientOriginalExtension();
-                $gcheck = in_array($gextension, $allowedfileExtion);
-
-                if ($gcheck) {
-                    $gfileName = $current_timestamp . "-" . $counter . "." . $gextension;
-                    $this->GenerateProductThumbnailImage($file, $gfileName);
-                    array_push($gallery_arr, $gfileName);
-                    $counter++;
-                }
-            }
-
-            $gallery_images = implode(',', $gallery_arr);
-        }
-
-        $product->images = $gallery_images;
+        $product->images = null;
         $product->save();
 
         return redirect()->route('admin.products')->with('status', 'Product has been updated successfully');
@@ -485,12 +478,12 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         return response()->json(['filenames' => $filenames]);
     }
 
-    protected function deleteVariantImageFiles(\App\Models\ProductVariant $variant)
+    protected function deleteVariantImageFiles(\App\Models\ProductVariant $variant, array $preserveMainImages = [], array $preserveGalleryFilenames = [])
     {
         $base = public_path('uploads/products');
         $thumb = public_path('uploads/products/thumbnails');
 
-        if ($variant->image) {
+        if ($variant->image && !in_array($variant->image, $preserveMainImages)) {
             if (File::exists($base . '/' . $variant->image)) {
                 File::delete($base . '/' . $variant->image);
             }
@@ -501,6 +494,9 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
         if ($variant->images) {
             foreach (array_filter(array_map('trim', explode(',', $variant->images))) as $f) {
+                if (in_array($f, $preserveGalleryFilenames)) {
+                    continue;
+                }
                 if (File::exists($base . '/' . $f)) {
                     File::delete($base . '/' . $f);
                 }
@@ -533,9 +529,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'stock_status' => 'required|in:instock,outofstock',
             'featured' => 'required',
             'quantity' => 'nullable|integer|min:0',
-            'image' => 'nullable|image|mimes:png,jpg,jpeg|max:5120',
-            'images' => 'nullable',
-            'images.*' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'gallery_filenames' => 'nullable|string',
             'category_id' => 'required',
             'brand_id' => 'required',
             'sizes' => 'nullable|array',
@@ -545,7 +539,21 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'variants.*.color' => 'nullable|string',
             'variants.*.quantity' => 'required_with:variants.*|integer|min:0',
             'variants.*.SKU' => 'nullable|string',
+            'variants.*.main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'variants.*.main_image_filename' => 'nullable|string',
         ]);
+
+        if ($request->filled('variants')) {
+            foreach ($request->variants as $i => $vdata) {
+                if (!isset($vdata['quantity'])) {
+                    continue;
+                }
+                $hasMainImage = trim($vdata['main_image_filename'] ?? '') !== '' || $request->hasFile("variants.{$i}.main_image");
+                if (!$hasMainImage) {
+                    return redirect()->back()->withInput()->withErrors(["variants.{$i}.main_image_filename" => "Variant " . ($i + 1) . " must have a main image."]);
+                }
+            }
+        }
 
         $product = Product::find($request->id);
         $product->name = $request->name;
@@ -560,8 +568,18 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         $product->brand_id = $request->brand_id;
 
         if ($request->filled('variants')) {
+            $preserveMainImages = collect($request->variants)->pluck('main_image_filename')->filter()->unique()->all();
+            $preserveGalleryFilenames = collect($request->variants)
+                ->pluck('gallery_filenames')
+                ->filter()
+                ->flatMap(function ($str) {
+                    return array_filter(array_map('trim', explode(',', $str)));
+                })
+                ->unique()
+                ->values()
+                ->all();
             foreach ($product->variants as $v) {
-                $this->deleteVariantImageFiles($v);
+                $this->deleteVariantImageFiles($v, $preserveMainImages, $preserveGalleryFilenames);
             }
 
             $product->variants()->delete();
@@ -592,6 +610,16 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
                     $variantGalleryStr = $variantGallery ? implode(',', $variantGallery) : ($vdata['existing_images'] ?? null);
                 }
 
+                $variantMainImage = trim($vdata['main_image_filename'] ?? '') ?: null;
+                if (!$variantMainImage && $request->hasFile("variants.{$i}.main_image")) {
+                    $mainFile = $request->file("variants.{$i}.main_image");
+                    if ($mainFile && in_array(strtolower($mainFile->getClientOriginalExtension()), $allowedExt)) {
+                        $mainName = $current_timestamp . '-v' . $i . '-main.' . $mainFile->getClientOriginalExtension();
+                        $this->GenerateProductThumbnailImage($mainFile, $mainName);
+                        $variantMainImage = $mainName;
+                    }
+                }
+
                 \App\Models\ProductVariant::create([
                     'product_id'   => $product->id,
                     'size'         => $vdata['size'] ?? null,
@@ -599,7 +627,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
                     'SKU'          => $vdata['SKU'] ?? null,
                     'quantity'     => $vdata['quantity'],
                     'stock_status' => $vdata['quantity'] > 0 ? 'instock' : 'outofstock',
-                    'image'        => null,
+                    'image'        => $variantMainImage,
                     'images'       => $variantGalleryStr,
                 ]);
             }
@@ -615,30 +643,23 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
             $product->sizes = $product->variants()->pluck('size')->filter()->unique()->values()->implode(',');
             $product->colors = $product->variants()->pluck('color')->filter()->unique()->values()->implode(',');
+
+            $first = $product->variants()->first();
+            if ($first && $first->image) {
+                if ($product->image && $product->image !== $first->image) {
+                    if (File::exists(public_path('uploads/products') . '/' . $product->image)) {
+                        File::delete(public_path('uploads/products') . '/' . $product->image);
+                    }
+                    if (File::exists(public_path('uploads/products/thumbnails') . '/' . $product->image)) {
+                        File::delete(public_path('uploads/products/thumbnails') . '/' . $product->image);
+                    }
+                }
+                $product->image = $first->image;
+            }
         }
 
-        $current_timestamp = Carbon::now()->timestamp;
-
-        if ($request->hasFile('image')) {
-            if (File::exists(public_path('uploads/products') . '/' . $product->image)) {
-                File::delete(public_path('uploads/products') . '/' . $product->image);
-            }
-            if (File::exists(public_path('uploads/products/thumbnails') . '/' . $product->image)) {
-                File::delete(public_path('uploads/products/thumbnails') . '/' . $product->image);
-            }
-
-            $image = $request->file('image');
-            $imageName = $current_timestamp . '.' . $image->extension();
-            $this->GenerateProductThumbnailImage($image, $imageName);
-            $product->image = $imageName;
-        }
-
-        $gallery_arr = [];
-        $gallery_images = "";
-        $counter = 1;
-
-        if ($request->hasFile('images')) {
-            foreach (explode(',', $product->images) as $ofile) {
+        if ($product->images) {
+            foreach (array_filter(array_map('trim', explode(',', $product->images))) as $ofile) {
                 if (File::exists(public_path('uploads/products') . '/' . $ofile)) {
                     File::delete(public_path('uploads/products') . '/' . $ofile);
                 }
@@ -646,24 +667,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
                     File::delete(public_path('uploads/products/thumbnails') . '/' . $ofile);
                 }
             }
-
-            $allowedfileExtion = ['jpg', 'png', 'jpeg'];
-            $files = $request->file('images');
-
-            foreach ($files as $file) {
-                $gextension = $file->getClientOriginalExtension();
-                $gcheck = in_array($gextension, $allowedfileExtion);
-
-                if ($gcheck) {
-                    $gfileName = $current_timestamp . "-" . $counter . "." . $gextension;
-                    $this->GenerateProductThumbnailImage($file, $gfileName);
-                    array_push($gallery_arr, $gfileName);
-                    $counter++;
-                }
-            }
-
-            $gallery_images = implode(',', $gallery_arr);
-            $product->images = $gallery_images;
+            $product->images = null;
         }
 
         if (!$request->filled('variants')) {
@@ -683,19 +687,28 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
     {
         $product = Product::find($id);
 
-        if (File::exists(public_path('uploads/products') . '/' . $product->image)) {
-            File::delete(public_path('uploads/products') . '/' . $product->image);
+        foreach ($product->variants as $v) {
+            $this->deleteVariantImageFiles($v, [], []);
         }
-        if (File::exists(public_path('uploads/products/thumbnails') . '/' . $product->image)) {
-            File::delete(public_path('uploads/products/thumbnails') . '/' . $product->image);
+        $product->variants()->delete();
+
+        if ($product->image) {
+            if (File::exists(public_path('uploads/products') . '/' . $product->image)) {
+                File::delete(public_path('uploads/products') . '/' . $product->image);
+            }
+            if (File::exists(public_path('uploads/products/thumbnails') . '/' . $product->image)) {
+                File::delete(public_path('uploads/products/thumbnails') . '/' . $product->image);
+            }
         }
 
-        foreach (explode(',', $product->images) as $ofile) {
-            if (File::exists(public_path('uploads/products') . '/' . $ofile)) {
-                File::delete(public_path('uploads/products') . '/' . $ofile);
-            }
-            if (File::exists(public_path('uploads/products/thumbnails') . '/' . $ofile)) {
-                File::delete(public_path('uploads/products/thumbnails') . '/' . $ofile);
+        if ($product->images) {
+            foreach (array_filter(array_map('trim', explode(',', $product->images))) as $ofile) {
+                if (File::exists(public_path('uploads/products') . '/' . $ofile)) {
+                    File::delete(public_path('uploads/products') . '/' . $ofile);
+                }
+                if (File::exists(public_path('uploads/products/thumbnails') . '/' . $ofile)) {
+                    File::delete(public_path('uploads/products/thumbnails') . '/' . $ofile);
+                }
             }
         }
 

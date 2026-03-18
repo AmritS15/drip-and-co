@@ -40,7 +40,6 @@
                 @php
                     $productImage = $product->image ? asset('uploads/products') . '/' . $product->image : '';
                     $productThumb = $product->image ? asset('uploads/products/thumbnails') . '/' . $product->image : '';
-                    $productGallery = $product->images ? array_filter(array_map('trim', explode(',', $product->images))) : [];
                 @endphp
                 <div class="col-lg-7">
                     <div class="product-single__media" data-media-type="vertical-thumbnail" id="product-media">
@@ -55,14 +54,6 @@
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom" /></svg>
                                         </a>
                                     </div>
-                                    @foreach ($productGallery as $gimg)
-                                        <div class="swiper-slide product-single__image-item">
-                                            <img loading="lazy" class="h-auto" src="{{ asset('uploads/products') }}/{{ $gimg }}" width="674" height="674" alt="" />
-                                            <a data-fancybox="gallery" href="{{ asset('uploads/products') }}/{{ $gimg }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
-                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom" /></svg>
-                                            </a>
-                                        </div>
-                                    @endforeach
                                 </div>
                                 <div class="swiper-button-prev"><svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg></div>
                                 <div class="swiper-button-next"><svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg></div>
@@ -72,9 +63,6 @@
                             <div class="swiper-container" id="product-swiper-thumb">
                                 <div class="swiper-wrapper" id="product-swiper-thumb-wrapper">
                                     <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" id="thumb-img" src="{{ $productThumb }}" width="104" height="104" alt="" /></div>
-                                    @foreach ($productGallery as $gimg)
-                                        <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="{{ asset('uploads/products/thumbnails') }}/{{ $gimg }}" width="104" height="104" alt="" /></div>
-                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -169,6 +157,9 @@
                         }
                         $uploadsBase = asset('uploads/products');
                         $uploadsThumb = asset('uploads/products/thumbnails');
+                        $firstVariant = $hasVariants ? $product->variants->first() : null;
+                        $defaultVariantSize = $firstVariant ? trim((string) $firstVariant->size) : '';
+                        $defaultVariantColor = $firstVariant ? trim((string) $firstVariant->color) : '';
                     @endphp
                     <form name="addtocart-form" method="post" action="{{ route('cart.add') }}">
                         @csrf
@@ -177,15 +168,14 @@
                                 $gallery = $v->gallery_array ?? [];
                                 $galleryUrls = array_map(function($f) use ($uploadsBase) { return $uploadsBase . '/' . $f; }, $gallery);
                                 $galleryThumbs = array_map(function($f) use ($uploadsThumb) { return $uploadsThumb . '/' . $f; }, $gallery);
-                                $first = count($gallery) ? $gallery[0] : null;
                                 return [
                                     'id' => $v->id,
                                     'size' => $v->size,
                                     'color' => $v->color,
                                     'quantity' => (int) $v->quantity,
                                     'sku' => $v->SKU,
-                                    'image' => $first ? $uploadsBase . '/' . $first : null,
-                                    'thumb' => $first ? $uploadsThumb . '/' . $first : null,
+                                    'image' => $v->image ? $uploadsBase . '/' . $v->image : null,
+                                    'thumb' => $v->image ? $uploadsThumb . '/' . $v->image : null,
                                     'gallery' => $galleryUrls,
                                     'galleryThumbs' => $galleryThumbs
                                 ];
@@ -193,14 +183,16 @@
                             window.productFallback = {
                                 image: "{{ $productImage }}",
                                 thumb: "{{ $productThumb }}",
-                                gallery: {!! json_encode(array_map(function($f) use ($uploadsBase) { return $uploadsBase . '/' . $f; }, $productGallery)) !!},
-                                galleryThumbs: {!! json_encode(array_map(function($f) use ($uploadsThumb) { return $uploadsThumb . '/' . $f; }, $productGallery)) !!}
+                                gallery: [],
+                                galleryThumbs: []
                             };
                             window.variantBySize = {!! json_encode($bySize) !!};
                             window.variantByColor = {!! json_encode($byColor) !!};
                             window.allVariantSizes = {!! json_encode($variantSizes) !!};
                             window.allVariantColors = {!! json_encode($variantColors) !!};
                             window.productTotalStock = {{ (int) $stockQty }};
+                            window.defaultVariantSize = {!! json_encode($defaultVariantSize) !!};
+                            window.defaultVariantColor = {!! json_encode($defaultVariantColor) !!};
                         </script>
                         <div class="product-single__addtocart">
 
@@ -218,10 +210,10 @@
                                 <div class="mb-3">
                                     <label class="form-label fw-medium mb-1">Size <span class="text-danger">*</span></label>
                                     <select name="size" id="variant-size" class="form-select form-select-lg shadow-sm" {{ $hasVariants ? 'required' : '' }}>
-                                        <option value="">Select size</option>
                                         @foreach ($variantSizes as $size)
-                                            <option value="{{ $size }}">{{ $size }}</option>
+                                            <option value="{{ $size }}" {{ ($defaultVariantSize && $defaultVariantSize === $size) ? 'selected' : '' }}>{{ $size }}</option>
                                         @endforeach
+                                        <option value="" {{ !$defaultVariantSize ? 'selected' : '' }}>Select size</option>
                                     </select>
                                 </div>
                             @endif
@@ -293,18 +285,19 @@
                             var opts = color && window.variantByColor && window.variantByColor[color]
                                 ? window.variantByColor[color]
                                 : (window.allVariantSizes || []);
-                            $size.empty().append('<option value="">Select size</option>');
+                            $size.empty();
                             for (var j = 0; j < opts.length; j++) {
                                 $size.append('<option value="' + opts[j] + '">' + opts[j] + '</option>');
                             }
+                            $size.append('<option value="">Select size</option>');
                             if (opts.indexOf(currentSize) !== -1) $size.val(currentSize);
                             else $size.val('');
                         }
                         function switchVariantMedia(variant) {
                             var fallback = window.productFallback;
-                            // First image is always the product (original) image, same as shop thumbnail; then variant gallery (or product gallery when no variant selected)
-                            var mainImg = fallback.image;
-                            var mainThumb = fallback.thumb;
+                            // Main image: use variant's main image if set (changes product details view only; shop thumbnail stays as product.image)
+                            var mainImg = (variant && variant.image) ? variant.image : fallback.image;
+                            var mainThumb = (variant && variant.thumb) ? variant.thumb : fallback.thumb;
                             var gallery = [];
                             var galleryThumbs = [];
                             if (variant && variant.gallery && variant.gallery.length) {
@@ -379,12 +372,19 @@
                             if (colorEl) {
                                 colorEl.addEventListener('change', function() { filterSizeByColor(); updateVariantStock(); });
                             }
+                            function runInit() {
+                                filterColorBySize();
+                                if (window.defaultVariantSize && window.defaultVariantColor && colorEl) {
+                                    colorEl.value = window.defaultVariantColor;
+                                    filterSizeByColor();
+                                }
+                                updateVariantStock();
+                            }
                             if (sizeEl || colorEl) {
                                 if (document.readyState === 'loading') {
-                                    document.addEventListener('DOMContentLoaded', function() { filterColorBySize(); updateVariantStock(); });
+                                    document.addEventListener('DOMContentLoaded', runInit);
                                 } else {
-                                    filterColorBySize();
-                                    updateVariantStock();
+                                    runInit();
                                 }
                             }
                         })();
@@ -392,6 +392,11 @@
                             if ($('#variant-size').length || $('#variant-color').length) {
                                 $('#variant-size').off('change').on('change', function() { filterColorBySize(); updateVariantStock(); });
                                 $('#variant-color').off('change').on('change', function() { filterSizeByColor(); updateVariantStock(); });
+                                filterColorBySize();
+                                if (window.defaultVariantSize && window.defaultVariantColor) {
+                                    $('#variant-color').val(window.defaultVariantColor);
+                                    filterSizeByColor();
+                                }
                             }
                             updateVariantStock();
                         });
@@ -650,12 +655,6 @@
                                     <a href="{{ route('shop.product.details', ['product_slug' => $rproduct->slug]) }}">
                                         <img loading="lazy" src="{{ asset('uploads/products') }}/{{ $rproduct->image }}"
                                             width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
-                                        @foreach (explode(',', $rproduct->images) as $gimg)
-                                            <img loading="lazy"
-                                                src="{{ asset('uploads/products') }}/{{ $gimg }}" width="330"
-                                                height="400" alt="{{ $rproduct->name }}"
-                                                class="pc__img pc__img-second">
-                                        @endforeach
                                     </a>
                                     
                                 </div>
