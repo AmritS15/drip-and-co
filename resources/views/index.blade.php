@@ -135,8 +135,31 @@
         background-color: #f7f5f1;
     }
 
+    .home-collection--featured {
+        margin-top: 3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .home-collection--featured .home-section-shell {
+        padding-bottom: 1rem;
+    }
+
     html[data-theme="dark"] .home-collection {
         background-color: rgb(155, 179, 171);
+    }
+
+    .home-collection__heading {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-weight: 500;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        padding-bottom: 0.75rem;
+    }
+
+    html[data-theme="dark"] .home-collection__heading {
+        border-bottom-color: rgba(255, 255, 255, 0.1);
     }
 
     .home-collection__tabs {
@@ -752,6 +775,74 @@
         </section>
     @endforeach
 
+    @if ($fproducts && $fproducts->count() > 0)
+    <section class="home-collection home-collection--featured js-scroll-reveal">
+        <div class="home-section-shell">
+            <h2 class="home-collection__heading">Featured</h2>
+            <div id="featured-slider-wrap" class="home-collection__slider-wrap position-relative">
+                <div class="swiper-container js-swiper-slider home-collection__swiper"
+                     data-settings='{
+                        "autoplay": false,
+                        "slidesPerView": 4,
+                        "slidesPerGroup": 4,
+                        "spaceBetween": 16,
+                        "effect": "none",
+                        "loop": {{ $fproducts->count() > 4 ? 'true' : 'false' }},
+                        "navigation": {
+                            "nextEl": "#featured-slider-wrap .products-carousel__next",
+                            "prevEl": "#featured-slider-wrap .products-carousel__prev"
+                        },
+                        "breakpoints": {
+                            "320": { "slidesPerView": 2, "slidesPerGroup": 2, "spaceBetween": 12 },
+                            "640": { "slidesPerView": 3, "slidesPerGroup": 3, "spaceBetween": 14 },
+                            "992": { "slidesPerView": 4, "slidesPerGroup": 4, "spaceBetween": 16 }
+                        }
+                    }'>
+                    <div class="swiper-wrapper">
+                        @foreach ($fproducts as $product)
+                            @php
+                                $material = $product->material ?? optional($product->category)->name ?? 'Premium materials';
+                            @endphp
+                            <div class="swiper-slide">
+                                <article class="product-card-modern">
+                                    <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
+                                       class="product-card-modern__media d-block">
+                                        <img loading="lazy"
+                                             src="{{ asset('uploads/products') }}/{{ $product->image }}"
+                                             alt="{{ $product->name }}">
+                                    </a>
+                                    <div class="product-card-modern__body">
+                                        <h3 class="product-card-modern__title">
+                                            <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
+                                               class="stretched-link text-reset text-decoration-none">
+                                                {{ strtoupper($product->name) }}
+                                            </a>
+                                        </h3>
+                                        <p class="product-card-modern__meta">{{ $material }}</p>
+                                        <div class="product-card-modern__price">
+                                            @if ($product->sale_price)
+                                                <span><s>£{{ $product->regular_price }}</s> £{{ $product->sale_price }}</span>
+                                            @else
+                                                <span>£{{ $product->regular_price }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="products-carousel__prev position-absolute top-50 start-0 d-flex align-items-center justify-content-center">
+                    <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_md" /></svg>
+                </div>
+                <div class="products-carousel__next position-absolute top-50 end-0 d-flex align-items-center justify-content-center">
+                    <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_md" /></svg>
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+
 </main>
 @endsection
 
@@ -773,7 +864,17 @@
 
                 panels.forEach(function (panel) {
                     var panelId = panel.getAttribute('data-panel') || '';
-                    panel.classList.toggle('is-active', String(panelId) === String(categoryId));
+                    var isActive = String(panelId) === String(categoryId);
+                    panel.classList.toggle('is-active', isActive);
+                    // Swipers inside hidden panels were initialized with 0 width; update when panel becomes visible
+                    if (isActive && typeof Swiper !== 'undefined') {
+                        var swiperEl = panel.querySelector('.home-collection__swiper');
+                        if (swiperEl && swiperEl.swiper) {
+                            requestAnimationFrame(function () {
+                                swiperEl.swiper.update();
+                            });
+                        }
+                    }
                 });
             });
         });

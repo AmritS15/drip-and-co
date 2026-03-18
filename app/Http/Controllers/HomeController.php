@@ -7,7 +7,9 @@ use App\Models\Brand;
 use App\Models\Product;
 use App\Models\Slide;
 use App\Models\Contact;
+use App\Models\SiteExperienceRating;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -54,13 +56,22 @@ class HomeController extends Controller
             ->orderBy('name')
             ->get()
             ->map(function (Category $category) {
-                $directProductIds = Product::where('category_id', $category->id)->pluck('id');
-                $brandIdsInCategory = Brand::where('category_id', $category->id)->pluck('id');
-                $collectionProductIds = Product::whereIn('brand_id', $brandIdsInCategory)->pluck('id');
-                $allIds = $directProductIds->merge($collectionProductIds)->unique()->values();
-                $products = $allIds->isNotEmpty()
-                    ? Product::whereIn('id', $allIds)->orderBy('id', 'DESC')->get()
-                    : collect();
+                $categoryId = $category->id;
+                $brandIdsInCategory = Brand::where('category_id', $categoryId)->pluck('id');
+                // Products in this slider: (1) product assigned to this category, OR
+                // (2) product's brand is in this category AND product is not assigned to a different category
+                $products = Product::query()
+                    ->where(function ($q) use ($categoryId, $brandIdsInCategory) {
+                        $q->where('category_id', $categoryId)
+                            ->orWhere(function ($q2) use ($categoryId, $brandIdsInCategory) {
+                                $q2->whereIn('brand_id', $brandIdsInCategory)
+                                    ->where(function ($q3) use ($categoryId) {
+                                        $q3->whereNull('category_id')->orWhere('category_id', $categoryId);
+                                    });
+                            });
+                    })
+                    ->orderBy('id', 'DESC')
+                    ->get();
                 $category->setRelation('products', $products);
                 return $category;
             });
@@ -143,7 +154,48 @@ class HomeController extends Controller
 
     public function contact()
     {
-        return view('contact');
+        $siteRatingAvg = SiteExperienceRating::avg('rating');
+        $siteRatingCount = SiteExperienceRating::count();
+        $userRating = null;
+        if (Auth::id()) {
+            $r = SiteExperienceRating::where('user_id', Auth::id())->first();
+            $userRating = $r ? (int) $r->rating : null;
+        } else {
+            $r = SiteExperienceRating::where('session_id', session()->getId())->first();
+            $userRating = $r ? (int) $r->rating : null;
+        }
+        return view('contact', [
+            'siteRatingAvg' => $siteRatingAvg !== null ? round((float) $siteRatingAvg, 1) : null,
+            'siteRatingCount' => (int) $siteRatingCount,
+            'userRating' => $userRating,
+        ]);
+    }
+
+    public function site_rating_store(Request $request)
+    {
+        $request->validate(['rating' => 'required|integer|min:1|max:5']);
+
+        $attrs = ['rating' => (int) $request->rating];
+        if (Auth::id()) {
+            SiteExperienceRating::updateOrCreate(
+                ['user_id' => Auth::id()],
+                $attrs
+            );
+        } else {
+            SiteExperienceRating::updateOrCreate(
+                ['session_id' => session()->getId()],
+                array_merge($attrs, ['session_id' => session()->getId()])
+            );
+        }
+
+        $siteRatingAvg = SiteExperienceRating::avg('rating');
+        $siteRatingCount = SiteExperienceRating::count();
+
+        return response()->json([
+            'ok' => true,
+            'average' => $siteRatingAvg !== null ? round((float) $siteRatingAvg, 1) : null,
+            'count' => (int) $siteRatingCount,
+        ]);
     }
 
     public function contact_store(Request $request)
