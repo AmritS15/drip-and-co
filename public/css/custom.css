@@ -167,3 +167,10 @@ body {
     margin: 0 auto;
 }
 
+/* Product add/edit: variants column wider than product details.
+   Duplicated from style.css so production stays correct if an older
+   style.css is cached or not redeployed. Loads after style.css. */
+form.form-add-product.tf-section-2 {
+    grid-template-columns: 2fr 3fr;
+}
+
