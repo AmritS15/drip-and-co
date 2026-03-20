@@ -36,9 +36,11 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-floating my-3">
-                            <input type="text" id="mobile" class="form-control" name="mobile" value="{{ Auth::user()->mobile }}">
-                            <label for="mobile">Mobile Number</label>
-                            @error('mobile') 
+                            <input type="text" id="mobile" class="form-control js-uk-mobile-11" name="mobile" value="{{ old('mobile', Auth::user()->mobile) }}"
+                                required autocomplete="tel" inputmode="numeric" maxlength="11" pattern="[0-9]{11}"
+                                title="Enter 11 digits">
+                            <label for="mobile">Mobile Number *</label>
+                                                        @error('mobile') 
                             <span class="text-danger">{{ $message }}</span> 
                             @enderror
                             </div>
@@ -66,4 +68,5 @@
       </div>
     </section>
   </main>
+@include('partials.uk-mobile-11-script')
 @endsection

@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,34 @@ class AppServiceProvider extends ServiceProvider
                 return false;
             }
             return preg_match('/[A-Z]/', $value) === 1;
+        });
+
+        View::composer('layouts.app', function ($view) {
+            $shopUrlForCategory = function (array $slugs, array $namesLower): string {
+                $category = Category::query()->whereIn('slug', $slugs)->first();
+                if (! $category && $namesLower !== []) {
+                    $placeholders = implode(',', array_fill(0, count($namesLower), '?'));
+                    $category = Category::query()
+                        ->whereRaw('LOWER(name) IN ('.$placeholders.')', $namesLower)
+                        ->first();
+                }
+                if (! $category) {
+                    return route('shop.index');
+                }
+
+                return route('shop.index', ['categories' => $category->id]);
+            };
+
+            $view->with([
+                'footerShopMensUrl' => $shopUrlForCategory(
+                    ['mens', 'men'],
+                    ['mens', 'men', "men's"]
+                ),
+                'footerShopWomensUrl' => $shopUrlForCategory(
+                    ['womens', 'women'],
+                    ['womens', 'women', "women's"]
+                ),
+            ]);
         });
     }
 }

@@ -50,9 +50,11 @@
                 </fieldset>
 
                 <fieldset class="name">
-                    <div class="body-title">Mobile Number</div>
-                    <input class="flex-grow" type="text" name="mobile" value="{{ old('mobile', $user->mobile) }}">
-                </fieldset>
+                    <div class="body-title">Mobile Number <span class="tf-color-1">*</span></div>
+                    <input class="flex-grow js-uk-mobile-11" type="text" name="mobile" value="{{ old('mobile', $user->mobile) }}"
+                        required autocomplete="tel" inputmode="numeric" maxlength="11" pattern="[0-9]{11}"
+                        title="Enter 11 digits">
+                                    </fieldset>
 
                 <fieldset class="name">
                     <div class="body-title">Email Address <span class="tf-color-1">*</span></div>
@@ -121,4 +123,5 @@
     </div>
 </div>
 
+@include('partials.uk-mobile-11-script')
 @endsection

@@ -76,7 +76,7 @@
         <div class="row">
           <div class="col-md-12">
             <p>No item found in your wishlist</p>
-            <a href="{{route('shop.index')}}" class="btn btn-info">Wishlist Now</a>
+            <a href="{{route('shop.index')}}" class="btn btn-info">Shop Now</a>
           </div>
       </div>
       @endif

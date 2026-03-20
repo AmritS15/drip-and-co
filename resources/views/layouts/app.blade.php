@@ -788,21 +788,21 @@
             justify-content: center;
         }
 
-        /* Extra space between last content and footer (not too much) */
+        /* Space before footer (kept modest so footer feels shorter overall) */
         .footer-spaced {
-            margin-top: 2rem;
-            padding-top: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 0.25rem;
         }
         /* Homepage: gap between last image/content and footer */
         body.page-home .layout-content--home {
             padding-bottom: 1.25rem;
         }
         body.page-home .content-footer-separator {
-            margin-top: 1.5rem;
+            margin-top: 1rem;
         }
         body.page-home .footer-spaced {
-            margin-top: 1.5rem;
-            padding-top: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 0.25rem;
         }
 
         .header-transparent-bg {
@@ -842,24 +842,24 @@
             transition: filter 0.25s ease;
         }
         /* Logo highlight: soft teal glow, complements logo colour in both themes */
-        .header-transparent-bg .logo .logo__image,
-        .header-desk .logo .logo__image,
-        .header-mobile .logo .logo__image {
+        body.page-home .header-transparent-bg .logo .logo__image,
+        body.page-home .header-desk .logo .logo__image,
+        body.page-home .header-mobile .logo .logo__image {
             filter: drop-shadow(0 0 6px rgba(0, 139, 125, 0.35)) drop-shadow(0 0 12px rgba(0, 139, 125, 0.18));
         }
-        html[data-theme="dark"] .header-transparent-bg .logo .logo__image,
-        html[data-theme="dark"] .header-desk .logo .logo__image,
-        html[data-theme="dark"] .header-mobile .logo .logo__image {
+        html[data-theme="dark"] body.page-home .header-transparent-bg .logo .logo__image,
+        html[data-theme="dark"] body.page-home .header-desk .logo .logo__image,
+        html[data-theme="dark"] body.page-home .header-mobile .logo .logo__image {
             filter: drop-shadow(0 0 8px rgba(0, 139, 125, 0.5)) drop-shadow(0 0 20px rgba(0, 139, 125, 0.28));
         }
-        .header-transparent-bg .logo a:hover .logo__image,
-        .header-desk .logo a:hover .logo__image,
-        .header-mobile .logo a:hover .logo__image {
+        body.page-home .header-transparent-bg .logo a:hover .logo__image,
+        body.page-home .header-desk .logo a:hover .logo__image,
+        body.page-home .header-mobile .logo a:hover .logo__image {
             filter: drop-shadow(0 0 8px rgba(0, 139, 125, 0.45)) drop-shadow(0 0 16px rgba(0, 139, 125, 0.28));
         }
-        html[data-theme="dark"] .header-transparent-bg .logo a:hover .logo__image,
-        html[data-theme="dark"] .header-desk .logo a:hover .logo__image,
-        html[data-theme="dark"] .header-mobile .logo a:hover .logo__image {
+        html[data-theme="dark"] body.page-home .header-transparent-bg .logo a:hover .logo__image,
+        html[data-theme="dark"] body.page-home .header-desk .logo a:hover .logo__image,
+        html[data-theme="dark"] body.page-home .header-mobile .logo a:hover .logo__image {
             filter: drop-shadow(0 0 12px rgba(0, 139, 125, 0.6)) drop-shadow(0 0 24px rgba(0, 139, 125, 0.35));
         }
         /* Footer logo: lighter highlight */
@@ -938,7 +938,7 @@
             gap: 2.75rem;
         }
 
-        .header-transparent-bg .navigation__link {
+        body.page-home .header-transparent-bg .navigation__link {
             text-transform: uppercase;
             letter-spacing: 0.22em;
             font-size: 0.78rem;
@@ -949,17 +949,17 @@
             text-shadow: 0 0 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9);
         }
 
-        html[data-theme="light"] .header-transparent-bg .navigation__link {
+        html[data-theme="light"] body.page-home .header-transparent-bg .navigation__link {
             color: #1f2d2b;
             text-shadow: 0 0 2px rgba(255,255,255,0.95), 0 0 4px rgba(255,255,255,0.8), 0 1px 2px rgba(255,255,255,0.9);
         }
 
-        html[data-theme="light"] .header-transparent-bg .navigation__link:hover,
-        html[data-theme="light"] .header-transparent-bg .navigation__link:focus-visible {
+        html[data-theme="light"] body.page-home .header-transparent-bg .navigation__link:hover,
+        html[data-theme="light"] body.page-home .header-transparent-bg .navigation__link:focus-visible {
             color: #2b5e59;
         }
 
-        .header-transparent-bg .navigation__link::after {
+        body.page-home .header-transparent-bg .navigation__link::after {
             content: "";
             position: absolute;
             left: 0;
@@ -972,62 +972,62 @@
             transition: transform 180ms ease-out;
         }
 
-        html[data-theme="light"] .header-transparent-bg .navigation__link::after {
+        html[data-theme="light"] body.page-home .header-transparent-bg .navigation__link::after {
             background-color: #1f2d2b;
         }
 
-        .header-transparent-bg .navigation__link:hover::after,
-        .header-transparent-bg .navigation__link:focus-visible::after {
+        body.page-home .header-transparent-bg .navigation__link:hover::after,
+        body.page-home .header-transparent-bg .navigation__link:focus-visible::after {
             transform: scaleX(1);
         }
 
-        .header-transparent-bg .header-tools__item svg {
+        body.page-home .header-transparent-bg .header-tools__item svg {
             color: #ffffff;
             filter: drop-shadow(0 0 1px rgba(0,0,0,0.9)) drop-shadow(0 0 2px rgba(0,0,0,0.8));
         }
-        .header-transparent-bg .header-toolstheme svg {
+        body.page-home .header-transparent-bg .header-toolstheme svg {
             filter: none;
         }
 
-        html[data-theme="light"] .header-transparent-bg .header-tools__item svg {
+        html[data-theme="light"] body.page-home .header-transparent-bg .header-tools__item svg {
             color: #1f2d2b;
             filter: drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 2px rgba(255,255,255,0.8));
         }
-        html[data-theme="light"] .header-transparent-bg .header-toolstheme svg {
+        html[data-theme="light"] body.page-home .header-transparent-bg .header-toolstheme svg {
             filter: none;
         }
 
-        .header-transparent-bg .header-tools__item,
-        .header-transparent-bg .header-toolsitem {
+        body.page-home .header-transparent-bg .header-tools__item,
+        body.page-home .header-transparent-bg .header-toolsitem {
             color: #ffffff;
             text-shadow: 0 0 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.8);
         }
-        .header-transparent-bg .header-toolstheme {
+        body.page-home .header-transparent-bg .header-toolstheme {
             text-shadow: none;
             padding: 0.35rem;
             border-radius: 50%;
             background: rgba(0,0,0,0.25);
         }
-        .header-transparent-bg .header-toolstheme:hover {
+        body.page-home .header-transparent-bg .header-toolstheme:hover {
             background: rgba(0,0,0,0.35);
         }
-        .header-transparent-bg .header-toolstheme:hover .theme-icon-moon {
+        body.page-home .header-transparent-bg .header-toolstheme:hover .theme-icon-moon {
             color: #2c5282 !important;
         }
 
-        html[data-theme="light"] .header-transparent-bg .header-tools__item,
-        html[data-theme="light"] .header-transparent-bg .header-toolsitem {
+        html[data-theme="light"] body.page-home .header-transparent-bg .header-tools__item,
+        html[data-theme="light"] body.page-home .header-transparent-bg .header-toolsitem {
             color: #1f2d2b;
             text-shadow: 0 0 2px rgba(255,255,255,0.95), 0 0 4px rgba(255,255,255,0.8);
         }
-        html[data-theme="light"] .header-transparent-bg .header-toolstheme {
+        html[data-theme="light"] body.page-home .header-transparent-bg .header-toolstheme {
             text-shadow: none;
             background: rgba(255,255,255,0.4);
         }
-        html[data-theme="light"] .header-transparent-bg .header-toolstheme:hover {
+        html[data-theme="light"] body.page-home .header-transparent-bg .header-toolstheme:hover {
             background: rgba(255,255,255,0.55);
         }
-        html[data-theme="light"] .header-transparent-bg .header-toolstheme:hover .theme-icon-moon {
+        html[data-theme="light"] body.page-home .header-transparent-bg .header-toolstheme:hover .theme-icon-moon {
             color: #2c5282 !important;
         }
 
@@ -1094,44 +1094,6 @@
             html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolstheme:hover {
                 background: rgba(0,0,0,0.35);
             }
-            /* Other pages: transparent header icon colours (always, since header is always transparent) */
-            body:not(.page-home) .header-mobile--transparent .header-mobile__icon svg,
-            body:not(.page-home) .header-mobile--transparent .header-tools__item,
-            body:not(.page-home) .header-mobile--transparent .header-toolsitem,
-            body:not(.page-home) .header-mobile--transparent .nav-icon {
-                color: #ffffff;
-                filter: drop-shadow(0 0 1px rgba(0,0,0,0.9)) drop-shadow(0 0 2px rgba(0,0,0,0.8));
-            }
-            body:not(.page-home) .header-mobile--transparent .header-toolstheme svg {
-                filter: none;
-            }
-            body:not(.page-home) .header-mobile--transparent .header-toolstheme {
-                padding: 0.35rem;
-                border-radius: 50%;
-                background: rgba(0,0,0,0.25);
-            }
-            body:not(.page-home) .header-mobile--transparent .header-toolstheme:hover {
-                background: rgba(0,0,0,0.35);
-            }
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-mobile__icon svg,
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-tools__item,
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-toolsitem,
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .nav-icon {
-                color: #1f2d2b;
-                filter: drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 2px rgba(255,255,255,0.8));
-            }
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-toolstheme svg {
-                filter: none;
-            }
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-toolstheme {
-                padding: 0.35rem;
-                border-radius: 50%;
-                background: rgba(255,255,255,0.4);
-            }
-            html[data-theme="light"] body:not(.page-home) .header-mobile--transparent .header-toolstheme:hover {
-                background: rgba(255,255,255,0.55);
-            }
-
             .header-mobile__tools {
                 gap: 0.5rem;
             }
@@ -1419,11 +1381,10 @@
         @yield('content')
     </div>
 
-    <hr class="content-footer-separator mt-5 mb-0 text-secondary" />
     <footer class="footer footer_type_2 footer-spaced">
         <div class="footer-middle container">
             <div class="row row-cols-lg-5 row-cols-2">
-                <div class="footer-column footer-store-info col-12 mb-4 mb-lg-0">
+                <div class="footer-column footer-store-info col-12 mb-3 mb-lg-0">
                     <div class="logo">
                         <a href="{{ route('home.index') }}">
                             <img src="{{ asset('assets/images/logo.png') }}" alt="DripandCo"
@@ -1464,42 +1425,35 @@
                     </ul>
                 </div>
 
-                <div class="footer-column footer-menu mb-4 mb-lg-0">
+                <div class="footer-column footer-menu mb-3 mb-lg-0">
                     <h6 class="sub-menu__title text-uppercase">Company</h6>
                     <ul class="sub-menu__list list-unstyled">
                         <li class="sub-menu__item"><a href="{{ route('home.about') }}"
                                 class="menu-link menu-link_us-s">About Us</a></li>
-                        <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Modern Slavery
+                        <li class="sub-menu__item"><a href="{{ route('home.modern_slavery') }}"
+                                class="menu-link menu-link_us-s">Modern Slavery
                                 Act</a></li>
-                        <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">All rights
-                                reserved</a></li>
+                        <li class="sub-menu__item"><span class="small text-secondary">All rights reserved</span></li>
                     </ul>
                 </div>
 
-                <div class="footer-column footer-menu mb-4 mb-lg-0">
+                <div class="footer-column footer-menu mb-3 mb-lg-0">
                     <h6 class="sub-menu__title text-uppercase">Help</h6>
                     <ul class="sub-menu__list list-unstyled">
                         <li class="sub-menu__item"><a href="{{ route('home.contact') }}"
                                 class="menu-link menu-link_us-s">Contact Us</a></li>
-                        <li class="sub-menu__item"><a href="{{ route('shop.index') }}"
-                                class="menu-link menu-link_us-s">Accessbility</a></li>
+                        <li class="sub-menu__item"><a href="{{ route('home.accessibility') }}"
+                                class="menu-link menu-link_us-s">Accessibility</a></li>
                     </ul>
                 </div>
 
-                <div class="footer-column footer-menu mb-4 mb-lg-0">
+                <div class="footer-column footer-menu mb-3 mb-lg-0">
                     <h6 class="sub-menu__title text-uppercase">Categories</h6>
                     <ul class="sub-menu__list list-unstyled category-grid">
-                        <li class="sub-menu__item"><a href="{{ route('shop.index') }}"
-                                class="menu-link menu-link_us-s">Outerwear</a></li>
-                        <li class="sub-menu__item"><a href="{{ route('shop.index') }}"
-                                class="menu-link menu-link_us-s">Innerwear</a></li>
-                        <li class="sub-menu__item"><a href="{{ route('shop.index') }}"
-                                class="menu-link menu-link_us-s">Tops</a></li>
-                        <li class="sub-menu__item"><a href="{{ route('shop.index') }}"
-                                class="menu-link menu-link_us-s">Bottoms</a></li>
-                        <li class="sub-menu__item"><a href="{{ route('shop.index') }}"
-                                class="menu-link menu-link_us-s">Accessories</a></li>
-
+                        <li class="sub-menu__item"><a href="{{ $footerShopMensUrl }}"
+                                class="menu-link menu-link_us-s">Mens</a></li>
+                        <li class="sub-menu__item"><a href="{{ $footerShopWomensUrl }}"
+                                class="menu-link menu-link_us-s">Womens</a></li>
                     </ul>
                 </div>
 
@@ -1509,10 +1463,10 @@
 
         <div class="footer-bottom">
             <div class="container d-md-flex align-items-center">
-                <span class="footer-copyright me-auto">Drip&Co Ltd.</span>
+                <span class="footer-copyright me-auto d-inline-flex align-items-center gap-1"><span aria-hidden="true">&copy;</span> Drip&amp;Co Ltd.</span>
                 <div class="footer-settings d-md-flex align-items-center">
-                    <a href="privacy-policy.html">Privacy Policy</a> &nbsp;|&nbsp; <a
-                        href="terms-conditions.html">Terms &amp;
+                    <a href="{{ route('home.privacy') }}">Privacy Policy</a> &nbsp;|&nbsp; <a
+                        href="{{ route('home.terms') }}">Terms &amp;
                         Conditions</a>
                 </div>
             </div>
@@ -2092,6 +2046,88 @@
         })();
     </script>
 
+    <style>
+        .password-toggle-wrap {
+            position: relative;
+            display: block;
+        }
+        .password-toggle-wrap input[type="password"],
+        .password-toggle-wrap input[type="text"] {
+            padding-right: 2.5rem;
+        }
+        .password-toggle-btn {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: 0;
+            padding: 0;
+            line-height: 1;
+            color: #6c757d;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .password-toggle-btn.is-visible {
+            color: #2b5e59;
+        }
+    </style>
+    <script>
+        (function() {
+            function attachPasswordToggles() {
+                document.querySelectorAll('input[type="password"]').forEach(function(input) {
+                    if (input.dataset.passwordToggleInit === '1') {
+                        return;
+                    }
+                    var parent = input.parentElement;
+                    if (!parent) {
+                        return;
+                    }
+
+                    input.dataset.passwordToggleInit = '1';
+                    var wrapper = document.createElement('div');
+                    wrapper.className = 'password-toggle-wrap';
+                    parent.insertBefore(wrapper, input);
+                    wrapper.appendChild(input);
+
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'password-toggle-btn';
+                    btn.setAttribute('aria-label', 'Show password');
+
+                    function setIcon(isVisible) {
+                        btn.innerHTML = isVisible
+                            ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 3L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.58 10.58a2 2 0 102.83 2.83" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.68 16.67A10.94 10.94 0 0112 18c-5 0-9.27-3.11-11-7.5a11.8 11.8 0 012.6-4.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.88 5.09A11 11 0 0112 5c5 0 9.27 3.11 11 7.5a11.77 11.77 0 01-1.71 2.87" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+                            : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1 12C2.73 7.61 7 4.5 12 4.5S21.27 7.61 23 12c-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>';
+                    }
+
+                    setIcon(false);
+
+                    btn.addEventListener('click', function() {
+                        var showing = input.type === 'text';
+                        input.type = showing ? 'password' : 'text';
+                        btn.classList.toggle('is-visible', !showing);
+                        btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+                        setIcon(!showing);
+                    });
+
+                    wrapper.appendChild(btn);
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', attachPasswordToggles);
+            } else {
+                attachPasswordToggles();
+            }
+
+            document.addEventListener('focusin', function(e) {
+                if (e.target && e.target.matches('input[type="password"]') && e.target.dataset.passwordToggleInit !== '1') {
+                    attachPasswordToggles();
+                }
+            });
+        })();
+    </script>
     @stack('scripts')
 </body>
 

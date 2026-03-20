@@ -174,3 +174,36 @@ form.form-add-product.tf-section-2 {
     grid-template-columns: 2fr 3fr;
 }
 
+/* Admin tables: delete uses a <form>; block forms break .list-icon-function flex and push the bin out */
+.list-icon-function form {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    flex: 0 0 auto;
+}
+
+.list-icon-function form .item {
+    margin: 0;
+}
+
+/* Keep icon links/forms as flex items so the row doesn’t break when the table is narrow */
+.list-icon-function > a {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+/* When the viewport/table is squished, wrap icons inside the cell instead of spilling out */
+.table-responsive .list-icon-function {
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    justify-content: flex-start;
+    align-items: center;
+    max-width: 100%;
+}
+
+.table-responsive td:has(> .list-icon-function) {
+    vertical-align: middle;
+}
+

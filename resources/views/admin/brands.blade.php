@@ -61,7 +61,7 @@
                                     </div>
                                 </td>
                                 <td>{{$brand->slug}}</td>
-                                <td><a href="#" target="_blank">0</a></td>
+                                <td>{{ $brand->products_count }}</td>
                                 <td>
                                     <div class="list-icon-function">
                                         <a href="{{ route('admin.brand.edit',['id'=>$brand->id]) }}">

@@ -58,7 +58,7 @@ class ShopController extends Controller
         $hasVariants = Schema::hasTable('product_variants');
 
         $productsQuery = Product::query()
-            ->with('reviews')
+            ->with(['reviews', 'variants'])
             ->when($brandIds, function ($query) use ($brandIds) {
                 $query->whereIn('brand_id', $brandIds);
             })
