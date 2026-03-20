@@ -11,6 +11,33 @@
 
 > **Note:** the application now supports per‑variant stock levels (size/color combinations). After pulling these changes you should run `php artisan migrate` to add the `product_variants` table and update your data accordingly.
 
+## Deployment (GitHub Actions → production domain)
+
+Pushes to **`main`** run the **Auto Deploy** workflow (`.github/workflows/deploy.yml`). It SSHs into the production server, syncs the repo to `origin/main`, and runs `scripts/server-deploy.sh` (Composer, Vite build, migrations, caches).
+
+### GitHub repository configuration
+
+**Secrets** (Settings → Secrets and variables → Actions):
+
+| Secret | Description |
+|--------|-------------|
+| `ASTON_HOST` | Server hostname or IP (the machine that serves your domain) |
+| `ASTON_USER` | SSH user |
+| `ASTON_SSH_KEY` | Private key for that user (PEM / OpenSSH format) |
+
+**Optional variables** (Settings → Secrets and variables → Actions → Variables):
+
+| Variable | Description |
+|----------|-------------|
+| `ASTON_DEPLOY_PATH` | Absolute path to the app on the server (default: `/home/cs2team17/drip-and-co`) |
+
+### Server requirements
+
+- PHP, Composer, **Node.js + npm** (Vite builds `public/build`, which is not committed)
+- Git remote on the server must be able to `git fetch` without prompts (e.g. deploy key or HTTPS credential)
+- Web server document root should point at `public/` as usual for Laravel
+
+Manual deploy: **Actions** → **Auto Deploy** → **Run workflow**.
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 

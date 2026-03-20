@@ -5,16 +5,38 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# One deploy at a time; additional pushes wait (no overlapping deploys)
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Deploy over SSH
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.ASTON_HOST }}
           username: ${{ secrets.ASTON_USER }}
           key: ${{ secrets.ASTON_SSH_KEY }}
           port: 22
-          script: /home/cs2team17/deploy.sh
+          # Stop on first failed command; long timeout for composer/npm
+          script_stop: true
+          command_timeout: 25m
+          script: |
+            set -euo pipefail
+            DEPLOY_PATH="${{ vars.ASTON_DEPLOY_PATH }}"
+            if [ -z "$DEPLOY_PATH" ]; then
+              DEPLOY_PATH="/home/cs2team17/drip-and-co"
+            fi
+            cd "$DEPLOY_PATH"
+            git fetch origin main
+            git reset --hard origin/main
+            chmod +x scripts/server-deploy.sh
+            bash scripts/server-deploy.sh
