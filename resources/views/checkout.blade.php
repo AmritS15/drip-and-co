@@ -239,7 +239,7 @@
 
                 <div class="policy-text">
                   Your personal data will be used to process your order, support your experience throughout this
-                  website, and for other purposes described in our <a href="terms.html" target="_blank">privacy
+                  website, and for other purposes described in our <a href="{{ route('home.privacy') }}" target="_blank" rel="noopener noreferrer">privacy
                     policy</a>.
                 </div>
               </div>

@@ -62,6 +62,7 @@ class RegisterController extends Controller
                 'password.contains_uppercase' => 'Password must include at least 1 capital letter.',
                 'password.confirmed' => 'Password confirmation does not match.',
                 'mobile.digits' => 'The phone number must be 11 digits.',
+                'mobile.unique' => 'This phone number is already registered.',
             ]
         );
     }

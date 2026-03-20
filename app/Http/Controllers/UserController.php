@@ -65,6 +65,7 @@ class UserController extends Controller
         ],
         [
             'mobile.digits' => 'The phone number must be 11 digits.',
+            'mobile.unique' => 'This phone number is already registered.',
         ]
         );
 

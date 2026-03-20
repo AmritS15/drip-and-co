@@ -44,6 +44,14 @@
             border: 1px solid #f59e0b;
             color: #fffbeb !important;
         }
+
+        /* Ensure product-card gallery arrows stay clickable above image links */
+        .pc__img-wrapper .pc__img-next,
+        .pc__img-wrapper .pc__img-prev {
+            z-index: 5;
+            cursor: pointer;
+            pointer-events: auto;
+        }
     </style>
 
     <main class="pt-90">
@@ -84,7 +92,7 @@
                                                     @if (in_array($category->id, explode(',', $f_categories))) checked="checked" @endif />
                                                 {{ $category->name }}
                                             </span>
-                                            <span class="text-right float-right">{{ $category->products->count() }}</span>
+                                            <span class="text-right float-right">({{ $category->products->count() }})</span>
                                         </li>
                                     @endforeach
 
@@ -196,7 +204,7 @@
                                                 {{ $brand->name }}
                                             </span>
                                             <span class="text-right float-end">
-                                                {{ $brand->products->count() }}
+                                                ({{ $brand->products->count() }})
                                             </span>
                                         </li>
                                     @endforeach
@@ -421,9 +429,33 @@
                                     </div>
                                 @endif
                                 @php
-                                    // Shop card always uses product-level image/gallery (chosen outside variant); variant images only on details when that variant is selected
                                     $cardImage = $product->image;
                                     $cardGallery = $product->images ? array_filter(array_map('trim', explode(',', $product->images))) : [];
+
+                                    // Variant products: show one main image per colour in card slider.
+                                    if ($product->variants->isNotEmpty()) {
+                                        $colorMainImages = [];
+                                        foreach ($product->variants as $variant) {
+                                            $variantImage = trim((string) $variant->image);
+                                            if ($variantImage === '') {
+                                                continue;
+                                            }
+                                            $colorKey = strtolower(trim((string) ($variant->color ?? '')));
+                                            if ($colorKey === '') {
+                                                $colorKey = '__no_color__';
+                                            }
+                                            if (!isset($colorMainImages[$colorKey])) {
+                                                $colorMainImages[$colorKey] = $variantImage;
+                                            }
+                                        }
+
+                                        if (!empty($colorMainImages)) {
+                                            $cardGallery = array_values(array_filter(
+                                                $colorMainImages,
+                                                fn($img) => $img !== $cardImage
+                                            ));
+                                        }
+                                    }
                                 @endphp
                                 <div class="pc__img-wrapper">
                                     <div class="swiper-container background-img js-swiper-slider"
@@ -689,7 +721,55 @@
 
                 
                 syncHiddenInputsFromUI();
+
+                // Product-card sliders: bind each swiper to its own arrows.
+                // This prevents duplicate class selectors from cross-wiring controls.
+                $('#products-grid .pc__img-wrapper .swiper-container').each(function() {
+                    var $slider = $(this);
+                    var swiper = this.swiper;
+                    if (!swiper) {
+                        return;
+                    }
+
+                    var nextEl = $slider.find('.pc__img-next')[0];
+                    var prevEl = $slider.find('.pc__img-prev')[0];
+                    if (!nextEl || !prevEl) {
+                        return;
+                    }
+
+                    swiper.params.navigation = Object.assign({}, swiper.params.navigation, {
+                        nextEl: nextEl,
+                        prevEl: prevEl,
+                    });
+
+                    if (swiper.navigation && typeof swiper.navigation.destroy === 'function') {
+                        swiper.navigation.destroy();
+                    }
+                    if (swiper.navigation && typeof swiper.navigation.init === 'function') {
+                        swiper.navigation.init();
+                    }
+                    if (swiper.navigation && typeof swiper.navigation.update === 'function') {
+                        swiper.navigation.update();
+                    }
+                });
             });
+
+            // Product card image arrows: force per-card navigation binding
+            // so each next/prev controls its own slider reliably.
+            $(document).on('click', '#products-grid .pc__img-next, #products-grid .pc__img-prev', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var $slider = $(this).closest('.swiper-container');
+                if (!$slider.length || !$slider[0].swiper) return;
+
+                if ($(this).hasClass('pc__img-next')) {
+                    $slider[0].swiper.slideNext();
+                } else {
+                    $slider[0].swiper.slidePrev();
+                }
+            });
+
 
         });
     </script>

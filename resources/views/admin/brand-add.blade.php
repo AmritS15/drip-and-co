@@ -65,7 +65,7 @@
                                 </span>
                                 <span class="body-text">Drop your images here or select <span 
                                         class="tf-color">click to browse</span></span>
-                                <input type="file" id="myFile" name="image" accept="image/*">
+                                <input type="file" id="myFile" name="image" accept="image/*" required>
                             </label>
                         </div>
                     </div>

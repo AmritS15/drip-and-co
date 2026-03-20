@@ -3,9 +3,59 @@
     color: #2c5282 !important;
 }
 
+/* Compact footer (theme defaults are very tall on desktop) */
 .footer-middle {
-    padding-top: 2.25rem;
-    padding-bottom: 2.25rem;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1rem !important;
+}
+@media (min-width: 768px) {
+    .footer-middle {
+        padding-top: 1.5rem !important;
+        padding-bottom: 1.25rem !important;
+    }
+}
+@media (min-width: 992px) {
+    .footer-middle {
+        padding-top: 1.75rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+}
+.footer-middle .logo {
+    margin-bottom: 0.85rem !important;
+}
+.footer .sub-menu__title {
+    margin-bottom: 0.5rem !important;
+}
+@media (min-width: 992px) {
+    .footer .sub-menu__title {
+        margin-bottom: 0.65rem !important;
+    }
+}
+.footer-bottom {
+    padding-top: 0.65rem !important;
+    padding-bottom: 0.65rem !important;
+}
+.footer-address {
+    margin-bottom: 0.5rem !important;
+}
+.footer-store-info p {
+    margin-bottom: 0.35rem;
+}
+.footer-store-info p:last-of-type {
+    margin-bottom: 0;
+}
+.footer .menu-link {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.footer .social-links {
+    margin-top: 0.35rem;
+}
+.footer__social-link {
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.35rem !important;
 }
 .text-right{
     text-align: right;
@@ -21,6 +71,33 @@
 .form-floating>.form-control,
 .form-floating>.form-select {
     height: 48px;
+}
+
+/* Shop pagination: improve dark-mode visibility for numbers and arrows */
+html[data-theme="dark"] .shop-list .pagination .page-link {
+    color: #e9ecef;
+    background-color: #2b2f33;
+    border-color: #5e656d;
+}
+
+html[data-theme="dark"] .shop-list .pagination .page-item.active .page-link {
+    color: #ffffff;
+    background-color: #141618;
+    border-color: #141618;
+}
+
+html[data-theme="dark"] .shop-list .pagination .page-item.disabled .page-link {
+    color: #9aa3ad;
+    background-color: #22262a;
+    border-color: #4f565e;
+    opacity: 1;
+}
+
+html[data-theme="dark"] .shop-list .pagination .page-link:hover,
+html[data-theme="dark"] .shop-list .pagination .page-link:focus {
+    color: #ffffff;
+    background-color: #33383d;
+    border-color: #6a727a;
 }
 
 /* Mobile header: fixed + transparent rules consolidated in app.blade.php inline styles */

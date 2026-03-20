@@ -46,6 +46,11 @@ Route::post('/site-rating', [HomeController::class, 'site_rating_store'])->name(
 
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
 
+Route::get('/privacy-policy', [HomeController::class, 'privacy'])->name('home.privacy');
+Route::get('/terms-and-conditions', [HomeController::class, 'terms'])->name('home.terms');
+Route::get('/modern-slavery-act', [HomeController::class, 'modern_slavery'])->name('home.modern_slavery');
+Route::get('/accessibility', [HomeController::class, 'accessibility'])->name('home.accessibility');
+
 Route::get('/search', [HomeController::class, 'search'])->name('home.search');
 
 

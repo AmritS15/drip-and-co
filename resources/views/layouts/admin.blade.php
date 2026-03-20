@@ -357,6 +357,88 @@
         });
     </script>
 
+    <style>
+        .password-toggle-wrap {
+            position: relative;
+            display: block;
+        }
+        .password-toggle-wrap input[type="password"],
+        .password-toggle-wrap input[type="text"] {
+            padding-right: 2.5rem;
+        }
+        .password-toggle-btn {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: 0;
+            padding: 0;
+            line-height: 1;
+            color: #6c757d;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .password-toggle-btn.is-visible {
+            color: #2b5e59;
+        }
+    </style>
+    <script>
+        (function() {
+            function attachPasswordToggles() {
+                document.querySelectorAll('input[type="password"]').forEach(function(input) {
+                    if (input.dataset.passwordToggleInit === '1') {
+                        return;
+                    }
+                    var parent = input.parentElement;
+                    if (!parent) {
+                        return;
+                    }
+
+                    input.dataset.passwordToggleInit = '1';
+                    var wrapper = document.createElement('div');
+                    wrapper.className = 'password-toggle-wrap';
+                    parent.insertBefore(wrapper, input);
+                    wrapper.appendChild(input);
+
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'password-toggle-btn';
+                    btn.setAttribute('aria-label', 'Show password');
+
+                    function setIcon(isVisible) {
+                        btn.innerHTML = isVisible
+                            ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 3L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.58 10.58a2 2 0 102.83 2.83" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.68 16.67A10.94 10.94 0 0112 18c-5 0-9.27-3.11-11-7.5a11.8 11.8 0 012.6-4.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.88 5.09A11 11 0 0112 5c5 0 9.27 3.11 11 7.5a11.77 11.77 0 01-1.71 2.87" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+                            : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1 12C2.73 7.61 7 4.5 12 4.5S21.27 7.61 23 12c-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>';
+                    }
+
+                    setIcon(false);
+
+                    btn.addEventListener('click', function() {
+                        var showing = input.type === 'text';
+                        input.type = showing ? 'password' : 'text';
+                        btn.classList.toggle('is-visible', !showing);
+                        btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+                        setIcon(!showing);
+                    });
+
+                    wrapper.appendChild(btn);
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', attachPasswordToggles);
+            } else {
+                attachPasswordToggles();
+            }
+
+            document.addEventListener('focusin', function(e) {
+                if (e.target && e.target.matches('input[type="password"]') && e.target.dataset.passwordToggleInit !== '1') {
+                    attachPasswordToggles();
+                }
+            });
+        })();
+    </script>
     @stack("scripts")
 </body>
 </html>

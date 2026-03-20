@@ -81,7 +81,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
     public function brands()
     {
-        $brands = Brand::orderBy('id', 'DESC')->paginate(10);
+        $brands = Brand::withCount('products')->orderBy('id', 'DESC')->paginate(10);
         return view('admin.brands', compact('brands'));
     }
 
@@ -97,7 +97,12 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'name' => 'required',
             'slug' => 'required|unique:brands,slug',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'mimes:png,jpg,jpeg|max:5120'
+            'image' => 'required|image|mimes:png,jpg,jpeg|max:5120'
+        ], [
+            'image.required' => 'Please upload an image.',
+            'image.image' => 'The uploaded file must be an image.',
+            'image.mimes' => 'The image must be a file of type: png, jpg, jpeg.',
+            'image.max' => 'The image must not be greater than 5MB.',
         ]);
 
         $brand = new Brand();
@@ -175,7 +180,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
     public function categories()
     {
-        $categories = Category::orderBy('id', 'DESC')->paginate(10);
+        $categories = Category::withCount('products')->orderBy('id', 'DESC')->paginate(10);
         return view('admin.categories', compact('categories'));
     }
 
@@ -189,7 +194,12 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         $request->validate([
             'name' => 'required',
             'slug' => 'required|unique:categories,slug',
-            'image' => 'mimes:png,jpg,jpeg|max:5120'
+            'image' => 'required|image|mimes:png,jpg,jpeg|max:5120'
+        ], [
+            'image.required' => 'Please upload an image.',
+            'image.image' => 'The uploaded file must be an image.',
+            'image.mimes' => 'The image must be a file of type: png, jpg, jpeg.',
+            'image.max' => 'The image must not be greater than 5MB.',
         ]);
 
         $category = new Category();
@@ -1161,7 +1171,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
     $request->validate([
         'name' => 'required|string|max:255',
-        'mobile' => 'nullable|string|max:50',
+        'mobile' => ['required', 'digits:11', 'unique:users,mobile,' . $user->id],
         'email' => 'required|email|max:255|unique:users,email,' . $user->id,
         'password' => ['nullable', 'string', 'min:8', 'contains_number', 'contains_uppercase', 'confirmed'],
         'address' => 'nullable|string|max:255',
@@ -1174,6 +1184,8 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         'password.contains_number' => 'Password must include at least 1 number.',
         'password.contains_uppercase' => 'Password must include at least 1 capital letter.',
         'password.confirmed' => 'Password confirmation does not match.',
+        'mobile.digits' => 'The phone number must be 11 digits.',
+        'mobile.unique' => 'This phone number is already registered.',
     ]);
 
     $user->name = $request->name;

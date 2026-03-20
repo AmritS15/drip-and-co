@@ -41,10 +41,11 @@
               <div class="pb-3"></div>
 
               <div class="form-floating mb-3">
-                <input id="mobile" type="text" class="form-control form-control_gray @error('mobile') is-invalid @enderror" name="mobile" value="{{ old('mobile') }}"
-                  required="" autocomplete="mobile">
+                <input id="mobile" type="text" class="form-control form-control_gray js-uk-mobile-11 @error('mobile') is-invalid @enderror" name="mobile" value="{{ old('mobile') }}"
+                  required autocomplete="tel" inputmode="numeric" maxlength="11" pattern="[0-9]{11}"
+                  title="Enter 11 digits">
                 <label for="mobile">Mobile *</label>
-                @error('mobile')
+                                @error('mobile')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -75,7 +76,7 @@
 
               <div class="d-flex align-items-center mb-3 pb-2">
                 <p class="m-0">Your personal data will be used to support your experience throughout this website, to
-                  manage access to your account, and for other purposes described in our privacy policy.</p>
+                  manage access to your account, and for other purposes described in our <a href="{{ route('home.privacy') }}">privacy policy</a>.</p>
               </div>
 
               <button class="btn btn-primary w-100 text-uppercase" type="submit">Register</button>
@@ -92,4 +93,5 @@
   </main>
 
 
+@include('partials.uk-mobile-11-script')
 @endsection

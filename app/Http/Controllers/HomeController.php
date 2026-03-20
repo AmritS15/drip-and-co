@@ -253,6 +253,26 @@ class HomeController extends Controller
     {
         return view('about');
     }
+
+    public function privacy()
+    {
+        return view('privacy');
+    }
+
+    public function terms()
+    {
+        return view('terms');
+    }
+
+    public function modern_slavery()
+    {
+        return view('modern-slavery');
+    }
+
+    public function accessibility()
+    {
+        return view('accessibility');
+    }
 }
 
     
