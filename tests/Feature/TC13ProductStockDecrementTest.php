@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Surfsidemedia\Shoppingcart\Facades\Cart;
 use Tests\TestCase;
 
-class CheckoutVariantFlowTest extends TestCase
+class TC13ProductStockDecrementTest extends TestCase
 {
     use RefreshDatabase;
 

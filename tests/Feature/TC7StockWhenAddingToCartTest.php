@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Surfsidemedia\Shoppingcart\Facades\Cart;
 use Tests\TestCase;
 
-class QuantityTest extends TestCase
+class TC7StockWhenAddingToCartTest extends TestCase
 {
     use RefreshDatabase;
 
