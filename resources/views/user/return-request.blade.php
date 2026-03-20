@@ -49,7 +49,7 @@
 
                 <div class="col-lg-10">
 
-                    {{-- Product summary --}}
+                    
                     <div class="wg-box mb-4">
                         <h5>Item Being Returned</h5>
                         <div class="return-product-info">
@@ -77,7 +77,7 @@
                         </div>
                     </div>
 
-                    {{-- Return reason form --}}
+                    
                     <div class="wg-box">
                         <h5>Return Reason</h5>
 

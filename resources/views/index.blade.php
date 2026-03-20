@@ -584,7 +584,7 @@
                     "pagination": { "el": ".home-hero-slideshow__pagination", "type": "bullets", "clickable": true }
                  }'>
                 <div class="swiper-wrapper">
-                    {{-- First slide: always the static original hero (two images + overlay) --}}
+                    
                     @if ($staticHero)
                         <div class="swiper-slide home-hero-slideshow__slide">
                             <div class="home-category-banner home-category-banner--hero home-category-banner--in-slider">

@@ -16,7 +16,7 @@
 </style>
 @endpush
      <div class="main-content-inner">
-        <!-- main-content-wrap -->
+        
         <div class="main-content-wrap">
             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                 <h3>Edit Slide</h3>
@@ -42,7 +42,7 @@
                     </li>
                 </ul>
             </div>
-            <!-- new-category -->
+            
             <div class="wg-box">
                 @if(session('error'))
                     <div class="alert alert-danger mb-3">{{ session('error') }}</div>
@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <!-- Hero type fields -->
+                    
                     <div id="heroFields" class="slide-type-panel" style="{{ old('type', $slide->type) === 'hero' ? '' : 'display:none;' }}">
                         <div class="slide-form__section">
                             <div class="slide-form__section-title">Text</div>
@@ -148,7 +148,7 @@
                         </div>
                     </div>
 
-                    <!-- Standard type fields -->
+                    
                     <div id="standardFields" class="slide-type-panel" style="{{ old('type', $slide->type) === 'standard' ? '' : 'display:none;' }}">
                         <div class="slide-form__section">
                             <div class="slide-form__section-title">Text</div>
@@ -211,9 +211,9 @@
                     </div>
                 </form>
             </div>
-            <!-- /new-category -->
+            
         </div>
-        <!-- /main-content-wrap -->
+        
     </div>
 @endsection
 

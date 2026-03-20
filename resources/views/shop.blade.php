@@ -281,7 +281,14 @@
             .shop-main:not(.filters-collapsed) .shop-list {
                 max-height: 100%;
                 overflow-y: auto;
-                overscroll-behavior: contain;
+            }
+
+            .shop-main:not(.filters-collapsed) .shop-sidebar {
+                overscroll-behavior-y: contain;
+            }
+
+            .shop-main:not(.filters-collapsed) .shop-list {
+                overscroll-behavior-y: auto;
             }
 
             .shop-main:not(.filters-collapsed) .shop-list {
@@ -557,7 +564,7 @@
             }
           }'>
                     <div class="swiper-wrapper">
-                        {{-- Slide 1: Sale up to 80% off --}}
+                        
                         <div class="swiper-slide">
                             <div class="slide-split h-100 d-block d-md-flex overflow-hidden">
                                 <div class="slide-split_text position-relative d-flex align-items-center"
@@ -579,7 +586,7 @@
                             </div>
                         </div>
 
-                        {{-- Slide 2: Men's clothing --}}
+                        
                         <div class="swiper-slide">
                             <div class="slide-split h-100 d-block d-md-flex overflow-hidden">
                                 <div class="slide-split_text position-relative d-flex align-items-center"
@@ -601,7 +608,7 @@
                             </div>
                         </div>
 
-                        {{-- Slide 3: Women's clothing --}}
+                        
                         <div class="swiper-slide">
                             <div class="slide-split h-100 d-block d-md-flex overflow-hidden">
                                 <div class="slide-split_text position-relative d-flex align-items-center"

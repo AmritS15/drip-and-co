@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
     public function up()
     {
         Schema::create('reviews', function (Blueprint $table) {
@@ -16,15 +14,13 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('email');
-            $table->integer('rating'); // 1 to 5
+            $table->integer('rating'); 
             $table->text('review');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::dropIfExists('reviews');

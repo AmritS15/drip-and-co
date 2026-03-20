@@ -56,7 +56,7 @@ class UserController extends Controller
 
         $user = Auth::user();
         
-        // Validate input
+        
         $request->validate(
         [
             'name'   => 'required|string|max:255',
@@ -197,7 +197,7 @@ class UserController extends Controller
 
         $userId = $user->id;
 
-        // Orders and transactions keep user_id as null (migration changes FK to set null on delete)
+        
         Order::where('user_id', $userId)->update(['user_id' => null]);
         Transaction::where('user_id', $userId)->update(['user_id' => null]);
 

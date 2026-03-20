@@ -1,14 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-   body { 
-      min-height: 100vh; 
-      display: flex; 
-      flex-direction: column; 
-    }
-    main { flex: 1; min-height: 50vh; }
-  </style>
 <main class="pt-90 pb-5">
     <div class="mb-4 pb-4"></div>
     <div class="container">

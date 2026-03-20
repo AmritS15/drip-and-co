@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
+    
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -26,7 +26,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer">
     @stack('styles')
 
-    <!-- Mobile header: fixed overlay + transparent on all pages (same as desktop) -->
+    
     <style>
         @media (max-width: 1199.98px) {
             #header.header { display: none !important; }
@@ -419,6 +419,47 @@
             color: #ffffff !important;
         }
 
+        /* Account details + address forms/list – dark mode text visibility */
+        html[data-theme="dark"] .my-account .form-control,
+        html[data-theme="dark"] .my-account input.form-control,
+        html[data-theme="dark"] .my-account select.form-control,
+        html[data-theme="dark"] .my-account textarea.form-control {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+        html[data-theme="dark"] .my-account .form-control::placeholder,
+        html[data-theme="dark"] .my-account input.form-control::placeholder,
+        html[data-theme="dark"] .my-account textarea.form-control::placeholder {
+            color: #b0b0b0 !important;
+            opacity: 1;
+        }
+        html[data-theme="dark"] .my-account .form-floating label,
+        html[data-theme="dark"] .my-account label,
+        html[data-theme="dark"] .my-account .notice,
+        html[data-theme="dark"] .my-account h2,
+        html[data-theme="dark"] .my-account h3,
+        html[data-theme="dark"] .my-account h4,
+        html[data-theme="dark"] .my-account h5,
+        html[data-theme="dark"] .my-account p,
+        html[data-theme="dark"] .my-account span {
+            color: #ffffff !important;
+        }
+        html[data-theme="dark"] .my-account .text-muted {
+            color: #d1d1d1 !important;
+        }
+
+        /* Checkout saved-address labels/details – dark mode visibility */
+        html[data-theme="dark"] .shop-checkout .my-account__address-list-item,
+        html[data-theme="dark"] .shop-checkout .my-account__address-list-item p,
+        html[data-theme="dark"] .shop-checkout .my-account__address-list-item label,
+        html[data-theme="dark"] .shop-checkout .my-account__address-item__detail,
+        html[data-theme="dark"] .shop-checkout .my-account__address-item__detail p {
+            color: #ffffff !important;
+        }
+        html[data-theme="dark"] .shop-checkout .my-account__address-list-item .text-muted {
+            color: #d1d1d1 !important;
+        }
+
         /* Checkout steps: line under titles flips in dark mode (white/black <-> black/white) */
         html[data-theme="dark"] .shop-checkout .checkout-steps {
             border-bottom-color: #444444;
@@ -641,7 +682,7 @@
 
 </head>
 
-<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif">
+<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif @if(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*')) page-auth @endif">
     <svg class="d-none">
         <symbol id="icon_nav" viewBox="0 0 25 18">
             <rect width="25" height="2" />
@@ -885,6 +926,19 @@
         .footer-spaced {
             margin-top: 1rem;
             padding-top: 0.25rem;
+        }
+        /* Auth pages: keep footer pinned to viewport bottom */
+        body.page-auth {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        body.page-auth .layout-content {
+            flex: 1 0 auto;
+        }
+        body.page-auth .footer-spaced {
+            margin-top: 0;
+            padding-top: 0;
         }
         /* Homepage: gap between last image/content and footer */
         body.page-home .layout-content--home {
@@ -1485,9 +1539,9 @@
                                 class="logo__image d-block" />
                         </a>
                     </div>
-                    <p class="footer-address">14 Drip Drive, Dripstone City, UK B4 7ET</p>
-                    <p class="m-0"><strong class="fw-medium">dripandco@outlook.com</strong></p>
-                    <p><strong class="fw-medium">+44 000-000-0000</strong></p>
+                    <p class="footer-address">{{ config('store.contact.address') }}</p>
+                    <p class="m-0"><strong class="fw-medium">{{ config('store.contact.email') }}</strong></p>
+                    <p><strong class="fw-medium">{{ config('store.contact.phone') }}</strong></p>
 
                     <ul class="social-links list-unstyled d-flex flex-wrap mb-0">
 
@@ -1610,13 +1664,13 @@
         </div>
     </footer>
 
-    <!-- Chat widget (not on admin dashboard) -->
+    
     <button type="button" class="chat-widget-trigger" id="chat-widget-trigger" aria-label="Open or close chat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
     </button>
-    <div class="chat-widget-panel" id="chat-widget-panel" role="dialog" aria-label="Chat" data-contact-url="{{ route('home.contact') }}">
+    <div class="chat-widget-panel" id="chat-widget-panel" role="dialog" aria-label="Chat" data-contact-url="{{ route('home.contact') }}" data-chatbot-url="{{ route('home.chatbot.reply') }}">
         <div class="chat-widget-header">
             <h3>Support</h3>
             <div class="chat-widget-header-actions">
@@ -1625,7 +1679,7 @@
             </div>
         </div>
         <div class="chat-widget-messages" id="chat-widget-messages">
-            <!-- Messages and quick replies rendered by JS; initial state from localStorage or default -->
+            
         </div>
         <div class="chat-widget-input-wrap">
             <form id="chat-widget-form">
@@ -1801,7 +1855,7 @@
     </script>
 
     <script src="{{ asset('assets/js/theme.js') }}"></script>
-    {{-- Mobile menu search: runs after theme.js; fetch JSON (not theme's ./search.html). List must NOT use class "search-result". --}}
+    
     <script>
         (function() {
             var debounceTimer;
@@ -1951,8 +2005,10 @@
             var input = document.getElementById('chat-widget-input');
             var messagesEl = document.getElementById('chat-widget-messages');
             var contactUrl = (panel && panel.getAttribute('data-contact-url')) || '/contact-us';
+            var chatbotUrl = (panel && panel.getAttribute('data-chatbot-url')) || '/chatbot/reply';
+            var csrfToken = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
 
-            var quickReplies = ['Hello', 'Shipping & tracking', 'Returns & refunds', 'Contact options', 'Products & stock'];
+            var quickReplies = ['Shipping & tracking', 'Returns & refunds', 'Contact options', 'Products & stock'];
 
             if (!trigger || !panel) return;
 
@@ -2012,24 +2068,46 @@
                 messagesEl.appendChild(div);
                 messagesEl.scrollTop = messagesEl.scrollHeight;
             }
-            function getBotReply(userText) {
+            function getFallbackBotReply(userText) {
                 var t = (userText || '').toLowerCase().trim();
                 if (!t) return "Please type a message and we'll be happy to help.";
-                if (/hi|hello|hey|howdy|good morning|good afternoon|good evening/.test(t))
+                if (/\b(hi|hello|hey|howdy|good morning|good afternoon|good evening)\b/.test(t))
                     return "Hello. Thank you for contacting Drip&Co. How may we assist you today?";
-                if (/hour|open|close|time|when/.test(t))
+                if (/\b(hour|open|close|time|when)\b/.test(t))
                     return "We aim to respond to all enquiries within 24 hours. For immediate assistance, you can reach us by phone at +44 000-000-0000 or by email at dripandco@outlook.com.";
-                if (/ship|delivery|track|order status|where is my order/.test(t))
-                    return "Delivery and tracking information for your order is available in your account dashboard. Go to Order details to view status and tracking. We ship across the UK; standard delivery typically takes 3–5 working days.";
-                if (/return|refund|exchange/.test(t))
-                    return "Returns can be requested from your account dashboard. Go to Order details, select the relevant order and follow the return options there. We accept returns within 30 days. If you need further assistance, please contact us.";
-                if (/contact|email|phone|help|reach|get in touch/.test(t))
+                if (/\b(ship|shipping|delivery|track|tracking|order status|where is my order)\b/.test(t))
+                    return "Delivery and tracking information for your order is available in your account dashboard. Go to Order details to view status and tracking. Once dispatched, tracking details are provided by our third-party delivery partner. We ship across the UK; standard delivery typically takes 3–5 working days.";
+                if (/\b(return|returns|refund|refunds|exchange|exchanges)\b/.test(t))
+                    return "You can request a return from your account dashboard. Please open your order history, select View Details for the relevant order, and submit your return request from there. Returns are accepted within 30 days. If you need any assistance, our support team will be happy to help.";
+                if (/\b(contact|email|phone|help|reach|get in touch)\b/.test(t))
                     return "You can reach us by phone at +44 000-000-0000, by email at dripandco@outlook.com, or via our Contact page using the form there. We're here to help.";
                 if (/product|item|stock|available|in stock/.test(t))
                     return "Our full product range is available in the Shop. For availability of a specific item or restock dates, please email dripandco@outlook.com and we'll get back to you shortly.";
                 if (/thank|thanks|bye|goodbye|cheers/.test(t))
                     return "You're welcome. If you need anything else, feel free to ask. Have a great day.";
                 return "Thank you for your message. For detailed assistance, please email us at dripandco@outlook.com or use our contact form, and we'll respond as soon as possible.";
+            }
+            function getBotReply(userText) {
+                return fetch(chatbotUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ message: userText })
+                }).then(function(res) {
+                    if (!res.ok) throw new Error('Chatbot request failed');
+                    return res.json();
+                }).then(function(data) {
+                    if (data && typeof data.reply === 'string' && data.reply.trim() !== '') {
+                        return data.reply;
+                    }
+                    return getFallbackBotReply(userText);
+                }).catch(function() {
+                    return getFallbackBotReply(userText);
+                });
             }
             function renderMessages(messages) {
                 messagesEl.innerHTML = '';
@@ -2046,14 +2124,15 @@
             function sendMessage(text) {
                 if (!text) return;
                 appendMessage(text, false);
-                var reply = getBotReply(text);
-                setTimeout(function() {
-                    appendMessage(reply, true);
-                    renderQuickReplies();
-                    var history = loadHistory() || [];
-                    history.push({ text: text, bot: false }, { text: reply, bot: true });
-                    saveHistory(history);
-                }, 350);
+                getBotReply(text).then(function(reply) {
+                    setTimeout(function() {
+                        appendMessage(reply, true);
+                        renderQuickReplies();
+                        var history = loadHistory() || [];
+                        history.push({ text: text, bot: false }, { text: reply, bot: true });
+                        saveHistory(history);
+                    }, 250);
+                });
             }
 
             var history = loadHistory();
@@ -2169,6 +2248,9 @@
         .password-toggle-wrap input[type="text"] {
             padding-right: 2.5rem;
         }
+        .form-floating.password-toggle-floating > .form-control {
+            padding-right: 2.5rem;
+        }
         .password-toggle-btn {
             position: absolute;
             right: 0.75rem;
@@ -2199,11 +2281,6 @@
                     }
 
                     input.dataset.passwordToggleInit = '1';
-                    var wrapper = document.createElement('div');
-                    wrapper.className = 'password-toggle-wrap';
-                    parent.insertBefore(wrapper, input);
-                    wrapper.appendChild(input);
-
                     var btn = document.createElement('button');
                     btn.type = 'button';
                     btn.className = 'password-toggle-btn';
@@ -2225,7 +2302,17 @@
                         setIcon(!showing);
                     });
 
-                    wrapper.appendChild(btn);
+                    if (parent.classList.contains('form-floating')) {
+                        // Keep input as a direct sibling of label so floating labels still work.
+                        parent.classList.add('password-toggle-floating');
+                        parent.appendChild(btn);
+                    } else {
+                        var wrapper = document.createElement('div');
+                        wrapper.className = 'password-toggle-wrap';
+                        parent.insertBefore(wrapper, input);
+                        wrapper.appendChild(input);
+                        wrapper.appendChild(btn);
+                    }
                 });
             }
 

@@ -46,7 +46,7 @@
                         <div class="product-single__image">
                             <div class="swiper-container" id="product-swiper-main">
                                 <div class="swiper-wrapper" id="product-swiper-wrapper">
-                                    {{-- Slides filled by JS when variant changes; initial state from product --}}
+                                    
                                     <div class="swiper-slide product-single__image-item">
                                         <img loading="lazy" class="h-auto" id="main-img" width="674" height="674" alt=""
                                             src="{{ $productImage }}" />
@@ -240,7 +240,7 @@
 
                             <input type="hidden" name="id" value="{{ $product->id }}" />
 
-                            {{-- Size: when variants exist, color options depend on size (and vice versa) --}}
+                            
                             @if (count($variantSizes) > 0)
                                 <div class="mb-3">
                                     <label class="form-label fw-medium mb-1">Size <span class="text-danger">*</span></label>
@@ -253,7 +253,7 @@
                                 </div>
                             @endif
 
-                            {{-- Color: options filled by JS from selected size only (no options in HTML so only valid combos possible) --}}
+                            
                             @if (count($variantColors) > 0)
                                 <div class="mb-3">
                                     <label class="form-label fw-medium mb-1">Color <span class="text-danger">*</span></label>

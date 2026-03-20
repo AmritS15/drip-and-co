@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('content')
     <div class="main-content-inner">
-        <!-- main-content-wrap -->
+        
         <div class="main-content-wrap">
             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                 <h3>Add Product</h3>
@@ -27,7 +27,7 @@
                     </li>
                 </ul>
             </div>
-            <!-- form-add-product -->
+            
             <form class="tf-section-2 form-add-product" method="POST" enctype="multipart/form-data"
                 action="{{ route('admin.product.update') }}">
                 @csrf
@@ -98,7 +98,7 @@
                                     @enderror
                 </div>
                 <div class="wg-box">
-                            <!-- variant manager: size, color, SKU, qty, main image, gallery -->
+                            
                             <fieldset class="variants">
                                 <div class="body-title mb-10">Variants (size / color / SKU / qty / main image / gallery)</div>
                                 @foreach(array_filter(array_keys($errors->toArray()), fn($k) => str_starts_with($k ?? '', 'variants.') && str_contains($k ?? '', 'main_image')) as $errKey)
@@ -234,9 +234,9 @@
                             </div>
                 </div>
             </form>
-            <!-- /form-add-product -->
+            
         </div>
-        <!-- /main-content-wrap -->
+        
     </div>
 @endsection
 

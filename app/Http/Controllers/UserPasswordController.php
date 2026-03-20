@@ -8,20 +8,16 @@ use Illuminate\Support\Facades\Auth;
 
 class UserPasswordController extends Controller
 {
-    /**
-     * Show the change password form.
-     */
+    
     public function edit()
     {
         return view('user.account-password');
     }
 
-    /**
-     * Handle the password update.
-     */
+    
     public function update(Request $request)
     {
-        // Validate input
+        
         $request->validate(
             [
                 'current_password' => ['required'],
@@ -37,11 +33,11 @@ class UserPasswordController extends Controller
 
         $user = Auth::user();
 
-        // Check if current password matches
+        
         if (!Hash::check($request->current_password, $user->password)) {
             return back()->with(['error' => 'old passwords do not match']);
         }
-        // Update password
+        
         $user->password = Hash::make($request->new_password);
         $user->save();
 
