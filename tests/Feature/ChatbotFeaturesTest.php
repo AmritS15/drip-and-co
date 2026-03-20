@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
-class WebsiteFeaturesTest extends TestCase
+class ChatbotFeaturesTest extends TestCase
 {
     public function test_chatbot_empty_message_returns_helpful_prompt(): void
     {
