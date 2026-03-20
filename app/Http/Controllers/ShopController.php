@@ -21,8 +21,9 @@ class ShopController extends Controller
         $f_categories = $request->query('categories');
         $fsizes = $request->query('sizes');
         $fcolors = $request->query('colors');
+        $onSale = $request->query('sale') === '1';
         $min_price = $request->query('min') ? $request->query('min') : 1;
-        $max_price = $request->query('max') ? $request->query('max') : 500;
+        $max_price = $request->query('max') ? $request->query('max') : 250;
         switch ($order) {
             case 1:
                 $o_column = 'created_at';
@@ -53,7 +54,7 @@ class ShopController extends Controller
         $colors = array_values(array_filter(array_map('trim', explode(',', (string) $fcolors))));
 
         $min_price = is_numeric($min_price) ? (float) $min_price : 1;
-        $max_price = is_numeric($max_price) ? (float) $max_price : 500;
+        $max_price = is_numeric($max_price) ? (float) $max_price : 250;
 
         $hasVariants = Schema::hasTable('product_variants');
 
@@ -68,6 +69,10 @@ class ShopController extends Controller
             ->where(function ($query) use ($min_price, $max_price) {
                 $query->whereBetween('regular_price', [$min_price, $max_price])
                     ->orWhereBetween('sale_price', [$min_price, $max_price]);
+            })
+            ->when($onSale, function ($query) {
+                $query->whereNotNull('sale_price')
+                    ->where('sale_price', '>', 0);
             });
 
         if ($hasVariants) {
@@ -119,7 +124,8 @@ class ShopController extends Controller
             'fsizes',
             'fcolors',
             'min_price',
-            'max_price'
+            'max_price',
+            'onSale'
         ));
     }
 

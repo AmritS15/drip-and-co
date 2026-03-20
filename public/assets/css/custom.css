@@ -101,3 +101,11 @@ html[data-theme="dark"] .shop-list .pagination .page-link:focus {
 }
 
 /* Mobile header: fixed + transparent rules consolidated in app.blade.php inline styles */
+
+/* Mobile menu live search: never use class "search-result" on #box-content-search-mobile (theme hides it). */
+#box-content-search-mobile.header-mobile-search__results {
+    position: relative;
+    width: 100%;
+    min-height: 0;
+    list-style: none;
+}

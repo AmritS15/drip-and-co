@@ -139,14 +139,20 @@
             color: rgba(0, 0, 0, 0.75);
         }
 
-        /* Results box under search in popup */
+        /* Results area: no margin/border/padding while empty (avoids “white bar” under the field) */
         .search-popup__results {
+            margin-top: 0;
+            padding: 0;
+            border-top: none;
+        }
+
+        .search-popup__results:not(:has(#box-content-search:empty)) {
             margin-top: 14px;
             padding: 10px 0 4px;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        html[data-theme="light"] .search-popup__results {
+        html[data-theme="light"] .search-popup__results:not(:has(#box-content-search:empty)) {
             border-top-color: rgba(0, 0, 0, 0.12);
         }
 
@@ -156,9 +162,113 @@
             overflow-y: auto;
         }
 
-        /* Ensure hamburger menu search dropdown appears above nav items */
-        .header-mobile__navigation #mobile-search-form .position-absolute.top-100 {
-            z-index: 20;
+        /* Desktop: frosted results panel only when there are hits (not the old solid white block) */
+        .search-popup #box-content-search:not(:empty) {
+            position: relative;
+            list-style: none;
+            margin: 0;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        html[data-theme="dark"] .search-popup #box-content-search:not(:empty) {
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Mobile menu search: results in normal flow (between bar and nav links) */
+        .mobile-search-results-wrap {
+            margin-top: 0;
+        }
+
+        .mobile-search-results-wrap:not(:has(#box-content-search-mobile:empty)) {
+            margin-top: 0.5rem;
+        }
+
+        /* Mobile list: no panel while empty; frosted when there are results */
+        #box-content-search-mobile.header-mobile-search__results {
+            position: relative;
+            width: 100%;
+            min-height: 0;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            background: transparent !important;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+
+        #box-content-search-mobile.header-mobile-search__results:not(:empty) {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 12px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 10px 12px;
+        }
+
+        html[data-theme="dark"] #box-content-search-mobile.header-mobile-search__results:not(:empty) {
+            background: rgba(0, 0, 0, 0.22) !important;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header-mobile__navigation #box-content-search-mobile .text-secondary,
+        .header-mobile__navigation #box-content-search-mobile .small.fw-medium.text-secondary {
+            color: rgba(255, 255, 255, 0.95) !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        html[data-theme="light"] .header-mobile__navigation #box-content-search-mobile .text-secondary,
+        html[data-theme="light"] .header-mobile__navigation #box-content-search-mobile .small.fw-medium.text-secondary {
+            color: rgba(0, 0, 0, 0.88) !important;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+        }
+
+        html[data-theme="light"] .header-mobile__navigation #box-content-search-mobile {
+            color: rgba(0, 0, 0, 0.9);
+        }
+
+        html[data-theme="dark"] .header-mobile__navigation #box-content-search-mobile {
+            color: rgba(255, 255, 255, 0.92);
+        }
+
+        .header-mobile__navigation #box-content-search-mobile .product-item a.body-text {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        html[data-theme="light"] .header-mobile__navigation #box-content-search-mobile .product-item:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        html[data-theme="dark"] .header-mobile__navigation #box-content-search-mobile .product-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Only the link list scrolls */
+        .header-mobile__nav-scroll {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Search row + results sit above the scrollable list if any stacking occurs */
+        .header-mobile__search-block {
+            position: relative;
+            z-index: 5;
+            flex-shrink: 0;
         }
 
         #box-content-search .product-item,
@@ -169,15 +279,11 @@
         }
 
         html[data-theme="light"] #box-content-search .product-item:hover {
-            background: #f5f7fb;
+            background: rgba(255, 255, 255, 0.45);
         }
 
-        html[data-theme="dark"] #box-content-search .product-item:hover,
-        html[data-theme="dark"] #box-content-search-mobile .product-item:hover {
-            background: #1f2229;
-        }
-        html[data-theme="light"] #box-content-search-mobile .product-item:hover {
-            background: #f5f7fb;
+        html[data-theme="dark"] #box-content-search .product-item:hover {
+            background: rgba(255, 255, 255, 0.08);
         }
 
         /* Desktop search only: whole row is clickable, link wraps content so image stays next to text */
@@ -192,19 +298,6 @@
         .search-popup #box-content-search .product-item a.body-text:hover,
         .search-popup #box-content-search .product-item a.body-text:focus {
             color: inherit;
-        }
-
-        /* Mobile search dropdown results */
-        .search-result {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 10px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-            padding: 10px 12px;
-        }
-
-        html[data-theme="dark"] .search-result {
-            background: rgba(45, 69, 65, 0.98);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
         }
 
         /* Product card category label */
@@ -1148,9 +1241,9 @@
         </div>
 
         <nav
-            class="header-mobile__navigation navigation d-flex flex-column w-100 position-absolute top-100 bg-body overflow-auto">
-            <div class="container">
-                <form action="#" method="GET" class="search-field position-relative mt-4 mb-3" id="mobile-search-form"
+            class="header-mobile__navigation navigation d-flex flex-column w-100 position-absolute top-100 bg-body overflow-hidden">
+            <div class="container header-mobile__search-block">
+                <form action="#" method="GET" class="search-field mt-4 mb-2" id="mobile-search-form"
                     data-search-url="{{ route('home.search') }}"
                     data-shop-url="{{ route('shop.index') }}"
                     data-product-base="{{ url('/shop') }}/"
@@ -1170,15 +1263,15 @@
                             <svg width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true"><path d="M3 3l12 12M15 3L3 15"/></svg>
                         </button>
                     </div>
-
-                    <div class="position-absolute start-0 top-100 m-0 w-100">
-                        <ul id="box-content-search-mobile" class="search-result list-unstyled mb-0"></ul>
+                    <div class="mobile-search-results-wrap w-100">
+                        <ul id="box-content-search-mobile" class="header-mobile-search__results list-unstyled mb-0"></ul>
                     </div>
                 </form>
             </div>
 
-            <div class="container">
-                <div class="overflow-hidden">
+            <div class="header-mobile__nav-scroll">
+                <div class="container">
+                    <div class="overflow-hidden">
                     <ul class="navigation__list list-unstyled position-relative">
                         <li class="navigation__item">
                             <a href="{{ route('home.index') }}" class="navigation__link">Home</a>
@@ -1196,10 +1289,11 @@
                             <a href="{{ route('home.contact') }}" class="navigation__link">Contact</a>
                         </li>
                     </ul>
+                    </div>
                 </div>
             </div>
 
-            <div class="border-top mt-auto pb-2">
+            <div class="border-top mt-auto pb-2 flex-shrink-0">
                 <div class="customer-links container mt-4 mb-2 pb-1">
                     @guest
                         <a href="{{ route('login') }}" class="d-flex align-items-center text-decoration-none text-body">
@@ -1624,171 +1718,52 @@
                 }
             }
 
-            function bindSearch(inputId, resultsId) {
-                $(inputId).on("keyup input", function() {
-                    var searchQuery = $(this).val().trim();
-                    var $results = $(resultsId);
-                    if (searchQuery.length > 2) {
-                        $.ajax({
-                            type: "GET",
-                            url: "{{ route('home.search') }}",
-                            data: { query: searchQuery },
-                            dataType: "json",
-                            success: function(data) {
-                                renderSearchResults(data, $results);
-                            }
-                        });
-                    } else {
-                        $results.html('');
-                    }
-                });
-            }
-            bindSearch("#search-input", "#box-content-search");
+            var desktopSearchSeq = 0;
+            var desktopSearchDebounce = null;
 
-            // Mobile hamburger search: shared run function + multiple triggers so it works on all devices/keyboards
-            function runMobileSearch() {
-                var searchQuery = $("#search-input-mobile").val().trim();
-                var $results = $("#box-content-search-mobile");
+            function doSearchAjax(searchQuery, $results, showShortHint) {
                 if (searchQuery.length > 2) {
-                    $results.html('');
+                    var mySeq = ++desktopSearchSeq;
+                    /* Keep showing previous hits until this response arrives — no blank flash per keystroke */
                     $.ajax({
                         type: "GET",
                         url: "{{ route('home.search') }}",
                         data: { query: searchQuery },
                         dataType: "json",
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
                         success: function(data) {
+                            if (mySeq !== desktopSearchSeq) return;
                             renderSearchResults(data, $results);
+                        },
+                        error: function() {
+                            if (mySeq !== desktopSearchSeq) return;
+                            $results.html('<li class="product-item py-2"><span class="text-secondary">Could not load search results.</span></li>');
                         }
                     });
                 } else {
+                    desktopSearchSeq++;
                     $results.html('');
-                    if (searchQuery.length > 0) {
+                    if (showShortHint && searchQuery.length > 0) {
                         $results.append('<li class="product-item py-2"><span class="text-secondary">Type at least 3 characters.</span></li>');
                     }
                 }
             }
 
-            $(document).on("keyup input search", "#search-input-mobile", function() {
-                runMobileSearch();
-            });
-            $(document).on("click", "#mobile-search-form .search-popup__submit", function(e) {
-                e.preventDefault();
-                runMobileSearch();
-            });
-            $(document).on("submit", "#mobile-search-form", function(e) {
-                e.preventDefault();
-                runMobileSearch();
-            });
-            $(document).on("click", "#mobile-search-form .search-popup__reset", function() {
-                $("#search-input-mobile").val('');
-                $("#box-content-search-mobile").html('');
-            });
+            function bindSearch(inputId, resultsId) {
+                $(inputId).on("keyup input", function() {
+                    var $input = $(this);
+                    clearTimeout(desktopSearchDebounce);
+                    desktopSearchDebounce = setTimeout(function() {
+                        doSearchAjax($input.val().trim(), $(resultsId), false);
+                    }, 280);
+                });
+            }
+            bindSearch("#search-input", "#box-content-search");
 
             $(".search-popup form").on("submit", function(e) {
                 e.preventDefault();
             });
         });
-    </script>
-
-    <!-- Self-contained mobile hamburger search (vanilla JS) so it works even if jQuery or other script fails -->
-    <script>
-        (function() {
-            function initMobileSearch() {
-                var form = document.getElementById('mobile-search-form');
-                if (!form) return;
-                var input = document.getElementById('search-input-mobile');
-                var resultsEl = document.getElementById('box-content-search-mobile');
-                if (!input || !resultsEl) return;
-
-                var searchUrl = form.getAttribute('data-search-url');
-                var shopUrl = form.getAttribute('data-shop-url');
-                var productBase = form.getAttribute('data-product-base');
-                var thumbBase = form.getAttribute('data-thumb-base') || '';
-                var categoryThumbBase = form.getAttribute('data-category-thumb-base') || '';
-                var brandThumbBase = form.getAttribute('data-brand-thumb-base') || '';
-
-                function shopUrlWithParams(catIds, brandIds) {
-                    var params = [];
-                    if (catIds && catIds.length) params.push('categories=' + catIds.join(','));
-                    if (brandIds && brandIds.length) params.push('brands=' + brandIds.join(','));
-                    return params.length ? shopUrl + '?' + params.join('&') : shopUrl;
-                }
-
-                function renderResults(data) {
-                    var html = '';
-                    var hasAny = (data.products && data.products.length) || (data.categories && data.categories.length) || (data.brands && data.brands.length);
-                    if (!hasAny) {
-                        html = '<li class="product-item py-2"><span class="text-secondary">No results found.</span></li>';
-                    } else {
-                        if (data.categories && data.categories.length) {
-                            html += '<li class="list-unstyled mb-2"><span class="text-uppercase small fw-medium text-secondary">Categories</span></li>';
-                            data.categories.forEach(function(cat) {
-                                var link = shopUrlWithParams([cat.id], []);
-                                var imgSrc = cat.image ? (categoryThumbBase + cat.image) : '';
-                                var imgHtml = imgSrc ? '<div class="image no-bg"><img src="' + imgSrc + '" alt="' + (cat.name || '') + '"></div>' : '';
-                                html += '<li class="product-item gap14 mb-10"><a href="' + link + '" class="body-text d-flex align-items-center gap14 w-100 text-decoration-none">' + imgHtml + '<div class="flex items-center justify-between gap20 flex-grow"><div class="name">' + (cat.name || '') + '</div></div></a></li>';
-                            });
-                            html += '<li class="mb-10"><div class="divider"></div></li>';
-                        }
-                        if (data.brands && data.brands.length) {
-                            html += '<li class="list-unstyled mb-2"><span class="text-uppercase small fw-medium text-secondary">Collections</span></li>';
-                            data.brands.forEach(function(brand) {
-                                var catIds = brand.category_id ? [brand.category_id] : [];
-                                var link = shopUrlWithParams(catIds, [brand.id]);
-                                var imgSrc = brand.image ? (brandThumbBase + brand.image) : '';
-                                var imgHtml = imgSrc ? '<div class="image no-bg"><img src="' + imgSrc + '" alt="' + (brand.name || '') + '"></div>' : '';
-                                html += '<li class="product-item gap14 mb-10"><a href="' + link + '" class="body-text d-flex align-items-center gap14 w-100 text-decoration-none">' + imgHtml + '<div class="flex items-center justify-between gap20 flex-grow"><div class="name">' + (brand.name || '') + '</div></div></a></li>';
-                            });
-                            html += '<li class="mb-10"><div class="divider"></div></li>';
-                        }
-                        if (data.products && data.products.length) {
-                            html += '<li class="list-unstyled mb-2"><span class="text-uppercase small fw-medium text-secondary">Products</span></li>';
-                            data.products.forEach(function(item) {
-                                var link = productBase + (item.slug || '');
-                                var imgSrc = item.image ? (thumbBase + '/' + item.image) : '';
-                                html += '<li><ul><li class="product-item gap14 mb-10"><div class="image no-bg"><img src="' + imgSrc + '" alt="' + (item.name || '') + '"></div><div class="flex items-center justify-between gap20 flex-grow"><div class="name"><a href="' + link + '" class="body-text">' + (item.name || '') + '</a></div></div></li><li class="mb-10"><div class="divider"></div></li></ul></li>';
-                            });
-                        }
-                    }
-                    resultsEl.innerHTML = html;
-                }
-
-                function runSearch() {
-                    var q = (input.value || '').trim();
-                    if (q.length > 2) {
-                        resultsEl.innerHTML = '';
-                        fetch(searchUrl + '?query=' + encodeURIComponent(q))
-                            .then(function(r) { return r.json(); })
-                            .then(function(data) { renderResults(data); })
-                            .catch(function() { resultsEl.innerHTML = '<li class="product-item py-2"><span class="text-secondary">Search failed. Try again.</span></li>'; });
-                    } else {
-                        resultsEl.innerHTML = q.length ? '<li class="product-item py-2"><span class="text-secondary">Type at least 3 characters.</span></li>' : '';
-                    }
-                }
-
-                input.addEventListener('input', runSearch);
-                input.addEventListener('keyup', runSearch);
-                input.addEventListener('search', runSearch);
-                form.querySelector('.search-popup__submit') && form.querySelector('.search-popup__submit').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    runSearch();
-                });
-                form.querySelector('.search-popup__reset') && form.querySelector('.search-popup__reset').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    input.value = '';
-                    resultsEl.innerHTML = '';
-                });
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    runSearch();
-                });
-            }
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initMobileSearch);
-            } else {
-                initMobileSearch();
-            }
-        })();
     </script>
 
     <script>
@@ -1826,6 +1801,145 @@
     </script>
 
     <script src="{{ asset('assets/js/theme.js') }}"></script>
+    {{-- Mobile menu search: runs after theme.js; fetch JSON (not theme's ./search.html). List must NOT use class "search-result". --}}
+    <script>
+        (function() {
+            var debounceTimer;
+            var mobileSearchSeq = 0;
+            function initHeaderMobileSearch() {
+                var form = document.getElementById('mobile-search-form');
+                var input = document.getElementById('search-input-mobile');
+                var resultsEl = document.getElementById('box-content-search-mobile');
+                if (!form || !input || !resultsEl) return;
+
+                var searchUrl = form.getAttribute('data-search-url');
+                var shopUrl = form.getAttribute('data-shop-url');
+                var productBase = form.getAttribute('data-product-base');
+                var thumbBase = (form.getAttribute('data-thumb-base') || '').replace(/\/+$/, '');
+                var categoryThumbBase = (form.getAttribute('data-category-thumb-base') || '').replace(/\/+$/, '');
+                var brandThumbBase = (form.getAttribute('data-brand-thumb-base') || '').replace(/\/+$/, '');
+
+                function joinUploadBase(base, file) {
+                    if (!file) return '';
+                    return base + '/' + String(file).replace(/^\/+/, '');
+                }
+
+                function shopUrlWithParams(catIds, brandIds) {
+                    var params = [];
+                    if (catIds && catIds.length) params.push('categories=' + catIds.join(','));
+                    if (brandIds && brandIds.length) params.push('brands=' + brandIds.join(','));
+                    return params.length ? shopUrl + '?' + params.join('&') : shopUrl;
+                }
+
+                function renderResults(data) {
+                    var html = '';
+                    var hasAny = (data.products && data.products.length) || (data.categories && data.categories.length) || (data.brands && data.brands.length);
+                    if (!hasAny) {
+                        html = '<li class="product-item py-2"><span class="text-secondary">No results found.</span></li>';
+                    } else {
+                        if (data.categories && data.categories.length) {
+                            html += '<li class="list-unstyled mb-2"><span class="text-uppercase small fw-medium text-secondary">Categories</span></li>';
+                            data.categories.forEach(function(cat) {
+                                var link = shopUrlWithParams([cat.id], []);
+                                var imgSrc = joinUploadBase(categoryThumbBase, cat.image);
+                                var imgHtml = imgSrc ? '<div class="image no-bg"><img src="' + imgSrc + '" alt="' + (cat.name || '') + '"></div>' : '';
+                                html += '<li class="product-item gap14 mb-10"><a href="' + link + '" class="body-text d-flex align-items-center gap14 w-100 text-decoration-none">' + imgHtml + '<div class="flex items-center justify-between gap20 flex-grow"><div class="name">' + (cat.name || '') + '</div></div></a></li>';
+                            });
+                            html += '<li class="mb-10"><div class="divider"></div></li>';
+                        }
+                        if (data.brands && data.brands.length) {
+                            html += '<li class="list-unstyled mb-2"><span class="text-uppercase small fw-medium text-secondary">Collections</span></li>';
+                            data.brands.forEach(function(brand) {
+                                var catIds = brand.category_id ? [brand.category_id] : [];
+                                var link = shopUrlWithParams(catIds, [brand.id]);
+                                var imgSrc = joinUploadBase(brandThumbBase, brand.image);
+                                var imgHtml = imgSrc ? '<div class="image no-bg"><img src="' + imgSrc + '" alt="' + (brand.name || '') + '"></div>' : '';
+                                html += '<li class="product-item gap14 mb-10"><a href="' + link + '" class="body-text d-flex align-items-center gap14 w-100 text-decoration-none">' + imgHtml + '<div class="flex items-center justify-between gap20 flex-grow"><div class="name">' + (brand.name || '') + '</div></div></a></li>';
+                            });
+                            html += '<li class="mb-10"><div class="divider"></div></li>';
+                        }
+                        if (data.products && data.products.length) {
+                            html += '<li class="list-unstyled mb-2"><span class="text-uppercase small fw-medium text-secondary">Products</span></li>';
+                            data.products.forEach(function(item) {
+                                var link = productBase + (item.slug || '');
+                                var imgSrc = joinUploadBase(thumbBase, item.image);
+                                html += '<li><ul><li class="product-item gap14 mb-10"><a href="' + link + '" class="body-text d-flex align-items-center gap14 w-100 text-decoration-none"><div class="image no-bg"><img src="' + imgSrc + '" alt="' + (item.name || '') + '"></div><div class="flex items-center justify-between gap20 flex-grow"><div class="name">' + (item.name || '') + '</div></div></a></li><li class="mb-10"><div class="divider"></div></li></ul></li>';
+                            });
+                        }
+                    }
+                    resultsEl.innerHTML = html;
+                }
+
+                function runSearch() {
+                    var q = (input.value || '').trim();
+                    if (q.length > 2) {
+                        var seq = ++mobileSearchSeq;
+                        /* Do not clear list to "Searching…" — keeps panel stable while typing */
+                        var sep = searchUrl.indexOf('?') >= 0 ? '&' : '?';
+                        fetch(searchUrl + sep + 'query=' + encodeURIComponent(q), {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            credentials: 'same-origin'
+                        })
+                            .then(function(r) {
+                                if (!r.ok) throw new Error('HTTP ' + r.status);
+                                return r.json();
+                            })
+                            .then(function(data) {
+                                if (seq !== mobileSearchSeq) return;
+                                renderResults(data);
+                            })
+                            .catch(function() {
+                                if (seq !== mobileSearchSeq) return;
+                                resultsEl.innerHTML = '<li class="product-item py-2"><span class="text-secondary">Search failed. Try again.</span></li>';
+                            });
+                    } else {
+                        mobileSearchSeq++;
+                        resultsEl.innerHTML = q.length ? '<li class="product-item py-2"><span class="text-secondary">Type at least 3 characters.</span></li>' : '';
+                    }
+                }
+
+                function scheduleSearch() {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(runSearch, 280);
+                }
+
+                input.addEventListener('input', scheduleSearch);
+                input.addEventListener('search', scheduleSearch);
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    clearTimeout(debounceTimer);
+                    runSearch();
+                });
+                var submitBtn = form.querySelector('.search-popup__submit');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        clearTimeout(debounceTimer);
+                        runSearch();
+                    });
+                }
+                var resetBtn = form.querySelector('.search-popup__reset');
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        clearTimeout(debounceTimer);
+                        mobileSearchSeq++;
+                        input.value = '';
+                        resultsEl.innerHTML = '';
+                    });
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initHeaderMobileSearch);
+            } else {
+                initHeaderMobileSearch();
+            }
+        })();
+    </script>
     <script>
         (function() {
             var STORAGE_KEY = 'dripandco_chat_history';

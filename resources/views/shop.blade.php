@@ -7,7 +7,8 @@
         }
 
         .brand-list li .chk-brand,
-        .category-list li .chk-category {
+        .category-list li .chk-category,
+        .shop-sale-filter .chk-on-sale {
             width: 1rem;
             height: 1rem;
             color: #e4e4e4;
@@ -52,17 +53,278 @@
             cursor: pointer;
             pointer-events: auto;
         }
+
+        /* Desktop-only: border, max-height & scroll (mobile drawer uses full-height panel below) */
+        @media (min-width: 992px) {
+            .shop-sidebar {
+                border-right: 1px solid #e9ecef;
+                padding-right: 1.25rem;
+                max-height: calc(100vh - 120px);
+                overflow-y: auto;
+            }
+
+            .shop-sidebar::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .shop-sidebar::-webkit-scrollbar-thumb {
+                background: #d0d4d8;
+                border-radius: 999px;
+            }
+        }
+
+        /* Mobile: right drawer — covers part of the page; slideshow/shop stay visible on the left */
+        @media (max-width: 991.98px) {
+            #shopFilter.shop-sidebar.side-sticky {
+                position: fixed !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                left: auto !important;
+                right: 0 !important;
+                width: min(26.25rem, 88vw) !important;
+                max-width: 88vw !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                min-height: 100vh !important;
+                min-height: 100dvh !important;
+                max-height: none !important;
+                margin: 0 !important;
+                box-sizing: border-box;
+                padding: 0 1rem 1.75rem;
+                border-right: none;
+                overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                z-index: 1060 !important;
+                box-shadow: -8px 0 24px rgba(0, 0, 0, 0.12);
+                transform: translateX(100%);
+                transition: transform 0.35s cubic-bezier(0.39, 0.575, 0.565, 1) !important;
+            }
+
+            #shopFilter.shop-sidebar.side-sticky::-webkit-scrollbar {
+                width: 0;
+                height: 0;
+                display: none;
+            }
+
+            #shopFilter.shop-sidebar.side-sticky.aside_visible {
+                transform: translateX(0) !important;
+            }
+
+            #shopFilter .aside-header {
+                margin-left: -1rem;
+                margin-right: -1rem;
+            }
+
+            #shopFilter.side-sticky .accordion {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+
+        .shop-filter-title {
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #5b6168;
+            margin-bottom: 1rem;
+        }
+
+        .shop-sidebar .accordion-item {
+            border: 0;
+            border-bottom: 1px solid #eceff2;
+            border-radius: 0;
+            margin-bottom: 0 !important;
+            padding: 0.9rem 0 0.95rem !important;
+        }
+
+        .shop-sidebar .accordion-button {
+            font-size: 0.85rem !important;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #111 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .shop-sidebar .accordion-button::after {
+            width: 0.72rem;
+            height: 0.72rem;
+            background-size: 0.72rem;
+        }
+
+        .shop-sidebar .list-item {
+            font-size: 0.95rem;
+            color: #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            line-height: 1.5 !important;
+            margin-bottom: 0.3rem;
+        }
+
+        .shop-sidebar .menu-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .shop-sidebar .chk-brand,
+        .shop-sidebar .chk-category,
+        .shop-sidebar .chk-on-sale {
+            width: 1.05rem !important;
+            height: 1.05rem !important;
+            border: 1px solid #8f959c !important;
+            border-radius: 2px;
+            margin-right: 0 !important;
+        }
+
+        .shop-sidebar .swatch-size {
+            border: 1px solid #c9ced3 !important;
+            color: #2b3137;
+            min-width: 44px;
+            text-align: center;
+            font-size: 0.82rem;
+            border-radius: 999px;
+            text-transform: uppercase;
+            padding: 0.28rem 0.8rem;
+        }
+
+        .shop-sidebar .swatch-size.btn-primary {
+            background: #111 !important;
+            color: #fff !important;
+            border-color: #111 !important;
+        }
+
+        .shop-sidebar .swatch-color {
+            width: 22px !important;
+            height: 22px !important;
+            border-width: 1px !important;
+            margin-right: 0.45rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .shop-sidebar .price-range__info {
+            font-size: 0.85rem;
+        }
+
+        html[data-theme="dark"] .shop-sidebar {
+            border-right-color: #3a4046;
+        }
+
+        html[data-theme="dark"] .shop-sidebar .accordion-item {
+            border-bottom-color: #373d43;
+        }
+
+        html[data-theme="dark"] .shop-sidebar .accordion-button,
+        html[data-theme="dark"] .shop-sidebar .list-item,
+        html[data-theme="dark"] .shop-filter-title {
+            color: #f3f5f7 !important;
+        }
+
+        /* Mobile filter top bar: dark grey, slightly darker than panel body (#383B3C) */
+        html[data-theme="dark"] #shopFilter .aside-header {
+            background-color: #2d3134 !important;
+            color: #f3f5f7;
+            border-bottom: 1px solid #3a4046;
+        }
+
+        html[data-theme="dark"] #shopFilter .aside-header h3 {
+            color: #f3f5f7 !important;
+        }
+
+        /* Close control visible on dark header */
+        html[data-theme="dark"] #shopFilter .aside-header .btn-close-aside,
+        html[data-theme="dark"] #shopFilter .aside-header .btn-close-lg {
+            filter: invert(1) grayscale(100%);
+            opacity: 0.85;
+        }
+
+        @media (min-width: 992px) {
+            .shop-main {
+                position: relative;
+                align-items: flex-start;
+            }
+
+            .shop-sidebar {
+                order: 1;
+                width: 260px;
+                min-width: 260px;
+                flex: 0 0 260px;
+                margin-right: 1.25rem;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+
+            .shop-list {
+                order: 2;
+                flex: 1 1 auto;
+                min-width: 0;
+                transition: max-width 0.3s ease, margin 0.3s ease;
+            }
+
+            .shop-main:not(.filters-collapsed) .shop-list {
+                max-width: none;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .shop-main:not(.filters-collapsed) {
+                height: calc(100vh - 110px);
+                overflow: hidden;
+            }
+
+            .shop-main:not(.filters-collapsed) .shop-sidebar,
+            .shop-main:not(.filters-collapsed) .shop-list {
+                max-height: 100%;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+            }
+
+            .shop-main:not(.filters-collapsed) .shop-list {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            .shop-main:not(.filters-collapsed) .shop-list::-webkit-scrollbar {
+                width: 0;
+                height: 0;
+                display: none;
+            }
+
+            .shop-main.filters-collapsed .shop-sidebar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                transform: translateX(-110%);
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .shop-main.filters-collapsed .shop-list {
+                max-width: 1120px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
     </style>
 
     <main class="pt-90">
-        <section class="shop-main container d-flex pt-4 pt-xl-5">
+        <section class="shop-main container d-flex pt-4 pt-xl-5 filters-collapsed" id="shopMain">
             <div class="shop-sidebar side-sticky bg-body" id="shopFilter">
                 <div class="aside-header d-flex d-lg-none align-items-center">
-                    <h3 class="text-uppercase fs-6 mb-0">Filter By</h3>
+                    <h3 class="text-uppercase fs-6 mb-0">Filters</h3>
                     <button class="btn-close-lg js-close-aside btn-close-aside ms-auto"></button>
                 </div>
 
                 <div class="pt-4 pt-lg-0"></div>
+                <button type="button" id="js-hide-filter-inside"
+                    class="shop-filter-title btn-link d-none d-lg-inline-flex align-items-center p-0 border-0 bg-transparent">
+                    Hide Filter
+                </button>
 
                 <div class="accordion" id="categories-list">
                     <div class="accordion-item mb-4 pb-3">
@@ -214,6 +476,17 @@
                     </div>
                 </div>
 
+                <div class="shop-sale-filter mb-4 pb-3 border-bottom">
+                    <ul class="list list-inline mb-0">
+                        <li class="list-item">
+                            <span class="menu-link py-1">
+                                <input type="checkbox" class="chk-on-sale" id="chk-on-sale"
+                                    @if (!empty($onSale ?? false)) checked="checked" @endif />
+                                On sale
+                            </span>
+                        </li>
+                    </ul>
+                </div>
 
                 <div class="accordion" id="price-filters">
                     <div class="accordion-item mb-4">
@@ -234,7 +507,7 @@
                         <div id="accordion-filter-price" class="accordion-collapse collapse show border-0"
                             aria-labelledby="accordion-heading-price" data-bs-parent="#price-filters">
                             <input class="price-range-slider" type="text" name="price_range" value=""
-                                data-slider-min="1" data-slider-max="500" data-slider-step="5"
+                                data-slider-min="1" data-slider-max="250" data-slider-step="5"
                                 data-slider-value="[{{ $min_price }},{{ $max_price }}]" data-currency="£" />
                             <div class="price-range__info d-flex align-items-center mt-2">
                                 <div class="me-auto">
@@ -243,7 +516,7 @@
                                 </div>
                                 <div>
                                     <span class="text-secondary">Max Price: </span>
-                                    <span class="price-range__max">£500</span>
+                                    <span class="price-range__max">£250</span>
                                 </div>
                             </div>
                         </div>
@@ -257,6 +530,9 @@
                             Clear All Filters
                         </button>
                         <button type="button" id="js-apply-filters-mobile" class="btn btn-primary w-100 text-uppercase py-3 mt-2 d-lg-none">
+                            Apply filters
+                        </button>
+                        <button type="button" id="js-apply-filters-desktop" class="btn btn-primary w-100 text-uppercase py-3 mt-2 d-none d-lg-block">
                             Apply filters
                         </button>
                     </div>
@@ -407,10 +683,25 @@
                                 <span class="text-uppercase fw-medium d-inline-block align-middle">Filter</span>
                             </button>
                         </div>
+
+                        <div class="shop-filter d-none d-lg-flex align-items-center order-0 order-md-3 ms-3">
+                            <button type="button" id="js-desktop-filter-toggle"
+                                class="btn-link btn-link_f d-flex align-items-center ps-0">
+                                <svg class="d-inline-block align-middle me-2" width="14" height="10"
+                                    viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#icon_filter" />
+                                </svg>
+                                <span
+                                    class="text-uppercase fw-medium d-inline-block align-middle js-desktop-filter-label">Show Filter</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="products-grid row row-cols-2 row-cols-md-3" id="products-grid">
+                    @php
+                        $activeColorFilters = array_values(array_filter(array_map('trim', explode(',', (string) $fcolors))));
+                    @endphp
                     @foreach ($products as $product)
                         <div class="product-card-wrapper">
                         <div class="product-card mb-3 mb-md-4 mb-xxl-5" style="position:relative;">
@@ -431,6 +722,7 @@
                                 @php
                                     $cardImage = $product->image;
                                     $cardGallery = $product->images ? array_filter(array_map('trim', explode(',', $product->images))) : [];
+                                    $colorMainImages = [];
 
                                     // Variant products: show one main image per colour in card slider.
                                     if ($product->variants->isNotEmpty()) {
@@ -449,11 +741,81 @@
                                             }
                                         }
 
+                                        // Keep first-selected active colour as the preferred main card image.
+                                        if (!empty($activeColorFilters)) {
+                                            foreach ($activeColorFilters as $activeColor) {
+                                                $activeColorKey = strtolower(trim((string) $activeColor));
+                                                if ($activeColorKey !== '' && isset($colorMainImages[$activeColorKey])) {
+                                                    $cardImage = $colorMainImages[$activeColorKey];
+                                                    break;
+                                                }
+                                            }
+                                        }
+
                                         if (!empty($colorMainImages)) {
                                             $cardGallery = array_values(array_filter(
                                                 $colorMainImages,
                                                 fn($img) => $img !== $cardImage
                                             ));
+                                        }
+                                    }
+
+                                    $baseProductUrl = route('shop.product.details', ['product_slug' => $product->slug]);
+                                    $productUrlMain = $baseProductUrl;
+                                    $productUrlGallery = [];
+
+                                    if ($product->variants->isNotEmpty() && !empty($colorMainImages)) {
+                                        $makeDetailUrlForVariantImage = function ($imageFilename) use ($product, $colorMainImages, $baseProductUrl) {
+                                            if ($imageFilename === '' || $imageFilename === null) {
+                                                return $baseProductUrl;
+                                            }
+                                            $canonicalColor = null;
+                                            foreach ($colorMainImages as $key => $img) {
+                                                if ($img !== $imageFilename) {
+                                                    continue;
+                                                }
+                                                foreach ($product->variants as $v) {
+                                                    $vk = strtolower(trim((string) ($v->color ?? '')));
+                                                    if ($key === '__no_color__') {
+                                                        if ($vk === '') {
+                                                            $canonicalColor = trim((string) $v->color);
+                                                            break 2;
+                                                        }
+                                                    } elseif ($vk === $key) {
+                                                        $canonicalColor = trim((string) $v->color);
+                                                        break 2;
+                                                    }
+                                                }
+                                            }
+                                            if ($canonicalColor === null || $canonicalColor === '') {
+                                                return $baseProductUrl;
+                                            }
+                                            $variantsForColor = $product->variants->filter(function ($v) use ($canonicalColor) {
+                                                return trim((string) ($v->color ?? '')) === $canonicalColor;
+                                            });
+                                            if ($variantsForColor->isEmpty()) {
+                                                return $baseProductUrl;
+                                            }
+                                            $pick = $variantsForColor->first(function ($v) {
+                                                return (int) $v->quantity > 0;
+                                            }) ?: $variantsForColor->first();
+                                            $size = trim((string) ($pick->size ?? ''));
+                                            if ($size === '') {
+                                                return $baseProductUrl;
+                                            }
+
+                                            return $baseProductUrl . '?' . http_build_query([
+                                                'color' => $canonicalColor,
+                                                'size' => $size,
+                                            ]);
+                                        };
+                                        $productUrlMain = $makeDetailUrlForVariantImage($cardImage);
+                                        foreach ($cardGallery as $gimg) {
+                                            $productUrlGallery[] = $makeDetailUrlForVariantImage($gimg);
+                                        }
+                                    } else {
+                                        foreach ($cardGallery as $gimg) {
+                                            $productUrlGallery[] = $baseProductUrl;
                                         }
                                     }
                                 @endphp
@@ -463,16 +825,16 @@
                                         <div class="swiper-wrapper">
                                             <div class="swiper-slide">
                                                 <a
-                                                    href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"><img
+                                                    href="{{ $productUrlMain }}"><img
                                                         loading="lazy"
                                                         src="{{ asset('uploads/products') }}/{{ $cardImage }}"
                                                         width="330" height="400" alt="{{ $product->name }}"
                                                         class="pc__img"></a>
                                             </div>
-                                            @foreach ($cardGallery as $gimg)
+                                            @foreach ($cardGallery as $idx => $gimg)
                                             <div class="swiper-slide">
                                                 <a
-                                                    href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"><img
+                                                    href="{{ $productUrlGallery[$idx] ?? $baseProductUrl }}"><img
                                                         loading="lazy"
                                                         src="{{ asset('uploads/products') }}/{{ $gimg }}"
                                                         width="330" height="400" alt="{{ $product->name }}"
@@ -494,7 +856,7 @@
                                 <div class="pc__info position-relative">
                                     <p class="pc__category">{{ $product->category->name }}</p>
                                     <h6 class="pc__title"><a
-                                            href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}">{{ $product->name }}</a>
+                                            href="{{ $productUrlMain }}">{{ $product->name }}</a>
                                     </h6>
                                     <div class="product-card__price d-flex">
                                         <span class="money price">
@@ -563,7 +925,7 @@
                 </div>
 
                 <div class="divider"></div>
-                <div class = "flex items-center justify-between flex-wrap gap10 wgp-pagination">
+                <div class = "flex items-center justify-between flex-wrap gap10 wgp-pagination" id="shop-pagination">
                     {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
                 </div>
             </div>
@@ -580,6 +942,7 @@
         <input type="hidden" name="max" id="hdnMaxPrice" value="{{ $max_price }}" />
         <input type="hidden" name="sizes" id="hdnSizes" />
         <input type="hidden" name="colors" id="hdnColors" />
+        <input type="hidden" name="sale" id="hdnSale" value="1" {{ empty($onSale ?? false) ? 'disabled' : '' }} />
     </form>
 @endsection
 
@@ -590,140 +953,62 @@
             $('.swatch-size').removeClass('btn-primary').addClass('btn-outline-light');
             $('.swatch-color').removeClass('swatch_active');
             $('.chk-brand, .chk-category').prop('checked', false);
+            $('.chk-on-sale').prop('checked', false);
+            $('#hdnSale').prop('disabled', true);
             $("[name='price_range']").val('');
             $('#frmfilter').submit();
         }
 
         $(function() {
-            function syncHiddenInputsFromUI() {
-                var brands = [];
-                $("input[name='brands']:checked").each(function() {
-                    brands.push($(this).val());
-                });
-                $("#hdnBrands").val(brands.join(','));
+            var desktopFilterStateKey = 'shopDesktopFilterOpen';
+            var autoApplyTimer = null;
+            var pendingFilterRequest = null;
+            var selectedColorOrder = [];
 
-                var categories = [];
-                $("input[name='categories']:checked").each(function() {
-                    categories.push($(this).val());
-                });
-                $("#hdnCategories").val(categories.join(','));
-
-                var selectedSizes = [];
-                $('.swatch-size.btn-primary').each(function() {
-                    selectedSizes.push($(this).text().trim());
-                });
-                $('#hdnSizes').val(selectedSizes.join(','));
-
-                var selectedColors = [];
-                $('.swatch-color.swatch_active').each(function() {
-                    selectedColors.push($(this).data('color'));
-                });
-                $('#hdnColors').val(selectedColors.join(','));
-
-                var priceVal = $("[name='price_range']").val();
-                if (priceVal && priceVal.includes(',')) {
-                    var parts = priceVal.split(',');
-                    $("#hdnMinPrice").val(parts[0]);
-                    $("#hdnMaxPrice").val(parts[1]);
-                }
+            function isDesktopView() {
+                return window.innerWidth >= 992;
             }
 
-            function applyFilters() {
-                $("#frmfilter input[name='page']").val(1);
-                syncHiddenInputsFromUI();
-                $("#frmfilter").submit();
+            function setDesktopFilterOpenState(isOpen) {
+                localStorage.setItem(desktopFilterStateKey, isOpen ? '1' : '0');
             }
 
-            function isMobileFilterView() {
-                return window.innerWidth < 992;
+            function getDesktopFilterOpenState() {
+                return localStorage.getItem(desktopFilterStateKey) === '1';
             }
 
-            function onFilterChange() {
-                syncHiddenInputsFromUI();
-                if (!isMobileFilterView()) {
-                    applyFilters();
+            function setDesktopFilterButtonState(isOpen) {
+                var $btn = $('#js-desktop-filter-toggle');
+                if (!$btn.length) {
+                    return;
                 }
+                $btn.find('.js-desktop-filter-label').text(isOpen ? 'Hide Filter' : 'Show Filter');
+                $btn.attr('aria-expanded', isOpen ? 'true' : 'false');
             }
 
-            $("#js-apply-filters-mobile").on("click", function() {
-                applyFilters();
-            });
-
-            $("#pagesize").on("change", function() {
-                $("#size").val($("#pagesize option:selected").val());
-                applyFilters();
-            });
-
-            $("#orderby").on("change", function() {
-                $("#order").val($("#orderby option:selected").val());
-                applyFilters();
-            });
-
-            $("input[name='brands']").on("change", function() {
-                onFilterChange();
-            });
-
-            $("input[name='categories']").on("change", function() {
-                onFilterChange();
-            });
-
-            $("[name='price_range']").on("change", function() {
-                if (isMobileFilterView()) {
-                    syncHiddenInputsFromUI();
-                } else {
-                    setTimeout(function() {
-                        applyFilters();
-                    }, 500);
-                }
-            });
-
-            $('.swatch-size').on('click', function(e) {
-                e.preventDefault();
-                $(this).toggleClass('btn-primary');
-                if ($(this).hasClass('btn-primary')) {
-                    $(this).removeClass('btn-outline-light');
-                } else {
-                    $(this).addClass('btn-outline-light');
-                }
-                onFilterChange();
-            });
-
-            $('.swatch-color').on('click', function(e) {
-                e.preventDefault();
-                onFilterChange();
-            });
-
-
-            $(document).ready(function() {
-                var urlSizes = new URLSearchParams(window.location.search).get('sizes');
-                if (urlSizes) {
-                    var sizesArray = urlSizes.split(',');
-                    $('.swatch-size').removeClass('btn-primary').addClass('btn-outline-light');
-                    $('.swatch-size').each(function() {
-                        var buttonText = $(this).text().trim();
-                        if (sizesArray.includes(buttonText)) {
-                            $(this).removeClass('btn-outline-light').addClass('btn-primary');
+            function refreshShopLayout() {
+                window.requestAnimationFrame(function() {
+                    window.requestAnimationFrame(function() {
+                        var mainSwiper = document.querySelector('.slideshow.js-swiper-slider');
+                        if (mainSwiper && mainSwiper.swiper && typeof mainSwiper.swiper.update === 'function') {
+                            mainSwiper.swiper.update();
                         }
+
+                        $('#products-grid .pc__img-wrapper .swiper-container').each(function() {
+                            if (this.swiper && typeof this.swiper.update === 'function') {
+                                this.swiper.update();
+                            }
+                        });
                     });
+                });
+            }
+
+            function initProductCardSliders() {
+                if (window.Uomo && window.Uomo.sections && typeof window.Uomo.sections.SwiperSlideshow === 'function') {
+                    new window.Uomo.sections.SwiperSlideshow();
                 }
 
-                var urlColors = new URLSearchParams(window.location.search).get('colors');
-                if (urlColors) {
-                    var colorsArray = urlColors.split(',');
-                    $('.swatch-color').removeClass('swatch_active');
-                    colorsArray.forEach(function(c) {
-                        var color = (c || '').trim();
-                        if (color) {
-                            $('.swatch-color[data-color="' + color + '"]').addClass('swatch_active');
-                        }
-                    });
-                }
-
-                
-                syncHiddenInputsFromUI();
-
-                // Product-card sliders: bind each swiper to its own arrows.
-                // This prevents duplicate class selectors from cross-wiring controls.
+                // Bind each card's arrows to its own swiper instance.
                 $('#products-grid .pc__img-wrapper .swiper-container').each(function() {
                     var $slider = $(this);
                     var swiper = this.swiper;
@@ -752,6 +1037,312 @@
                         swiper.navigation.update();
                     }
                 });
+            }
+
+            function syncDesktopFilterLayout() {
+                var $shopMain = $('#shopMain');
+                if (!$shopMain.length) {
+                    return;
+                }
+
+                if (isDesktopView()) {
+                    var isOpen = getDesktopFilterOpenState();
+                    $shopMain.toggleClass('filters-collapsed', !isOpen);
+                    setDesktopFilterButtonState(isOpen);
+                } else {
+                    $shopMain.removeClass('filters-collapsed');
+                    setDesktopFilterButtonState(true);
+                }
+
+                refreshShopLayout();
+            }
+
+            function syncHiddenInputsFromUI() {
+                var brands = [];
+                $("input[name='brands']:checked").each(function() {
+                    brands.push($(this).val());
+                });
+                $("#hdnBrands").val(brands.join(','));
+
+                var categories = [];
+                $("input[name='categories']:checked").each(function() {
+                    categories.push($(this).val());
+                });
+                $("#hdnCategories").val(categories.join(','));
+
+                var selectedSizes = [];
+                $('.swatch-size.btn-primary').each(function() {
+                    selectedSizes.push($(this).text().trim());
+                });
+                $('#hdnSizes').val(selectedSizes.join(','));
+
+                var selectedColors = selectedColorOrder.filter(function(color) {
+                    return $('.swatch-color[data-color="' + color + '"]').hasClass('swatch_active');
+                });
+
+                if (!selectedColors.length) {
+                    $('.swatch-color.swatch_active').each(function() {
+                        var color = ($(this).data('color') || '').toString().trim();
+                        if (color) {
+                            selectedColors.push(color);
+                        }
+                    });
+                }
+
+                $('#hdnColors').val(selectedColors.join(','));
+
+                var priceVal = $("[name='price_range']").val();
+                if (priceVal && priceVal.includes(',')) {
+                    var parts = priceVal.split(',');
+                    $("#hdnMinPrice").val(parts[0]);
+                    $("#hdnMaxPrice").val(parts[1]);
+                }
+
+                var onSaleChecked = $('#chk-on-sale').is(':checked');
+                $('#hdnSale').prop('disabled', !onSaleChecked);
+            }
+
+            function applyFilters() {
+                if (isDesktopView()) {
+                    setDesktopFilterOpenState(true);
+                }
+                requestProductsUpdate(1);
+            }
+
+            function requestProductsUpdate(page) {
+                syncHiddenInputsFromUI();
+                if (page) {
+                    $("#frmfilter input[name='page']").val(page);
+                }
+
+                var $form = $("#frmfilter");
+                var action = $form.attr('action');
+                var query = $form.serialize();
+                var url = action + (action.indexOf('?') === -1 ? '?' : '&') + query;
+
+                if (pendingFilterRequest && typeof pendingFilterRequest.abort === 'function') {
+                    pendingFilterRequest.abort();
+                }
+
+                pendingFilterRequest = $.ajax({
+                    url: url,
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                }).done(function(responseHtml) {
+                    var $response = $('<div></div>').html(responseHtml);
+                    var $newGrid = $response.find('#products-grid');
+                    var $newPagination = $response.find('#shop-pagination');
+
+                    if ($newGrid.length) {
+                        $('#products-grid').replaceWith($newGrid);
+                    }
+                    if ($newPagination.length) {
+                        $('#shop-pagination').replaceWith($newPagination);
+                    }
+
+                    window.history.replaceState({}, '', url);
+                    $("#frmfilter input[name='page']").val(page || 1);
+                    initProductCardSliders();
+                    refreshShopLayout();
+                }).fail(function(xhr, status) {
+                    if (status !== 'abort') {
+                        window.location.href = url;
+                    }
+                }).always(function() {
+                    pendingFilterRequest = null;
+                });
+            }
+
+            function scheduleApplyFilters(delay) {
+                clearTimeout(autoApplyTimer);
+                autoApplyTimer = setTimeout(function() {
+                    applyFilters();
+                }, delay || 250);
+            }
+
+            function syncColorSelectionOrder(recentlyClickedColor) {
+                var activeColors = [];
+                $('.swatch-color.swatch_active').each(function() {
+                    var color = ($(this).data('color') || '').toString().trim();
+                    if (color) {
+                        activeColors.push(color);
+                    }
+                });
+
+                selectedColorOrder = selectedColorOrder.filter(function(color) {
+                    return activeColors.includes(color);
+                });
+
+                var clicked = (recentlyClickedColor || '').toString().trim();
+                if (clicked && activeColors.includes(clicked) && !selectedColorOrder.includes(clicked)) {
+                    selectedColorOrder.push(clicked);
+                }
+
+                activeColors.forEach(function(color) {
+                    if (!selectedColorOrder.includes(color)) {
+                        selectedColorOrder.push(color);
+                    }
+                });
+            }
+
+            function isMobileFilterView() {
+                return window.innerWidth < 992;
+            }
+
+            function onFilterChange() {
+                syncHiddenInputsFromUI();
+                scheduleApplyFilters(250);
+            }
+
+            $("#js-apply-filters-mobile").on("click", function() {
+                applyFilters();
+            });
+
+            $("#js-apply-filters-desktop").on("click", function() {
+                applyFilters();
+            });
+
+            $("#pagesize").on("change", function() {
+                $("#size").val($("#pagesize option:selected").val());
+                applyFilters();
+            });
+
+            $("#orderby").on("change", function() {
+                $("#order").val($("#orderby option:selected").val());
+                applyFilters();
+            });
+
+            $(document).on('click', '#shop-pagination a.page-link', function(e) {
+                var href = $(this).attr('href');
+                if (!href) {
+                    return;
+                }
+                e.preventDefault();
+                var page = new URL(href, window.location.origin).searchParams.get('page') || 1;
+                requestProductsUpdate(page);
+            });
+
+            // Product title goes to the variant for the currently visible card image (active slide).
+            $(document).on('click', '.product-card .pc__title a', function(e) {
+                var $card = $(this).closest('.product-card');
+                var $activeLink = $card.find('.pc__img-wrapper .swiper-slide-active a').first();
+                if (!$activeLink.length) {
+                    return;
+                }
+                var href = $activeLink.attr('href');
+                if (!href) {
+                    return;
+                }
+                e.preventDefault();
+                window.location.href = href;
+            });
+
+            $("input[name='brands']").on("change", function() {
+                onFilterChange();
+            });
+
+            $("input[name='categories']").on("change", function() {
+                onFilterChange();
+            });
+
+            $('.chk-on-sale').on('change', function() {
+                onFilterChange();
+            });
+
+            $("[name='price_range']").on("change", function() {
+                syncHiddenInputsFromUI();
+                scheduleApplyFilters(350);
+            });
+
+            $('.swatch-size').on('click', function(e) {
+                e.preventDefault();
+                $(this).toggleClass('btn-primary');
+                if ($(this).hasClass('btn-primary')) {
+                    $(this).removeClass('btn-outline-light');
+                } else {
+                    $(this).addClass('btn-outline-light');
+                }
+                onFilterChange();
+            });
+
+            $('.swatch-color').on('click', function(e) {
+                e.preventDefault();
+                var clickedColor = $(this).data('color');
+                setTimeout(function() {
+                    syncColorSelectionOrder(clickedColor);
+                    onFilterChange();
+                }, 0);
+            });
+
+            $('#js-desktop-filter-toggle').on('click', function() {
+                if (!isDesktopView()) {
+                    return;
+                }
+                var willOpen = $('#shopMain').hasClass('filters-collapsed');
+                $('#shopMain').toggleClass('filters-collapsed');
+                setDesktopFilterButtonState(willOpen);
+                setDesktopFilterOpenState(willOpen);
+                refreshShopLayout();
+            });
+
+            $('#js-hide-filter-inside').on('click', function() {
+                if (!isDesktopView()) {
+                    return;
+                }
+                if (!$('#shopMain').hasClass('filters-collapsed')) {
+                    $('#js-desktop-filter-toggle').trigger('click');
+                }
+            });
+
+            $(window).on('resize', function() {
+                syncDesktopFilterLayout();
+                refreshShopLayout();
+            });
+
+            $(document).ready(function() {
+                if (!localStorage.getItem(desktopFilterStateKey)) {
+                    setDesktopFilterOpenState(false);
+                }
+
+                var urlSizes = new URLSearchParams(window.location.search).get('sizes');
+                if (urlSizes) {
+                    var sizesArray = urlSizes.split(',');
+                    $('.swatch-size').removeClass('btn-primary').addClass('btn-outline-light');
+                    $('.swatch-size').each(function() {
+                        var buttonText = $(this).text().trim();
+                        if (sizesArray.includes(buttonText)) {
+                            $(this).removeClass('btn-outline-light').addClass('btn-primary');
+                        }
+                    });
+                }
+
+                var urlColors = new URLSearchParams(window.location.search).get('colors');
+                if (urlColors) {
+                    var colorsArray = urlColors.split(',');
+                    selectedColorOrder = colorsArray.map(function(c) {
+                        return (c || '').trim();
+                    }).filter(function(c) {
+                        return c.length > 0;
+                    });
+                    $('.swatch-color').removeClass('swatch_active');
+                    colorsArray.forEach(function(c) {
+                        var color = (c || '').trim();
+                        if (color) {
+                            $('.swatch-color[data-color="' + color + '"]').addClass('swatch_active');
+                        }
+                    });
+                }
+
+                syncColorSelectionOrder();
+
+                
+                syncHiddenInputsFromUI();
+
+                initProductCardSliders();
+
+                syncDesktopFilterLayout();
             });
 
             // Product card image arrows: force per-card navigation binding
