@@ -59,10 +59,9 @@
             <p class="fs-6">If you have any questions about these Terms, please contact us at:</p>
             <p class="fs-6 mb-0">
                 Drip&amp;Co<br>
-                [Address Line 1]<br>
-                [City, Postcode]<br>
-                Email: hello@dripandco.com<br>
-                Phone: [+44 XXXX XXXXXX]
+                {{ config('store.contact.address') }}<br>
+                Email: {{ config('store.contact.email') }}<br>
+                Phone: {{ config('store.contact.phone') }}
             </p>
         </div>
     </section>

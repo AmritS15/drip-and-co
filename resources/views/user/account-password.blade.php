@@ -6,6 +6,21 @@
         border-color: #2B5E59 !important;
         color: #fff !important;
     }
+    html[data-theme="dark"] .my-account__edit-form h5,
+    html[data-theme="dark"] .my-account__edit-form label,
+    html[data-theme="dark"] .my-account__edit-form small,
+    html[data-theme="dark"] .my-account__edit-form p,
+    html[data-theme="dark"] .my-account__edit-form span {
+        color: #fff !important;
+    }
+    html[data-theme="dark"] .my-account__edit-form .form-control {
+        color: #fff !important;
+        -webkit-text-fill-color: #fff !important;
+    }
+    html[data-theme="dark"] .my-account__edit-form .form-control::placeholder {
+        color: #b0b0b0 !important;
+        opacity: 1;
+    }
 </style>
  <main class="pt-90">
     <div class="mb-4 pb-4"></div>

@@ -6,14 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
     public function up(): void
     {
         Schema::create('site_experience_ratings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('rating'); // 1-5
+            $table->unsignedTinyInteger('rating'); 
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('session_id', 100)->nullable();
             $table->timestamps();
@@ -23,9 +21,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::dropIfExists('site_experience_ratings');

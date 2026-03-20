@@ -27,7 +27,7 @@ class CartController extends Controller
            $product = Product::find($request->id);
     $options = ['product_id' => $request->id];
 
-    // if size/color provided, look up the variant
+    
     $variant = null;
     if ($product && ($request->has('size') || $request->has('color'))) {
         $query = $product->variants();
@@ -45,7 +45,7 @@ class CartController extends Controller
         }
     }
 
-    // prevent adding more than available stock
+    
     if ($variant) {
         if ($request->quantity > $variant->quantity) {
             return redirect()->back()->with('error', 'Requested quantity exceeds available stock for the selected variant.');
@@ -180,7 +180,7 @@ class CartController extends Controller
         $addresses = Address::where('user_id', Auth::user()->id)->orderBy('isdefault', 'desc')->get();
         $address = $addresses->where('isdefault', 1)->first() ?? $addresses->first();
 
-        // Build stock warnings and available quantities per product/variant for the view
+        
         $stockWarnings = [];
         $availableByProduct = [];
         foreach (Cart::instance('cart')->content() as $item) {
@@ -282,7 +282,7 @@ class CartController extends Controller
                 $orderItem->options = json_encode($item->options);
                 $orderItem->save();
 
-                // if variant exists reduce its quantity, otherwise fall back to product
+                
                 if (isset($item->options['variant_id'])) {
                     $variant = \App\Models\ProductVariant::find($item->options['variant_id']);
                     if ($variant) {
@@ -291,7 +291,7 @@ class CartController extends Controller
                         $variant->stock_status = $newQuantity > 0 ? 'instock' : 'outofstock';
                         $variant->save();
 
-                        // update parent product status based on remaining in-stock variants
+                        
                         $product = $variant->product;
                         if ($product) {
                             if ($product->variants()->where('stock_status','instock')->exists()) {

@@ -27,7 +27,7 @@
                 </li>
             </ul>
         </div>
-        <!-- new-category -->
+        
         <div class="wg-box">
             <form class="form-new-product form-style-1" action="{{ route('admin.brand.store') }}" method="POST"  enctype="multipart/form-data">
                 @csrf

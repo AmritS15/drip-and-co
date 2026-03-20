@@ -1,9 +1,9 @@
-/* Theme toggle: moon turns dark blue on hover */
+
 .header-toolstheme:hover .theme-icon-moon {
     color: #2c5282 !important;
 }
 
-/* Compact footer (theme defaults are very tall on desktop) */
+
 .footer-middle {
     padding-top: 1.25rem !important;
     padding-bottom: 1rem !important;
@@ -73,7 +73,7 @@
     height: 48px;
 }
 
-/* Shop pagination: improve dark-mode visibility for numbers and arrows */
+
 html[data-theme="dark"] .shop-list .pagination .page-link {
     color: #e9ecef;
     background-color: #2b2f33;
@@ -100,9 +100,9 @@ html[data-theme="dark"] .shop-list .pagination .page-link:focus {
     border-color: #6a727a;
 }
 
-/* Mobile header: fixed + transparent rules consolidated in app.blade.php inline styles */
 
-/* Mobile menu live search: never use class "search-result" on #box-content-search-mobile (theme hides it). */
+
+
 #box-content-search-mobile.header-mobile-search__results {
     position: relative;
     width: 100%;

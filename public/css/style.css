@@ -26,26 +26,9 @@
   --hv-item: #EDF1F5;
 }
 
-/**
-  * Name: Remos eCommerce Admin Dashboard HTML Template
-  * Version: 1.0.1
-  * Author: Themesflat
-  * Author URI: http://www.themesflat.com
-*/
-/**
 
-  	* Reset Browsers
-    * General
-	* Elements
-  	* Forms
-	* Typography
-	* Extra classes
-    * link style
-    * themesflat-container
 
-*/
-/* Reset Browsers
--------------------------------------------------------------- */
+
 html,
 body,
 div,
@@ -229,8 +212,7 @@ select {
   max-width: 100%;
 }
 
-/* General
--------------------------------------------------------------- */
+
 body,
 button,
 input,
@@ -246,13 +228,7 @@ textarea {
   overflow-y: auto;
 }
 
-/* ==========================================================================
-   Dark mode overrides for admin dashboard
-   Activated when <html data-theme="dark">
-   Palette matches storefront dark mode:
-   - Main background: grey
-   - Accents / boxes: dark green
-   ========================================================================== */
+
 html[data-theme="dark"] body {
   background: #383B3C;
   color: #e5e7eb;
@@ -271,7 +247,7 @@ html[data-theme="dark"] a:hover {
   color: #fbbf24;
 }
 
-/* Sidebar + header use the same dark green as storefront header */
+
 html[data-theme="dark"] .section-menu-left {
   background: #2B5E59;
   border-right-color: #234a46;
@@ -288,7 +264,7 @@ html[data-theme="dark"] .header-dashboard {
   border-bottom-color: #234a46;
 }
 
-/* Admin content area background (all admin pages) */
+
 html[data-theme="dark"] .layout-wrap,
 html[data-theme="dark"] .section-content-right,
 html[data-theme="dark"] .section-content-right .main-content,
@@ -299,7 +275,7 @@ html[data-theme="dark"] .tf-section-2 {
   background-color: #383B3C;
 }
 
-/* Sidebar text & icons (left list) */
+
 html[data-theme="dark"] .center-heading,
 html[data-theme="dark"] .menu-list .menu-item > a,
 html[data-theme="dark"] .sub-menu .sub-menu-item > a {
@@ -329,7 +305,7 @@ html[data-theme="dark"] .layout-wrap .section-menu-left > .center .center-item .
   color: #fbbf24;
 }
 
-/* Dashboard “stat” boxes */
+
 html[data-theme="dark"] .wg-chart-default {
   background: #2B5E59;
   color: #f9fafb;
@@ -349,7 +325,7 @@ html[data-theme="dark"] .wg-chart-default .image.ic-bg i {
   color: #f9fafb;
 }
 
-/* Generic content boxes (tables, forms, etc.) */
+
 html[data-theme="dark"] .wg-box {
   background: #1f2933;
   color: #e5e7eb;
@@ -363,7 +339,7 @@ html[data-theme="dark"] .wg-box .text-tiny {
   color: #e5e7eb;
 }
 
-/* Tables inside admin pages */
+
 html[data-theme="dark"] .wg-box .table {
   color: #e5e7eb;
   background-color: transparent;
@@ -392,7 +368,7 @@ html[data-theme="dark"] .wg-box .table th {
   border-color: #374151;
 }
 
-/* Ensure all admin tables (even outside .wg-box) avoid black / white striping */
+
 html[data-theme="dark"] .section-content-right .table-striped tbody tr:nth-of-type(odd),
 html[data-theme="dark"] .section-content-right .table tbody tr:nth-of-type(odd) {
   background-color: rgba(15, 23, 42, 0.8) !important;
@@ -403,7 +379,7 @@ html[data-theme="dark"] .section-content-right .table tbody tr:nth-of-type(even)
   background-color: rgba(15, 23, 42, 0.4) !important;
 }
 
-/* Ensure table text is light on all rows (odd + even) */
+
 html[data-theme="dark"] .section-content-right .table tbody tr th,
 html[data-theme="dark"] .section-content-right .table tbody tr td,
 html[data-theme="dark"] .section-content-right .table tbody tr .body-text,
@@ -412,7 +388,7 @@ html[data-theme="dark"] .section-content-right .table tbody tr .text-muted {
   color: #e5e7eb !important;
 }
 
-/* Badges keep their semantic colours but with slightly darker backgrounds for contrast */
+
 html[data-theme="dark"] .badge.bg-success {
   background-color: #15803d !important;
 }
@@ -426,7 +402,7 @@ html[data-theme="dark"] .badge.bg-danger {
   background-color: #b91c1c !important;
 }
 
-/* Page titles, breadcrumbs, generic headings in admin content */
+
 html[data-theme="dark"] .section-content-right h1,
 html[data-theme="dark"] .section-content-right h2,
 html[data-theme="dark"] .section-content-right h3,
@@ -442,7 +418,7 @@ html[data-theme="dark"] .section-content-right .breadcrumb-item {
   color: #e5e7eb;
 }
 
-/* Forms on all admin pages */
+
 html[data-theme="dark"] .section-content-right label,
 html[data-theme="dark"] .section-content-right .form-label,
 html[data-theme="dark"] .section-content-right .body-title {
@@ -466,7 +442,7 @@ html[data-theme="dark"] .section-content-right textarea::placeholder {
   color: #9ca3af;
 }
 
-/* Multi-selects for sizes / colours on product add */
+
 html[data-theme="dark"] .section-content-right select.form-select,
 html[data-theme="dark"] .section-content-right select[multiple] {
   background-color: #111827;
@@ -480,7 +456,7 @@ html[data-theme="dark"] .section-content-right select[multiple] option {
   color: #e5e7eb;
 }
 
-/* Ensure selected options remain visibly highlighted */
+
 .section-content-right select[multiple] option:checked,
 .section-content-right select.form-select[multiple] option:checked {
   background-color: #2B5E59;
@@ -493,7 +469,7 @@ html[data-theme="dark"] .section-content-right select.form-select[multiple] opti
   color: #ffffff;
 }
 
-/* Admin header search bar */
+
 html[data-theme="dark"] .section-content-right .header-dashboard .form-search input.show-search {
   background-color: #111827;
   border-color: #374151;
@@ -509,19 +485,19 @@ html[data-theme="dark"] .section-content-right .header-dashboard .form-search .b
   color: #e5e7eb;
 }
 
-/* Override any per-page table striping that forces white rows (e.g. order details) */
+
 html[data-theme="dark"] .section-content-right .table-transaction > tbody > tr:nth-of-type(odd),
 html[data-theme="dark"] .section-content-right .table-transaction > tbody > tr:nth-of-type(even) {
   --bs-table-accent-bg: transparent !important;
   background-color: rgba(15, 23, 42, 0.8) !important;
 }
 
-/* Delivery address text should be clearly readable */
+
 html[data-theme="dark"] .section-content-right .my-account__address-item__detail p {
   color: #e5e7eb;
 }
 
-/* Primary admin buttons (Back, Add new, etc.) in dark mode */
+
 html[data-theme="dark"] .section-content-right .tf-button,
 html[data-theme="dark"] .section-content-right .tf-button.style-1 {
   background-color: #2B5E59;
@@ -627,8 +603,7 @@ svg path {
   transition: all 0.3s ease-in-out;
 }
 
-/* Elements
--------------------------------------------------------------- */
+
 html {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -648,7 +623,7 @@ hr {
   border: dashed 1px #ccc;
 }
 
-/* List */
+
 ul,
 ol {
   padding: 0;
@@ -692,7 +667,7 @@ del,
   opacity: 0.5;
 }
 
-/* Table */
+
 table,
 th,
 td {
@@ -729,7 +704,7 @@ td {
   padding: 8px 12px;
 }
 
-/* Media */
+
 embed,
 object,
 video {
@@ -745,9 +720,8 @@ p > video {
   margin-bottom: 0;
 }
 
-/* Forms
--------------------------------------------------------------- */
-/* Fixes */
+
+
 button,
 input {
   line-height: normal;
@@ -769,14 +743,14 @@ select {
   font-size: 14px;
   max-width: 100%;
   background: #fff;
-  /* Removing the inner shadow on iOS inputs */
+  
 }
 
 textarea {
   overflow: auto;
-  /* Removes default vertical scrollbar in IE6/7/8/9 */
+  
   vertical-align: top;
-  /* Improves readability and alignment in all browsers */
+  
 }
 
 input[type=checkbox] {
@@ -802,16 +776,16 @@ input[type=radio] {
   background: rgba(0, 0, 0, 0) !important;
   cursor: pointer;
   vertical-align: sub;
-  /* Addresses excess padding in IE8/9 */
+  
 }
 
 input[type=search] {
   -webkit-appearance: textfield;
-  /* Addresses appearance set to searchfield in S5, Chrome */
+  
 }
 
 input[type=search]::-webkit-search-decoration {
-  /* Corrects inner padding displayed oddly in S5, Chrome on OSX */
+  
   -webkit-appearance: none;
 }
 
@@ -821,12 +795,12 @@ input::-moz-focus-inner {
   padding: 0;
 }
 
-/* Remove chrome yellow autofill */
+
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px #f7f7f7 inset;
 }
 
-/* Reset search styling */
+
 input[type=search] {
   outline: 0;
 }
@@ -838,7 +812,7 @@ input[type=search]::-webkit-search-results-decoration {
   display: none;
 }
 
-/* Placeholder color */
+
 ::-webkit-input-placeholder {
   color: #171412;
 }
@@ -848,13 +822,12 @@ input[type=search]::-webkit-search-results-decoration {
   opacity: 1;
 }
 
-/* Since FF19 lowers the opacity of the placeholder by default */
+
 :-ms-input-placeholder {
   color: #171412;
 }
 
-/* Typography
--------------------------------------------------------------- */
+
 h1, .h1,
 h2, .h2,
 h3, .h3,
@@ -898,8 +871,7 @@ h6, .h6 {
   line-height: 25px;
 }
 
-/* Extra classes
--------------------------------------------------------------- */
+
 .hidden {
   display: none;
 }
@@ -1202,8 +1174,7 @@ h6, .h6 {
   height: 100%;
 }
 
-/* link style
--------------------------------------------------------------- */
+
 a {
   text-decoration: none;
   color: var(--Heading);
@@ -1224,8 +1195,7 @@ a:hover, a:focus {
   transition: all 0.3s ease;
 }
 
-/* themesflat-container
--------------------------------------------------------------- */
+
 .themesflat-container {
   position: relative;
   margin-left: auto;
@@ -3049,7 +3019,7 @@ a:hover, a:focus {
   color: var(--Heading);
 }
 
-/* Dark mode variant for admin header search dropdown */
+
 html[data-theme="dark"] .header-dashboard .wrap .header-left .box-content-search {
   background-color: #111827;
   box-shadow: 0px 4px 24px 2px rgba(15, 23, 42, 0.8);
@@ -3560,7 +3530,7 @@ select.h40 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-/* Product add/edit: right panel (variants) wider than left */
+
 form.form-add-product.tf-section-2 {
   grid-template-columns: 2fr 3fr;
 }
@@ -6621,4 +6591,4 @@ form.form-add-product.tf-section-2 {
   }
 }
 
-/*# sourceMappingURL=style.css.map */
+

@@ -20,9 +20,7 @@ class ProductVariant extends Model
         'images',
     ];
 
-    /**
-     * Gallery image filenames as array (comma-separated in DB).
-     */
+    
     public function getGalleryArrayAttribute()
     {
         if (empty($this->images)) {

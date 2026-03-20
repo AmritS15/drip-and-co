@@ -43,6 +43,7 @@ Route::get('/order-confirmation', [CartController::class, 'order_confirmation'])
 Route::get('/contact-us', [HomeController::class, 'contact'])->name('home.contact');
 Route::post('/contact/store', [HomeController::class, 'contact_store'])->name('home.contact.store');
 Route::post('/site-rating', [HomeController::class, 'site_rating_store'])->name('home.site_rating.store');
+Route::post('/chatbot/reply', [HomeController::class, 'chatbot_reply'])->name('home.chatbot.reply');
 
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
 

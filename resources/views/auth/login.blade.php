@@ -1,15 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-   body { 
-      min-height: 100vh; 
-      display: flex; 
-      flex-direction: column; 
-    }
-    main { flex: 1; }
-    
-  </style>
 
 <main class="pt-90">
     <div class="mb-4 pb-4"></div>
@@ -26,7 +17,7 @@
             <form method="POST" action="{{ route('login') }}" name="login-form" class="needs-validation" novalidate="">
                 @csrf
                 <div class="form-floating mb-3">
-                <input class="form-control form-control_gray @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required="" autocomplete="email" autofocus="">
+                <input id="email" class="form-control form-control_gray @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required="" autocomplete="email" autofocus="">
                 <label for="email">Email address *</label>
                 @error('email')
                     <span class="invalid-feedback" role="alert">
@@ -39,7 +30,7 @@
 
               <div class="form-floating mb-3">
                 <input id="password" type="password" class="form-control form-control_gray @error('password') is-invalid @enderror" name="password" required="" autocomplete="current-password">
-                <label for="customerPasswodInput">Password *</label>
+                <label for="password">Password *</label>
                 @error('password')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>

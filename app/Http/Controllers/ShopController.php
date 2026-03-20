@@ -76,7 +76,7 @@ class ShopController extends Controller
             });
 
         if ($hasVariants) {
-            // require that product (or its variants) actually has stock
+            
             $productsQuery->where(function ($query) {
                 $query->where('quantity', '>', 0)
                     ->orWhereHas('variants', function ($q) {
@@ -84,7 +84,7 @@ class ShopController extends Controller
                     });
             });
 
-            // color & size filters only when variants table exists
+            
             $productsQuery
                 ->when($colors, function ($query) use ($colors) {
                     $query->whereHas('variants', function ($q) use ($colors) {
@@ -105,7 +105,7 @@ class ShopController extends Controller
                     });
                 });
         } else {
-            // fallback: basic stock filter without variants
+            
             $productsQuery->where('quantity', '>', 0);
         }
 

@@ -18,10 +18,15 @@
     <section class="contact-us container">
       <div class="mw-930">
         <h2 class="page-title">CONTACT US</h2>
+        <div class="mb-4">
+          <p class="mb-1"><strong>Address:</strong> {{ config('store.contact.address') }}</p>
+          <p class="mb-1"><strong>Email:</strong> {{ config('store.contact.email') }}</p>
+          <p class="mb-0"><strong>Phone:</strong> {{ config('store.contact.phone') }}</p>
+        </div>
       </div>
     </section>
 
-    <div class="mb-4 pb-4"></div>
+    <div class="mb-1 pb-1"></div>
 
     <section class="contact-us container">
       <div class="mw-930">
@@ -33,7 +38,7 @@
             @endif
           <form name="contact-us-form" class="needs-validation" novalidate="" action="{{route('home.contact.store')}}" method="POST">
             @csrf
-            <h3 class="mb-5">Get In Touch</h3>
+            <h3 class="mb-3">Get In Touch</h3>
             <div class="form-floating my-4">
               <input type="text" class="form-control" name="name" placeholder="Name *" value="{{old('name')}}" required="">
               <label for="contact_us_name">Name *</label>
