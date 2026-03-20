@@ -172,6 +172,29 @@
                                 $defaultVariantColor = $fromSession;
                             }
                         }
+
+                        // Deep-link from shop: ?color=&size= (overrides session when valid)
+                        if ($hasVariants) {
+                            $queryColor = trim((string) request()->query('color', ''));
+                            $querySize = trim((string) request()->query('size', ''));
+                            if ($queryColor !== '' && in_array($queryColor, $variantColors, true)) {
+                                $defaultVariantColor = $queryColor;
+                                $sizesForColor = $byColor[$defaultVariantColor] ?? [];
+                                if ($querySize !== '' && in_array($querySize, $sizesForColor, true)) {
+                                    $defaultVariantSize = $querySize;
+                                } else {
+                                    $variantsForColor = $product->variants->filter(function ($v) use ($defaultVariantColor) {
+                                        return trim((string) ($v->color ?? '')) === $defaultVariantColor;
+                                    });
+                                    $pick = $variantsForColor->first(function ($v) {
+                                        return (int) $v->quantity > 0;
+                                    }) ?: $variantsForColor->first();
+                                    if ($pick) {
+                                        $defaultVariantSize = trim((string) $pick->size);
+                                    }
+                                }
+                            }
+                        }
                     @endphp
                     <form name="addtocart-form" method="post" action="{{ route('cart.add') }}">
                         @csrf

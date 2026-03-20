@@ -60,8 +60,9 @@ let UomoHelpers = {
     });
   },
 
+  // Must match layout CSS: mobile header is max-width 1199.98px (not Bootstrap’s 992px).
   updateDeviceSize: () => {
-    return window.innerWidth < 992
+    return window.matchMedia('(max-width: 1199.98px)').matches;
   }
 };
 
@@ -181,9 +182,10 @@ function pureFadeOut(e) {
 
   UomoElements.Search = (function() {
     function Search() {
-      // Declare variables
+      // Declare variables — only desktop header popup; mobile menu uses #mobile-search-form + Laravel JSON (app layout)
       this.selectors = {
         container: '.search-field',
+        popupScope: '.search-popup',
         inputBox: '.search-field__input',
         searchSuggestItem: '.search-suggestion a.menu-link',
         searchFieldActor: '.search-field__actor',
@@ -195,7 +197,7 @@ function pureFadeOut(e) {
 
       this.searchInputFocusedClass = 'search-field__focused';
 
-      this.$containers = document.querySelectorAll(this.selectors.container);
+      this.$containers = document.querySelectorAll(this.selectors.popupScope + ' ' + this.selectors.container);
 
       this._initSearchSelect();
       this._initSearchReset();
@@ -250,34 +252,39 @@ function pureFadeOut(e) {
 
       _initSearchReset: function () {
         const _this = this;
-        document.querySelectorAll(this.selectors.resetButton).forEach( el => {
+        this.$containers.forEach(function(container) {
+          const el = container.querySelector(_this.selectors.resetButton);
+          if (!el) return;
           el.addEventListener('click', function(e) {
             const $parentDiv = e.target.closest(_this.selectors.container);
+            if (!$parentDiv) return;
             const $inputBox = $parentDiv.querySelector(_this.selectors.inputBox);
             const $rc = $parentDiv.querySelector(_this.selectors.resultContainer);
-
-            $inputBox.value = '';
-            $rc.innerHtml = '';
+            if ($inputBox) $inputBox.value = '';
+            if ($rc) $rc.innerHTML = '';
             _this._removeFormActiveClass(e.target);
           });
-        })
+        });
       },
 
       _initSearchInputFocus: function () {
         const _this = this;
-
-        document.querySelectorAll(this.selectors.inputBox).forEach( el => {
+        this.$containers.forEach(function(container) {
+          const el = container.querySelector(_this.selectors.inputBox);
+          if (!el) return;
           el.addEventListener('blur', function(e) {
             if (e.target.value.length == 0) {
               _this._removeFormActiveClass(e.target);
             }
-          })
+          });
         });
       },
 
       _initAjaxSearch: function () {
         const _this = this;
-        document.querySelectorAll(this.selectors.inputBox).forEach( el => {
+        this.$containers.forEach(function(container) {
+          const el = container.querySelector(_this.selectors.inputBox);
+          if (!el) return;
           el.addEventListener('keyup', (event) => {
             if (event.target.value.length == 0) {
               _this._removeFormActiveClass(event.target);
@@ -285,7 +292,7 @@ function pureFadeOut(e) {
               _this._handleAjaxSearch(event, _this);
             }
           });
-        })
+        });
       },
 
       _handleAjaxSearch: UomoHelpers.debounce((event, _this) => {
@@ -925,11 +932,7 @@ function pureFadeOut(e) {
           let settings = {
             autoplay: 0,
             slidesPerView: 1,
-            loop: true,
-            navigation: {
-              nextEl: ".pc__img-next",
-              prevEl: ".pc__img-prev"
-            }
+            loop: true
           };
 
           if ($sliderContainer.classList.contains('swiper-number-pagination')) {
@@ -947,6 +950,17 @@ function pureFadeOut(e) {
 
           if ($sliderContainer.dataset.settings) {
             settings = Object.assign(settings, JSON.parse($sliderContainer.dataset.settings));
+          }
+
+          // Scope product-card arrow controls to this slider only.
+          // Using global selectors lets arrows from one card control other sliders.
+          const nextEl = $sliderContainer.querySelector('.pc__img-next');
+          const prevEl = $sliderContainer.querySelector('.pc__img-prev');
+          if (nextEl && prevEl) {
+            settings.navigation = Object.assign({}, settings.navigation || {}, {
+              nextEl: nextEl,
+              prevEl: prevEl
+            });
           }
 
           if ($sliderContainer.querySelectorAll('.swiper-slide').length > 1) {
