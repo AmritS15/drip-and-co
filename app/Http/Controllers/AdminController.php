@@ -15,12 +15,14 @@ use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
 {
@@ -299,9 +301,11 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
     public function product_store(Request $request)
     {
+        $this->normalizeProductSlug($request);
+
         $request->validate([
             'name' => 'required',
-            'slug' => 'required|unique:products,slug',
+            'slug' => ['required', Rule::unique('products', 'slug')],
             'variants' => 'required|array|min:1',
             'short_description' => 'required',
             'description' => 'required',
@@ -316,11 +320,13 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'colors' => 'nullable|array',
             'variants.*.size' => 'nullable|string',
             'variants.*.color' => 'nullable|string',
-            'variants.*.quantity' => 'required_with:variants.*|integer|min:0',
+            'variants.*.quantity' => 'nullable|integer|min:0',
             'variants.*.SKU' => 'nullable|string',
             'variants.*.main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
             'variants.*.main_image_filename' => 'nullable|string',
-        ]);
+        ], $this->productVariantValidationMessages());
+
+        $this->validateProductVariantsAtLeastOne($request);
 
         if ($request->filled('variants')) {
             foreach ($request->variants as $i => $vdata) {
@@ -517,6 +523,58 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         }
     }
 
+    /**
+     * Saved slug is always derived from the product name; keep validation in sync.
+     */
+    protected function normalizeProductSlug(Request $request): void
+    {
+        $request->merge(['slug' => Str::slug($request->name)]);
+    }
+
+    protected function productVariantValidationMessages(): array
+    {
+        return [
+            'slug.unique' => 'A product with this name already exists. Please choose a different product name.',
+            'variants.required' => 'Add at least one product variant with quantity and a main image.',
+            'variants.min' => 'Add at least one product variant with quantity and a main image.',
+        ];
+    }
+
+    /**
+     * Require at least one variant row with quantity and a main image (upload or existing filename).
+     */
+    protected function validateProductVariantsAtLeastOne(Request $request): void
+    {
+        $variants = $request->input('variants', []);
+        if (!is_array($variants) || count($variants) === 0) {
+            throw ValidationException::withMessages([
+                'variants' => ['Add at least one product variant with quantity and a main image.'],
+            ]);
+        }
+        $validCount = 0;
+        foreach ($variants as $i => $v) {
+            if (!is_array($v)) {
+                continue;
+            }
+            $qty = $v['quantity'] ?? null;
+            if ($qty === '' || $qty === null) {
+                continue;
+            }
+            if (!is_numeric($qty)) {
+                continue;
+            }
+            $hasMain = trim($v['main_image_filename'] ?? '') !== '' || $request->hasFile("variants.{$i}.main_image");
+            if ($hasMain) {
+                $validCount++;
+            }
+        }
+        if ($validCount < 1) {
+            throw ValidationException::withMessages([
+                'variants' => ['Add at least one product variant with quantity and a main image.'],
+            ]);
+        }
+    }
+
     public function product_edit($id)
     {
         $product = Product::find($id);
@@ -527,9 +585,11 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 
     public function product_update(Request $request)
     {
+        $this->normalizeProductSlug($request);
+
         $request->validate([
             'name' => 'required',
-            'slug' => 'required|unique:products,slug,' . $request->id,
+            'slug' => ['required', Rule::unique('products', 'slug')->ignore($request->id)],
             'short_description' => 'required',
             'description' => 'required',
             'regular_price' => 'required|numeric|min:0',
@@ -542,14 +602,16 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
             'brand_id' => 'required|exists:brands,id',
             'sizes' => 'nullable|array',
             'colors' => 'nullable|array',
-            'variants' => 'nullable|array',
+            'variants' => 'required|array|min:1',
             'variants.*.size' => 'nullable|string',
             'variants.*.color' => 'nullable|string',
-            'variants.*.quantity' => 'required_with:variants.*|integer|min:0',
+            'variants.*.quantity' => 'nullable|integer|min:0',
             'variants.*.SKU' => 'nullable|string',
             'variants.*.main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
             'variants.*.main_image_filename' => 'nullable|string',
-        ]);
+        ], $this->productVariantValidationMessages());
+
+        $this->validateProductVariantsAtLeastOne($request);
 
         if ($request->filled('variants')) {
             foreach ($request->variants as $i => $vdata) {
@@ -1169,10 +1231,15 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 {
     $user = User::findOrFail($id);
 
+    if ((int) $user->id === (int) Auth::id()) {
+        $request->merge(['utype' => $user->utype]);
+    }
+
     $request->validate([
         'name' => 'required|string|max:255',
         'mobile' => ['required', 'digits:11', 'unique:users,mobile,' . $user->id],
         'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+        'utype' => ['required', Rule::in(['ADM', 'USR'])],
         'password' => ['nullable', 'string', 'min:8', 'contains_number', 'contains_uppercase', 'confirmed'],
         'address' => 'nullable|string|max:255',
         'city' => 'nullable|string|max:255',
@@ -1188,9 +1255,15 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
         'mobile.unique' => 'This phone number is already registered.',
     ]);
 
+    $adminCount = User::where('utype', 'ADM')->count();
+    if ($user->utype === 'ADM' && $request->utype === 'USR' && $adminCount <= 1) {
+        return back()->withInput()->with('error', 'You cannot remove the last administrator. Promote another user to administrator first.');
+    }
+
     $user->name = $request->name;
     $user->mobile = $request->mobile;
     $user->email = $request->email;
+    $user->utype = $request->utype;
 
     if ($request->filled('password')) {
         $user->password = bcrypt($request->password);
@@ -1224,7 +1297,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
 }
     public function user_delete(User $user)
     {
-        if ($user->utype === 'ADM' || $user->id === auth()->id()) {
+        if ($user->utype === 'ADM' || (int) $user->id === (int) Auth::id()) {
             return back()->with('error', 'Admin users cannot be deleted.');
         }
 

@@ -86,6 +86,23 @@
                     <input class="flex-grow" type="text" name="postcode" value="{{ old('postcode', $user->address->zip ?? '') }}" placeholder="Postcode">
                 </fieldset>
 
+                @if ((int) $user->id !== (int) auth()->id())
+                <fieldset class="name">
+                    <div class="body-title">Account type <span class="tf-color-1">*</span></div>
+                    <div class="select">
+                        <select name="utype" class="" required>
+                            <option value="USR" {{ old('utype', $user->utype) === 'USR' ? 'selected' : '' }}>Customer</option>
+                            <option value="ADM" {{ old('utype', $user->utype) === 'ADM' ? 'selected' : '' }}>Administrator</option>
+                        </select>
+                    </div>
+                </fieldset>
+                @else
+                <fieldset class="name">
+                    <div class="body-title">Account type</div>
+                    <input class="flex-grow" type="text" value="{{ $user->utype === 'ADM' ? 'Administrator' : 'Customer' }}" disabled readonly>
+                </fieldset>
+                @endif
+
                 <div class="row">
                     <div class="col-md-12">
                         <div class="my-3">

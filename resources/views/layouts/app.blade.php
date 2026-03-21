@@ -682,7 +682,7 @@
 
 </head>
 
-<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif @if(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*')) page-auth @endif">
+<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif @if(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*')) page-auth @endif @if(request()->routeIs('wishlist.index')) page-sticky-footer @endif">
     <svg class="d-none">
         <symbol id="icon_nav" viewBox="0 0 25 18">
             <rect width="25" height="2" />
@@ -927,16 +927,19 @@
             margin-top: 1rem;
             padding-top: 0.25rem;
         }
-        /* Auth pages: keep footer pinned to viewport bottom */
-        body.page-auth {
+        /* Auth + wishlist (short content): keep footer pinned to viewport bottom */
+        body.page-auth,
+        body.page-sticky-footer {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
-        body.page-auth .layout-content {
+        body.page-auth .layout-content,
+        body.page-sticky-footer .layout-content {
             flex: 1 0 auto;
         }
-        body.page-auth .footer-spaced {
+        body.page-auth .footer-spaced,
+        body.page-sticky-footer .footer-spaced {
             margin-top: 0;
             padding-top: 0;
         }

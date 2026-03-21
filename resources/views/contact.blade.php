@@ -39,24 +39,21 @@
           <form name="contact-us-form" class="needs-validation" novalidate="" action="{{route('home.contact.store')}}" method="POST">
             @csrf
             <h3 class="mb-3">Get In Touch</h3>
-            <div class="form-floating my-4">
-              <input type="text" class="form-control" name="name" placeholder="Name *" value="{{old('name')}}" required="">
-              <label for="contact_us_name">Name *</label>
+            <div class="my-4">
+              <input type="text" class="form-control" id="contact_us_name" name="name" placeholder="Name *" value="{{old('name')}}" required aria-label="Name">
              @error('name') <span class="text-danger">{{$message}}</span> @enderror
             </div>
-            <div class="form-floating my-4">
-              <input type="text" class="form-control" name="phone" placeholder="Phone *" value="{{old('phone')}}" required="">
-              <label for="contact_us_name">Phone *</label>
+            <div class="my-4">
+              <input type="text" class="form-control" id="contact_us_phone" name="phone" placeholder="Phone *" value="{{old('phone')}}" required aria-label="Phone">
               @error('phone') <span class="text-danger">{{$message}}</span> @enderror
             </div>
-            <div class="form-floating my-4">
-              <input type="email" class="form-control" name="email" placeholder="Email address *" value="{{old('email')}}" required="">
-              <label for="contact_us_name">Email address *</label>
+            <div class="my-4">
+              <input type="email" class="form-control" id="contact_us_email" name="email" placeholder="Email address *" value="{{old('email')}}" required aria-label="Email address">
               @error('email') <span class="text-danger">{{$message}}</span> @enderror
             </div>
             <div class="my-4">
-              <textarea class="form-control form-control_gray" name="comment" placeholder="Your Message"  cols="30"
-                rows="8" required="">{{old('comment')}}</textarea>
+              <textarea class="form-control form-control_gray" id="contact_us_comment" name="comment" placeholder="Your Message" cols="30"
+                rows="8" required aria-label="Your message">{{old('comment')}}</textarea>
               @error('comment') <span class="text-danger">{{$message}}</span> @enderror
             </div>
             <div class="my-4">

@@ -1,4 +1,7 @@
 @extends('layouts.admin')
+@push('styles')
+    @include('admin.partials.product-form-layout-styles')
+@endpush
 @section('content')
     <div class="main-content-inner">
         
@@ -100,6 +103,9 @@
                                         
                                         <fieldset class="variants">
                                             <div class="body-title mb-10">Variants (size / color / SKU / qty / main image / gallery)</div>
+                                            @error('variants')
+                                                <div class="alert alert-danger py-2 mb-2">{{ $message }}</div>
+                                            @enderror
                                             @foreach(array_filter(array_keys($errors->toArray()), fn($k) => str_starts_with($k ?? '', 'variants.') && str_contains($k ?? '', 'main_image')) as $errKey)
                                                 <div class="alert alert-danger py-2">{{ $errors->first($errKey) }}</div>
                                             @endforeach

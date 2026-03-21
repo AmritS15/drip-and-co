@@ -1,4 +1,7 @@
 @extends('layouts.admin')
+@push('styles')
+    @include('admin.partials.product-form-layout-styles')
+@endpush
 @section('content')
     <div class="main-content-inner">
         
@@ -38,7 +41,7 @@
                         <div class="body-title mb-10">Product name <span class="tf-color-1">*</span>
                         </div>
                         <input class="mb-10" type="text" placeholder="Enter product name" name="name" tabindex="0"
-                            value="{{ $product->name }}" aria-required="true" required="">
+                            value="{{ old('name', $product->name) }}" aria-required="true" required="">
                         <div class="text-tiny">Do not exceed 100 characters when entering the
                             product name.</div>
                     </fieldset>
@@ -49,7 +52,7 @@
                         <fieldset class="name">
                             <div class="body-title mb-10">Slug <span class="tf-color-1">*</span></div>
                             <input class="mb-10" type="text" placeholder="Enter product slug" name="slug"
-                                tabindex="0" value="{{ $product->slug }}" aria-required="true" required="">
+                                tabindex="0" value="{{ old('slug', $product->slug) }}" aria-required="true" required="">
                             <div class="text-tiny">Do not exceed 100 characters when entering the
                                 product name.</div>
                         </fieldset>
@@ -101,6 +104,9 @@
                             
                             <fieldset class="variants">
                                 <div class="body-title mb-10">Variants (size / color / SKU / qty / main image / gallery)</div>
+                                @error('variants')
+                                    <div class="alert alert-danger py-2 mb-2">{{ $message }}</div>
+                                @enderror
                                 @foreach(array_filter(array_keys($errors->toArray()), fn($k) => str_starts_with($k ?? '', 'variants.') && str_contains($k ?? '', 'main_image')) as $errKey)
                                     <div class="alert alert-danger py-2">{{ $errors->first($errKey) }}</div>
                                 @endforeach
