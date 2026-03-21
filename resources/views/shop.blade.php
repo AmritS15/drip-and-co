@@ -317,6 +317,41 @@
                 margin-right: auto;
             }
         }
+
+        html[data-theme="dark"] #shop-pagination .pagination .page-link,
+        html[data-theme="dark"] .shop-list .pagination .page-link {
+            color: #e9ecef !important;
+            background-color: #2b2f33 !important;
+            border-color: #5e656d !important;
+        }
+
+        html[data-theme="dark"] #shop-pagination .pagination .page-item.active .page-link,
+        html[data-theme="dark"] .shop-list .pagination .page-item.active .page-link {
+            color: #ffffff !important;
+            background-color: #141618 !important;
+            border-color: #141618 !important;
+        }
+
+        html[data-theme="dark"] #shop-pagination .pagination .page-item.disabled .page-link,
+        html[data-theme="dark"] .shop-list .pagination .page-item.disabled .page-link {
+            color: #9aa3ad !important;
+            background-color: #22262a !important;
+            border-color: #4f565e !important;
+            opacity: 1 !important;
+        }
+
+        html[data-theme="dark"] #shop-pagination .pagination a.page-link:hover,
+        html[data-theme="dark"] #shop-pagination .pagination a.page-link:focus,
+        html[data-theme="dark"] .shop-list .pagination a.page-link:hover,
+        html[data-theme="dark"] .shop-list .pagination a.page-link:focus {
+            color: #ffffff !important;
+            background-color: #33383d !important;
+            border-color: #6a727a !important;
+        }
+
+        html[data-theme="dark"] #shop-pagination .text-muted {
+            color: #adb5bd !important;
+        }
     </style>
 
     <main class="pt-90">
