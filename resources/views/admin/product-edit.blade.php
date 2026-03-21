@@ -110,8 +110,7 @@
                                 @foreach(array_filter(array_keys($errors->toArray()), fn($k) => str_starts_with($k ?? '', 'variants.') && str_contains($k ?? '', 'main_image')) as $errKey)
                                     <div class="alert alert-danger py-2">{{ $errors->first($errKey) }}</div>
                                 @endforeach
-                                <p class="text-tiny text-secondary mb-2">Each variant is a size+colour combination with its own SKU, quantity, main image, and optional gallery images.</p>
-                                <p class="text-tiny mb-2"><strong>Total quantity (from variants):</strong> <span id="variantTotalQty">{{ $product->variants->sum('quantity') }}</span></p>
+                                                                <p class="text-tiny mb-2"><strong>Total quantity (from variants):</strong> <span id="variantTotalQty">{{ $product->variants->sum('quantity') }}</span></p>
                                 <table class="table table-bordered" id="variantTable">
                                     <thead>
                                         <tr>

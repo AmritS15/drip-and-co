@@ -217,7 +217,11 @@
         }
 
         html[data-theme="dark"] .shop-sidebar .accordion-item {
-            border-bottom-color: #373d43;
+            border-bottom-color: #6b7280 !important;
+        }
+
+        html[data-theme="dark"] .shop-sidebar .accordion-item.mb-4.pb-3 {
+            border-bottom: 1px solid #6b7280 !important;
         }
 
         html[data-theme="dark"] .shop-sidebar .accordion-button,
@@ -351,6 +355,26 @@
 
         html[data-theme="dark"] #shop-pagination .text-muted {
             color: #adb5bd !important;
+        }
+
+        .shop-toolbar-divider {
+            width: 1px;
+            height: 26px;
+            background-color: #9ca3af;
+            opacity: 0.95;
+        }
+
+        html[data-theme="dark"] .shop-toolbar-divider {
+            background-color: #ffffff;
+        }
+
+        .shop-filter-title {
+            font-weight: 700 !important;
+            letter-spacing: 0.02em;
+        }
+
+        html[data-theme="dark"] .shop-filter-title {
+            color: #ffffff !important;
         }
     </style>
 
@@ -635,7 +659,7 @@
                                 </div>
                                 <div class="slide-split_media position-relative">
                                     <div class="slideshow-bg" style="background-color: #e0e8ec;">
-                                        <img loading="lazy" src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=630&amp;h=450&amp;fit=crop" width="630"
+                                        <img loading="lazy" src="{{ asset('assets/images/shop/mens-clothing-slide.png') }}" width="630"
                                             height="450" alt="Men's clothing"
                                             class="slideshow-bg__img object-fit-cover" />
                                     </div>
@@ -657,7 +681,7 @@
                                 </div>
                                 <div class="slide-split_media position-relative">
                                     <div class="slideshow-bg" style="background-color: #f5e6e0;">
-                                        <img loading="lazy" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=630&amp;h=450&amp;fit=crop" width="630"
+                                        <img loading="lazy" src="{{ asset('assets/images/shop/womens-clothing-slide.png') }}" width="630"
                                             height="450" alt="Women's clothing"
                                             class="slideshow-bg__img object-fit-cover" />
                                     </div>
@@ -694,6 +718,8 @@
                             <option value="102" {{ $size == 102 ? 'selected' : '' }}>102</option>
                         </select>
 
+                        <div class="shop-toolbar-divider mx-3 d-none d-lg-block order-md-0"></div>
+
                         <select class="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0"
                             aria-label="Sort Items" name="orderby" id="orderby">
                             <option value="-1" {{ $order == -1 ? 'selected' : '' }}>Default</option>
@@ -703,7 +729,7 @@
                             <option value="4" {{ $order == 4 ? 'selected' : '' }}>Price, High to Low</option>
                         </select>
 
-                        <div class="shop-asc__seprator mx-3 bg-light d-none d-md-block order-md-0"></div>
+                        <div class="shop-asc__seprator shop-toolbar-divider mx-3 d-none d-md-block order-md-0"></div>
 
                         <div class="col-size align-items-center order-1 d-none d-lg-flex">
                             <span class="text-uppercase fw-medium me-2">View</span>
@@ -726,7 +752,9 @@
                             </button>
                         </div>
 
-                        <div class="shop-filter d-none d-lg-flex align-items-center order-0 order-md-3 ms-3">
+                        <div class="shop-toolbar-divider mx-3 d-none d-lg-block order-2 order-md-2"></div>
+
+                        <div class="shop-filter d-none d-lg-flex align-items-center order-3 order-md-3">
                             <button type="button" id="js-desktop-filter-toggle"
                                 class="btn-link btn-link_f d-flex align-items-center ps-0">
                                 <svg class="d-inline-block align-middle me-2" width="14" height="10"

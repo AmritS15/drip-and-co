@@ -12,8 +12,50 @@
 .site-rating__stars-bg svg, .site-rating__stars-fill svg { width: 18px; height: 18px; flex-shrink: 0; display: block; }
 .site-rating__stars-bg { color: #ccc; }
 .site-rating__stars-fill { color: #ffc107; }
+html[data-theme="dark"] main.page-contact {
+    color: #f9fafb !important;
+}
+html[data-theme="dark"] main.page-contact .contact-us,
+html[data-theme="dark"] main.page-contact .contact-us p,
+html[data-theme="dark"] main.page-contact .contact-us strong,
+html[data-theme="dark"] main.page-contact .contact-us h2,
+html[data-theme="dark"] main.page-contact .contact-us h3,
+html[data-theme="dark"] main.page-contact .contact-us h4,
+html[data-theme="dark"] main.page-contact .contact-us h5,
+html[data-theme="dark"] main.page-contact .contact-us label,
+html[data-theme="dark"] main.page-contact .contact-us .fw-medium,
+html[data-theme="dark"] main.page-contact .contact-us .site-rating,
+html[data-theme="dark"] main.page-contact .contact-us #site-rating-text,
+html[data-theme="dark"] main.page-contact .contact-us .small {
+    color: #f9fafb !important;
+}
+html[data-theme="dark"] main.page-contact .contact-us .text-secondary {
+    color: #cbd5e1 !important;
+}
+html[data-theme="dark"] main.page-contact .contact-us .contact-us__form {
+    background-color: #383B3C !important;
+}
+html[data-theme="dark"] main.page-contact .contact-us .form-control,
+html[data-theme="dark"] main.page-contact .contact-us textarea.form-control {
+    color: #f9fafb !important;
+    -webkit-text-fill-color: #f9fafb !important;
+    background-color: #383B3C !important;
+    border-color: #ffffff !important;
+}
+html[data-theme="dark"] main.page-contact .contact-us .form-control::placeholder,
+html[data-theme="dark"] main.page-contact .contact-us textarea.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.55) !important;
+}
+html[data-theme="dark"] main.page-contact .contact-us .alert-success {
+    color: #dcfce7 !important;
+    background-color: #14532d !important;
+    border-color: #166534 !important;
+}
+html[data-theme="dark"] main.page-contact .contact-us .border-top {
+    border-color: #4b5563 !important;
+}
 </style>
-<main class="pt-90">
+<main class="pt-90 page-contact">
     <div class="mb-4 pb-4"></div>
     <section class="contact-us container">
       <div class="mw-930">

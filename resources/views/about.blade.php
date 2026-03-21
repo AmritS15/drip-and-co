@@ -8,11 +8,11 @@
         </div>
 
         <div class="about-us__content pb-5 mb-5">
-            <p class="mb-5 about-reveal about-reveal--delay-1">
-                <img loading="lazy" class="w-100 h-auto d-block" src="{{ asset('assets/images/about/about-1.jpg') }}"
-                    width="1410" height="550" alt="" />
-            </p>
             <div class="mw-930">
+                <p class="mb-5 about-reveal about-reveal--delay-1">
+                    <img loading="lazy" class="w-100 h-auto d-block" src="{{ asset('assets/images/about/about-1.jpg') }}"
+                        width="1410" height="550" alt="" />
+                </p>
                 <h3 class="mb-4 about-reveal">OUR STORY</h3>
                 <p class="fs-6 fw-medium mb-4 about-reveal about-reveal--delay-1">From Birmingham streets to your wardrobe. Drip & Co crafts affordable streetwear for
                     teens and young adults. Simple tees, tough joggers, oversized hoodies—designed for real
@@ -115,11 +115,11 @@
 
             var observer = new IntersectionObserver(function(entries) {
                 entries.forEach(function(entry) {
-                    if (!entry.isIntersecting) {
-                        return;
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-inview');
+                    } else {
+                        entry.target.classList.remove('is-inview');
                     }
-                    entry.target.classList.add('is-inview');
-                    observer.unobserve(entry.target);
                 });
             }, {
                 root: null,

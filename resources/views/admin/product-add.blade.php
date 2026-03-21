@@ -109,7 +109,6 @@
                                             @foreach(array_filter(array_keys($errors->toArray()), fn($k) => str_starts_with($k ?? '', 'variants.') && str_contains($k ?? '', 'main_image')) as $errKey)
                                                 <div class="alert alert-danger py-2">{{ $errors->first($errKey) }}</div>
                                             @endforeach
-                                            <p class="text-tiny text-secondary mb-2">Add at least one variant per size+colour combination. Each variant has its own SKU, quantity, main image, and optional gallery images.</p>
                                             <p class="text-tiny mb-2"><strong>Total quantity (from variants):</strong> <span id="variantTotalQty">0</span></p>
                                             <table class="table table-bordered" id="variantTable">
                                                 <thead>
