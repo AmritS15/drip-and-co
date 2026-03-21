@@ -9,10 +9,25 @@
 
         <div class="about-us__content pb-5 mb-5">
             <div class="mw-930">
-                <p class="mb-5 about-reveal about-reveal--delay-1">
-                    <img loading="lazy" class="w-100 h-auto d-block" src="{{ asset('assets/images/about/about-1.jpg') }}"
-                        width="1410" height="550" alt="" />
-                </p>
+                <div class="mb-5 about-reveal about-reveal--delay-1">
+                    <div class="swiper-container about-top-swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img loading="lazy" class="w-100 d-block about-top-swiper__image" src="{{ asset('assets/images/about/about-top-1.png') }}" width="1410" height="550" alt="Drip & Co store image 1" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img loading="lazy" class="w-100 d-block about-top-swiper__image" src="{{ asset('assets/images/about/about-top-2.png') }}" width="1410" height="550" alt="Drip & Co store image 2" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img loading="lazy" class="w-100 d-block about-top-swiper__image" src="{{ asset('assets/images/about/about-top-3.png') }}" width="1410" height="550" alt="Drip & Co store image 3" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img loading="lazy" class="w-100 d-block about-top-swiper__image" src="{{ asset('assets/images/about/about-top-4.png') }}" width="1410" height="550" alt="Drip & Co store image 4" />
+                            </div>
+                        </div>
+                        <div class="swiper-pagination about-top-swiper__pagination"></div>
+                    </div>
+                </div>
                 <h3 class="mb-4 about-reveal">OUR STORY</h3>
                 <p class="fs-6 fw-medium mb-4 about-reveal about-reveal--delay-1">From Birmingham streets to your wardrobe. Drip & Co crafts affordable streetwear for
                     teens and young adults. Simple tees, tough joggers, oversized hoodies—designed for real
@@ -84,6 +99,41 @@
             transform: translateY(0);
         }
 
+        .page-about .about-top-swiper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+
+        .page-about .about-top-swiper__image {
+            width: 100%;
+            height: min(52vw, 430px);
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .page-about .about-top-swiper__pagination {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 12px;
+            margin-top: 0;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .page-about .about-top-swiper__pagination .swiper-pagination-bullet {
+            width: 7px;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 1;
+            margin: 0 4px !important;
+        }
+
+        .page-about .about-top-swiper__pagination .swiper-pagination-bullet-active {
+            background: rgba(255, 255, 255, 0.85);
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .page-about .about-reveal {
                 opacity: 1 !important;
@@ -130,6 +180,22 @@
             nodes.forEach(function(el) {
                 observer.observe(el);
             });
+
+            if (typeof Swiper !== 'undefined') {
+                new Swiper('.about-top-swiper', {
+                    slidesPerView: 1,
+                    loop: true,
+                    speed: 700,
+                    autoplay: {
+                        delay: 3500,
+                        disableOnInteraction: false
+                    },
+                    pagination: {
+                        el: '.about-top-swiper__pagination',
+                        clickable: true
+                    }
+                });
+            }
         })();
     </script>
 @endpush
