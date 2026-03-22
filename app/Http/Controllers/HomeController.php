@@ -116,15 +116,15 @@ class HomeController extends Controller
             ],
             [
                 'kicker' => 'Explore More',
-                'title' => 'Shop the Trousers Collection',
+                'title' => 'Shop the Bottoms Collection',
                 'left_image' => $sectionImg('section3-general.jpg', 'assets/images/home/demo3/Trouser women.png'),
                 'right_image' => $sectionImg('section3-closeup.jpg', 'assets/images/home/demo3/Trouser men.png'),
                 'women_collection_name' => 'Womens Bottoms',
                 'men_collection_name' => 'Mens Bottoms',
             ],
             [
-                'kicker' => 'Tops',
-                'title' => 'Shirts',
+                'kicker' => 'Latest Drops',
+                'title' => 'Shop the Tops Collection',
                 'left_image' => $sectionImg('section4-general.jpg', 'assets/images/home/demo3/t-shirts women.png'),
                 'right_image' => $sectionImg('section4-closeup.jpg', 'assets/images/home/demo3/t-shirts men.png'),
                 'women_collection_name' => 'Womens Tops',
