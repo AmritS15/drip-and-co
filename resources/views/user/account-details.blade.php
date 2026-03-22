@@ -2,7 +2,7 @@
 @section('content')
  <main class="pt-90">
     <div class="mb-4 pb-4"></div>
-    <section class="my-account container">
+    <section class="my-account container mb-5">
       <h2 class="page-title">Account Details</h2>
       <div class="row">
         <div class="col-lg-3">
