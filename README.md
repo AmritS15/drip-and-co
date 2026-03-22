@@ -7,10 +7,6 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
-
-> **Note:** the application now supports per‑variant stock levels (size/color combinations). After pulling these changes you should run `php artisan migrate` to add the `product_variants` table and update your data accordingly.
-
 ## Deployment (GitHub Actions → production domain)
 
 Pushes to **`main`** run the **Auto Deploy** workflow (`.github/workflows/deploy.yml`). It SSHs into the production server, syncs the repo to `origin/main`, and runs `scripts/server-deploy.sh` (Composer, Vite build, migrations, caches).
