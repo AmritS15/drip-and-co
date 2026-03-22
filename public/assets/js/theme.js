@@ -700,8 +700,8 @@ function pureFadeOut(e) {
         document.querySelector("main").style.paddingTop = headerHeight + 'px';
         _this.$header.classList.add('position-absolute');
 
-        window.removeEventListener('scroll', this._stickyScrollHander);
-        window.addEventListener('scroll', this._stickyScrollHander, { passive: true });
+        document.removeEventListener('scroll', this._stickyScrollHander);
+        document.addEventListener('scroll', this._stickyScrollHander);
       },
 
       _initMenuPosition () {
@@ -754,7 +754,7 @@ function pureFadeOut(e) {
           return;
         }
         const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const noHeaderOnScrollUp = document.body.classList.contains('page-contact') || document.body.classList.contains('page-about') || document.body.classList.contains('page-shop');
+        const noHeaderOnScrollUp = document.body.classList.contains('page-contact') || document.body.classList.contains('page-about');
 
         if (currentScrollTop > this.lastScrollTop || currentScrollTop < this.stickyMinPos || noHeaderOnScrollUp) {
           this.$header.classList.remove(this.selectors.stickyActiveClass);

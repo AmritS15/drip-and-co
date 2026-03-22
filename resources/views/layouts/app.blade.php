@@ -40,11 +40,6 @@
                 width: 100% !important;
                 z-index: 1040;
             }
-            body.page-contact .header-mobile.position-absolute,
-            body.page-about .header-mobile.position-absolute,
-            body.page-shop .header-mobile.position-absolute {
-                position: absolute !important;
-            }
             /* All pages: mobile header always transparent (home + shop, cart, etc.) */
             .header-mobile,
             .header-mobile.header_sticky,
@@ -687,7 +682,7 @@
 
 </head>
 
-<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif @if(request()->routeIs('home.contact')) page-contact @endif @if(request()->routeIs('home.about')) page-about @endif @if(request()->routeIs('shop.*')) page-shop @endif @if(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*')) page-auth @endif @if(request()->routeIs('wishlist.index') || request()->routeIs('user.*')) page-sticky-footer @endif">
+<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif @if(request()->routeIs('home.contact')) page-contact @endif @if(request()->routeIs('home.about')) page-about @endif @if(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*')) page-auth @endif @if(request()->routeIs('wishlist.index') || request()->routeIs('user.*')) page-sticky-footer @endif">
     <svg class="d-none">
         <symbol id="icon_nav" viewBox="0 0 25 18">
             <rect width="25" height="2" />
@@ -1017,6 +1012,10 @@
         html[data-theme="dark"] body.page-home .header-mobile .logo a:hover .logo__image {
             filter: drop-shadow(0 0 12px rgba(0, 139, 125, 0.6)) drop-shadow(0 0 24px rgba(0, 139, 125, 0.35));
         }
+        body:not(.page-home) #header .logo .logo__image,
+        body:not(.page-home) .header-mobile .logo .logo__image {
+            filter: none;
+        }
         /* Footer logo: lighter highlight */
         .footer-middle .logo .logo__image {
             filter: drop-shadow(0 0 4px rgba(0, 139, 125, 0.25));
@@ -1093,7 +1092,7 @@
             gap: 2.75rem;
         }
 
-        body.page-home .header-transparent-bg .navigation__link {
+        .header-transparent-bg .navigation__link {
             text-transform: uppercase;
             letter-spacing: 0.22em;
             font-size: 0.78rem;
@@ -1104,17 +1103,17 @@
             text-shadow: 0 0 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.9);
         }
 
-        html[data-theme="light"] body.page-home .header-transparent-bg .navigation__link {
+        html[data-theme="light"] .header-transparent-bg .navigation__link {
             color: #1f2d2b;
             text-shadow: 0 0 2px rgba(255,255,255,0.95), 0 0 4px rgba(255,255,255,0.8), 0 1px 2px rgba(255,255,255,0.9);
         }
 
-        html[data-theme="light"] body.page-home .header-transparent-bg .navigation__link:hover,
-        html[data-theme="light"] body.page-home .header-transparent-bg .navigation__link:focus-visible {
+        html[data-theme="light"] .header-transparent-bg .navigation__link:hover,
+        html[data-theme="light"] .header-transparent-bg .navigation__link:focus-visible {
             color: #2b5e59;
         }
 
-        body.page-home .header-transparent-bg .navigation__link::after {
+        .header-transparent-bg .navigation__link::after {
             content: "";
             position: absolute;
             left: 0;
@@ -1127,62 +1126,62 @@
             transition: transform 180ms ease-out;
         }
 
-        html[data-theme="light"] body.page-home .header-transparent-bg .navigation__link::after {
+        html[data-theme="light"] .header-transparent-bg .navigation__link::after {
             background-color: #1f2d2b;
         }
 
-        body.page-home .header-transparent-bg .navigation__link:hover::after,
-        body.page-home .header-transparent-bg .navigation__link:focus-visible::after {
+        .header-transparent-bg .navigation__link:hover::after,
+        .header-transparent-bg .navigation__link:focus-visible::after {
             transform: scaleX(1);
         }
 
-        body.page-home .header-transparent-bg .header-tools__item svg {
+        .header-transparent-bg .header-tools__item svg {
             color: #ffffff;
             filter: drop-shadow(0 0 1px rgba(0,0,0,0.9)) drop-shadow(0 0 2px rgba(0,0,0,0.8));
         }
-        body.page-home .header-transparent-bg .header-toolstheme svg {
+        .header-transparent-bg .header-toolstheme svg {
             filter: none;
         }
 
-        html[data-theme="light"] body.page-home .header-transparent-bg .header-tools__item svg {
+        html[data-theme="light"] .header-transparent-bg .header-tools__item svg {
             color: #1f2d2b;
             filter: drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 2px rgba(255,255,255,0.8));
         }
-        html[data-theme="light"] body.page-home .header-transparent-bg .header-toolstheme svg {
+        html[data-theme="light"] .header-transparent-bg .header-toolstheme svg {
             filter: none;
         }
 
-        body.page-home .header-transparent-bg .header-tools__item,
-        body.page-home .header-transparent-bg .header-toolsitem {
+        .header-transparent-bg .header-tools__item,
+        .header-transparent-bg .header-toolsitem {
             color: #ffffff;
             text-shadow: 0 0 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.8);
         }
-        body.page-home .header-transparent-bg .header-toolstheme {
+        .header-transparent-bg .header-toolstheme {
             text-shadow: none;
             padding: 0.35rem;
             border-radius: 50%;
             background: rgba(0,0,0,0.25);
         }
-        body.page-home .header-transparent-bg .header-toolstheme:hover {
+        .header-transparent-bg .header-toolstheme:hover {
             background: rgba(0,0,0,0.35);
         }
-        body.page-home .header-transparent-bg .header-toolstheme:hover .theme-icon-moon {
+        .header-transparent-bg .header-toolstheme:hover .theme-icon-moon {
             color: #2c5282 !important;
         }
 
-        html[data-theme="light"] body.page-home .header-transparent-bg .header-tools__item,
-        html[data-theme="light"] body.page-home .header-transparent-bg .header-toolsitem {
+        html[data-theme="light"] .header-transparent-bg .header-tools__item,
+        html[data-theme="light"] .header-transparent-bg .header-toolsitem {
             color: #1f2d2b;
             text-shadow: 0 0 2px rgba(255,255,255,0.95), 0 0 4px rgba(255,255,255,0.8);
         }
-        html[data-theme="light"] body.page-home .header-transparent-bg .header-toolstheme {
+        html[data-theme="light"] .header-transparent-bg .header-toolstheme {
             text-shadow: none;
             background: rgba(255,255,255,0.4);
         }
-        html[data-theme="light"] body.page-home .header-transparent-bg .header-toolstheme:hover {
+        html[data-theme="light"] .header-transparent-bg .header-toolstheme:hover {
             background: rgba(255,255,255,0.55);
         }
-        html[data-theme="light"] body.page-home .header-transparent-bg .header-toolstheme:hover .theme-icon-moon {
+        html[data-theme="light"] .header-transparent-bg .header-toolstheme:hover .theme-icon-moon {
             color: #2c5282 !important;
         }
 
@@ -1204,49 +1203,45 @@
             padding-top: 0;
         }
 
-        /* Mobile header: icon colours when transparent (home = always, other pages = when scrolled) */
         @media (max-width: 1199.98px) {
-            /* Home page: transparent header icon colours always */
-            /* Home page light theme: dark icons */
-            html[data-theme="light"] body.page-home .header-mobile--transparent .header-mobile__icon svg,
-            html[data-theme="light"] body.page-home .header-mobile--transparent .header-tools__item,
-            html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolsitem,
-            html[data-theme="light"] body.page-home .header-mobile--transparent .nav-icon {
+            html[data-theme="light"] .header-mobile--transparent .header-mobile__icon svg,
+            html[data-theme="light"] .header-mobile--transparent .header-tools__item,
+            html[data-theme="light"] .header-mobile--transparent .header-toolsitem,
+            html[data-theme="light"] .header-mobile--transparent .nav-icon {
                 color: #1f2d2b;
                 filter: drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 2px rgba(255,255,255,0.8));
             }
-            html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolstheme svg {
+            html[data-theme="light"] .header-mobile--transparent .header-toolstheme svg {
                 filter: none;
             }
-            html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolstheme {
+            html[data-theme="light"] .header-mobile--transparent .header-toolstheme {
                 padding: 0.35rem;
                 border-radius: 50%;
                 background: rgba(255,255,255,0.4);
             }
-            html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolstheme:hover {
+            html[data-theme="light"] .header-mobile--transparent .header-toolstheme:hover {
                 background: rgba(255,255,255,0.55);
             }
-            html[data-theme="light"] body.page-home .header-mobile--transparent .header-toolstheme:hover .theme-icon-moon,
-            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolstheme:hover .theme-icon-moon {
+            html[data-theme="light"] .header-mobile--transparent .header-toolstheme:hover .theme-icon-moon,
+            html[data-theme="dark"] .header-mobile--transparent .header-toolstheme:hover .theme-icon-moon {
                 color: #2c5282 !important;
             }
-            /* Home page dark mode: light icons with dark outline */
-            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-mobile__icon svg,
-            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-tools__item,
-            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolsitem,
-            html[data-theme="dark"] body.page-home .header-mobile--transparent .nav-icon {
+            html[data-theme="dark"] .header-mobile--transparent .header-mobile__icon svg,
+            html[data-theme="dark"] .header-mobile--transparent .header-tools__item,
+            html[data-theme="dark"] .header-mobile--transparent .header-toolsitem,
+            html[data-theme="dark"] .header-mobile--transparent .nav-icon {
                 color: #ffffff;
                 filter: drop-shadow(0 0 1px rgba(0,0,0,0.9)) drop-shadow(0 0 2px rgba(0,0,0,0.8));
             }
-            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolstheme svg {
+            html[data-theme="dark"] .header-mobile--transparent .header-toolstheme svg {
                 filter: none;
             }
-            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolstheme {
+            html[data-theme="dark"] .header-mobile--transparent .header-toolstheme {
                 padding: 0.35rem;
                 border-radius: 50%;
                 background: rgba(0,0,0,0.25);
             }
-            html[data-theme="dark"] body.page-home .header-mobile--transparent .header-toolstheme:hover {
+            html[data-theme="dark"] .header-mobile--transparent .header-toolstheme:hover {
                 background: rgba(0,0,0,0.35);
             }
             .header-mobile__tools {
@@ -1862,11 +1857,7 @@
         });
     </script>
 
-    @php
-        $themeJsPublic = public_path('assets/js/theme.js');
-        $themeJsVersion = is_file($themeJsPublic) ? filemtime($themeJsPublic) : 1;
-    @endphp
-    <script src="{{ asset('assets/js/theme.js') }}?v={{ $themeJsVersion }}"></script>
+    <script src="{{ asset('assets/js/theme.js') }}"></script>
     
     <script>
         (function() {
