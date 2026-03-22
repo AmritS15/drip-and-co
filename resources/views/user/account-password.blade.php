@@ -22,7 +22,7 @@
         opacity: 1;
     }
 </style>
- <main class="pt-90">
+ <main class="pt-90 pb-5">
     <div class="mb-4 pb-4"></div>
     <section class="my-account container">
       <h2 class="page-title">Account Details</h2>
