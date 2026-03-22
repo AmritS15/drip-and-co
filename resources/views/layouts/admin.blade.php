@@ -14,13 +14,13 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/animation.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-select.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}?v={{ file_exists(public_path('css/style.css')) ? filemtime(public_path('css/style.css')) : 1 }}">
     <link rel="stylesheet" href="{{ asset('font/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('icon/style.css') }}">
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ asset('images/favicon.ico') }}">
-    <linkrel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}?v={{ file_exists(public_path('css/custom.css')) ? filemtime(public_path('css/custom.css')) : 1 }}">
     <style>
         html[data-theme="dark"] .wgp-pagination .pagination .page-link {
             color: #e9ecef !important;
@@ -46,6 +46,38 @@
         }
         html[data-theme="dark"] .wgp-pagination .text-muted {
             color: #adb5bd !important;
+        }
+        /*
+         * Dark mode fixes inlined so they apply on deploy even when public/css is CDN-cached.
+         * Mirrors public/css/style.css — coupon expiry date + wg-box search icon.
+         */
+        html[data-theme="dark"] .section-content-right input[type="date"],
+        html[data-theme="dark"] .section-content-right input[type="datetime-local"],
+        html[data-theme="dark"] .section-content-right input[type="month"],
+        html[data-theme="dark"] .section-content-right input[type="time"],
+        html[data-theme="dark"] .section-content-right input[type="week"] {
+            background-color: #111827 !important;
+            border-color: #374151 !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+        }
+        html[data-theme="dark"] .section-content-right input[type="date"]::-webkit-calendar-picker-indicator,
+        html[data-theme="dark"] .section-content-right input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: 0.9;
+        }
+        html[data-theme="dark"] .section-content-right .wg-box .form-search .button-submit button,
+        html[data-theme="dark"] .section-content-right .wg-box .form-search .button-submit button i {
+            color: #ffffff !important;
+        }
+        html[data-theme="dark"] .section-content-right .wg-box .form-search .button-submit button:hover,
+        html[data-theme="dark"] .section-content-right .wg-box .form-search .button-submit button:hover i {
+            color: #ffffff !important;
+            opacity: 0.9;
+        }
+        html[data-theme="dark"] .section-content-right .header-dashboard .form-search .button-submit button,
+        html[data-theme="dark"] .section-content-right .header-dashboard .form-search .button-submit button i {
+            color: #e5e7eb !important;
         }
     </style>
     @stack("styles")
