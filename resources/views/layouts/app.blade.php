@@ -1857,7 +1857,11 @@
         });
     </script>
 
-    <script src="{{ asset('assets/js/theme.js') }}"></script>
+    @php
+        $themeJsPublic = public_path('assets/js/theme.js');
+        $themeJsVersion = is_file($themeJsPublic) ? filemtime($themeJsPublic) : 1;
+    @endphp
+    <script src="{{ asset('assets/js/theme.js') }}?v={{ $themeJsVersion }}"></script>
     
     <script>
         (function() {
