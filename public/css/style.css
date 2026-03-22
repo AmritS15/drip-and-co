@@ -437,6 +437,24 @@ html[data-theme="dark"] .section-content-right select {
   color: #e5e7eb;
 }
 
+/* Date/time inputs: not covered above; need explicit light text + WebKit fill (coupon forms, etc.) */
+html[data-theme="dark"] .section-content-right input[type="date"],
+html[data-theme="dark"] .section-content-right input[type="datetime-local"],
+html[data-theme="dark"] .section-content-right input[type="month"],
+html[data-theme="dark"] .section-content-right input[type="time"],
+html[data-theme="dark"] .section-content-right input[type="week"] {
+  background-color: #111827;
+  border-color: #374151;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+}
+
+html[data-theme="dark"] .section-content-right input[type="date"]::-webkit-calendar-picker-indicator,
+html[data-theme="dark"] .section-content-right input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.9;
+}
+
 html[data-theme="dark"] .section-content-right input::placeholder,
 html[data-theme="dark"] .section-content-right textarea::placeholder {
   color: #9ca3af;
@@ -483,6 +501,18 @@ html[data-theme="dark"] .section-content-right .header-dashboard .form-search in
 html[data-theme="dark"] .section-content-right .header-dashboard .form-search .button-submit button,
 html[data-theme="dark"] .section-content-right .header-dashboard .form-search .button-submit i {
   color: #e5e7eb;
+}
+
+/* Product / Users / etc.: search lives in wg-box, not header-dashboard — icon must stay visible */
+html[data-theme="dark"] .section-content-right .wg-box .form-search .button-submit button,
+html[data-theme="dark"] .section-content-right .wg-box .form-search .button-submit button i {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .section-content-right .wg-box .form-search .button-submit button:hover,
+html[data-theme="dark"] .section-content-right .wg-box .form-search .button-submit button:hover i {
+  color: #ffffff !important;
+  opacity: 0.9;
 }
 
 
@@ -2168,6 +2198,37 @@ a:hover, a:focus {
 }
 .list-icon-function .item.trash {
   color: #FF5200;
+}
+
+/* Admin tables: keep action icons (eye/edit/bin) inside the cell — works with or without .table-responsive */
+.wg-table .table td:has(.list-icon-function) {
+  min-width: 7rem;
+  vertical-align: middle;
+}
+
+.wg-table .table .list-icon-function {
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  justify-content: flex-start;
+  align-items: center;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.wg-table .table .list-icon-function > a,
+.wg-table .table .list-icon-function > form {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  line-height: 1;
+}
+
+.wg-table .table .list-icon-function .item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .wg-order-detail {

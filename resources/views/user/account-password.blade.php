@@ -37,9 +37,6 @@
                     <h5 class="text-uppercase mb-0">Change Password</h5>
                     <a class="btn btn-sm btn-danger btn-order-back" href="{{ route('user.details') }}">Back</a>
                   </div>
-                  @if (session('status'))
-                      <div class="alert alert-success">{{ session('status') }}</div>
-                  @endif
 
                   <form action="{{ route('user.password.update') }}" method="POST">
                       @csrf

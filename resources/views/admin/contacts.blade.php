@@ -1,5 +1,22 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    /* Long emails / message text must wrap inside the wg-box */
+    .wg-table.table-all-user .table td.contacts-table__email {
+        max-width: 16rem;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        white-space: normal;
+        vertical-align: top;
+    }
+    .wg-table.table-all-user .table td.contacts-table__message {
+        max-width: 28rem;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        white-space: normal;
+        vertical-align: top;
+    }
+</style>
 <div class="main-content-inner">
     <div class="main-content-wrap">
         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
@@ -54,8 +71,8 @@
                                 <td>{{$contact->id}}</td>
                                 <td>{{$contact->name}}</td>
                                 <td>{{$contact->phone}}</td>
-                                <td>{{$contact->email}}</td>
-                                <td>{{$contact->comment}}</td>
+                                <td class="contacts-table__email text-break">{{ $contact->email }}</td>
+                                <td class="contacts-table__message text-break">{{ $contact->comment }}</td>
                                 <td>{{$contact->created_at}}</td>
                                 <td>
                                     <div class="list-icon-function">

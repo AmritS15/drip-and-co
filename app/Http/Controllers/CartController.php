@@ -16,10 +16,27 @@ use Surfsidemedia\Shoppingcart\Facades\Cart;
 
 class CartController extends Controller
 {
+    /**
+     * Cart/checkout pages must not be stored in the browser cache, or the Back button can show
+     * stale line items after an order when the session cart is already empty.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    private function viewWithNoStoreCache(string $view, array $data = [])
+    {
+        return response()
+            ->view($view, $data)
+            ->withHeaders([
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
+                'Expires' => 'Fri, 01 Jan 1990 00:00:00 GMT',
+            ]);
+    }
+
     public function index()
     {
         $items = Cart::instance('cart')->content();
-        return view('cart', compact('items'));
+        return $this->viewWithNoStoreCache('cart', compact('items'));
     }
 
     public function add_to_cart(Request $request)
@@ -177,6 +194,10 @@ class CartController extends Controller
             return redirect()->route('login');
         }
 
+        if (Cart::instance('cart')->content()->count() === 0) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
         $addresses = Address::where('user_id', Auth::user()->id)->orderBy('isdefault', 'desc')->get();
         $address = $addresses->where('isdefault', 1)->first() ?? $addresses->first();
 
@@ -203,12 +224,17 @@ class CartController extends Controller
             }
         }
 
-        return view('checkout', compact('address', 'addresses', 'stockWarnings', 'availableByProduct'));
+        return $this->viewWithNoStoreCache('checkout', compact('address', 'addresses', 'stockWarnings', 'availableByProduct'));
     }
 
     public function place_an_order(Request $request)
     {
         $user_id = Auth::user()->id;
+
+        if (Cart::instance('cart')->content()->count() === 0) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
         $address = null;
 
         if ($request->filled('address_id')) {
@@ -387,7 +413,7 @@ class CartController extends Controller
         if(Session::has('order_id'))
             {
                 $order = Order::find(Session::get('order_id'));
-                return view('order-confirmation',compact('order'));
+                return $this->viewWithNoStoreCache('order-confirmation', compact('order'));
             }
             return redirect()->route('cart.index');
         

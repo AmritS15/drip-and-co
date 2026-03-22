@@ -254,3 +254,13 @@
     </section>
   </main>
 @endsection
+
+@push('scripts')
+    <script>
+        window.addEventListener('pageshow', function (e) {
+            if (e.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
+@endpush

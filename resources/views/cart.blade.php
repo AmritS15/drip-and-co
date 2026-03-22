@@ -260,6 +260,11 @@
 
 @push('scripts')
     <script>
+        window.addEventListener('pageshow', function (e) {
+            if (e.persisted) {
+                window.location.reload();
+            }
+        });
         $(function() {
             $(".qty-control__increase").on("click", function() {
                 $(this).closest('form').submit();

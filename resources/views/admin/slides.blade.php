@@ -1,5 +1,15 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    /* Long URLs in the Link column must wrap instead of overflowing the wg-box */
+    .wg-table.table-all-user .table td.slides-table__link {
+        max-width: 18rem;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        white-space: normal;
+        vertical-align: top;
+    }
+</style>
  <div class="main-content-inner">
     <div class="main-content-wrap">
         <div class="flex items-center flex-wrap justify-between gap20 mb-27">
@@ -28,6 +38,7 @@
                 @if(Session::has('status'))
                     <p class="alert alert-success">{{ Session::get('status') }}</p>
                 @endif
+                <div class="table-responsive">
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -63,7 +74,7 @@
                             <td>{{ $slide->tagline }}</td>
                             <td>{{ $slide->title }}</td>
                             <td>{{ $slide->subtitle ?? '—' }}</td>
-                            <td>{{ $slide->link ?: '—' }}</td>
+                            <td class="slides-table__link text-break">{{ $slide->link ?: '—' }}</td>
                             <td>
                                 <div class="list-icon-function">
                                     <a href="{{ route('admin.slide.edit',['id'=>$slide->id]) }}">
@@ -84,6 +95,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
             </div>
             <div class="divider"></div>
             <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
