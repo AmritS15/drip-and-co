@@ -1,8 +1,6 @@
 @extends('layouts.app')
 @section('content')
 <style>
-    body { min-height: 100vh; display: flex; flex-direction: column; }
-    main { flex: 1; }
     .account-delete-box {
         background: var(--bs-body-bg);
         border: 1px solid var(--bs-border-color);

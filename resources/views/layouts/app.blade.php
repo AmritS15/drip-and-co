@@ -682,7 +682,7 @@
 
 </head>
 
-<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif @if(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*')) page-auth @endif @if(request()->routeIs('wishlist.index')) page-sticky-footer @endif">
+<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif @if(request()->routeIs('home.contact')) page-contact @endif @if(request()->routeIs('home.about')) page-about @endif @if(request()->routeIs('shop.*')) page-shop @endif @if(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*')) page-auth @endif @if(request()->routeIs('wishlist.index') || request()->routeIs('user.*')) page-sticky-footer @endif">
     <svg class="d-none">
         <symbol id="icon_nav" viewBox="0 0 25 18">
             <rect width="25" height="2" />
