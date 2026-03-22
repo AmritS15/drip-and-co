@@ -700,8 +700,8 @@ function pureFadeOut(e) {
         document.querySelector("main").style.paddingTop = headerHeight + 'px';
         _this.$header.classList.add('position-absolute');
 
-        document.removeEventListener('scroll', this._stickyScrollHander);
-        document.addEventListener('scroll', this._stickyScrollHander);
+        window.removeEventListener('scroll', this._stickyScrollHander);
+        window.addEventListener('scroll', this._stickyScrollHander, { passive: true });
       },
 
       _initMenuPosition () {

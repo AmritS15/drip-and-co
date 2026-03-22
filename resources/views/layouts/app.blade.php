@@ -40,6 +40,11 @@
                 width: 100% !important;
                 z-index: 1040;
             }
+            body.page-contact .header-mobile.position-absolute,
+            body.page-about .header-mobile.position-absolute,
+            body.page-shop .header-mobile.position-absolute {
+                position: absolute !important;
+            }
             /* All pages: mobile header always transparent (home + shop, cart, etc.) */
             .header-mobile,
             .header-mobile.header_sticky,
