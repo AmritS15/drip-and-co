@@ -61,7 +61,7 @@
               @endforeach
             </tbody>
           </table>
-          <div class="cart-table-footer">
+          <div class="cart-table-footer pt-3 pb-1">
             <form method="POST" action="{{route('wishlist.items.clear')}}">
               @csrf
               @method('DELETE')
