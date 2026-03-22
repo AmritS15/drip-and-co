@@ -22,7 +22,7 @@ class HomeController extends Controller
             ->inRandomOrder()
             ->get()
             ->take(8);
-        $fproducts = Product::where('featured', 1)->get()->take(8);
+        $fproducts = Product::where('featured', 1)->inRandomOrder()->limit(8)->get();
 
         
         $heroSlides = Slide::where('status', 1)
@@ -71,7 +71,7 @@ class HomeController extends Controller
                                     });
                             });
                     })
-                    ->orderBy('id', 'DESC')
+                    ->inRandomOrder()
                     ->get();
                 $category->setRelation('products', $products);
                 return $category;

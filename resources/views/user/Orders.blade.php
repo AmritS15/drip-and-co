@@ -31,13 +31,6 @@
       background-color: #f5d700 !important;
       color: #000;
     }
-
-     body { 
-      min-height: 100vh; 
-      display: flex; 
-      flex-direction: column; 
-    }
-    main { flex: 1; }
   </style>
  <main class="pt-90" style="padding-top: 0px;">
     <div class="mb-4 pb-4"></div>

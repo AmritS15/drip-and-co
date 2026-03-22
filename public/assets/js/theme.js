@@ -754,8 +754,9 @@ function pureFadeOut(e) {
           return;
         }
         const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const noHeaderOnScrollUp = document.body.classList.contains('page-contact') || document.body.classList.contains('page-about') || document.body.classList.contains('page-shop');
 
-        if (currentScrollTop > this.lastScrollTop || currentScrollTop < this.stickyMinPos) {
+        if (currentScrollTop > this.lastScrollTop || currentScrollTop < this.stickyMinPos || noHeaderOnScrollUp) {
           this.$header.classList.remove(this.selectors.stickyActiveClass);
           this.$header.classList.add('position-absolute');
         } else if (currentScrollTop > this.stickyMinPos) {
