@@ -50,7 +50,6 @@
             <h2 class="h4 mt-4">Approval</h2>
             <p class="fs-6">This statement has been approved by the directors of Drip&amp;Co and will be reviewed and updated annually.</p>
 
-            <p class="fs-6 mb-0"><strong>[Director Name]</strong><br>Director, Drip&amp;Co<br>March 2026</p>
         </div>
     </section>
 </main>
