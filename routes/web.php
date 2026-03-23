@@ -15,7 +15,10 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
-Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/shop', [ShopController::class, 'landing'])->name('shop.index');
+Route::get('/shop/all', [ShopController::class, 'index'])->name('shop.all');
+Route::get('/shop/mens', [ShopController::class, 'mens'])->name('shop.mens');
+Route::get('/shop/womens', [ShopController::class, 'womens'])->name('shop.womens');
 Route::get('/shop/{product_slug}', [ShopController::class, 'product_details'])->name('shop.product.details');
 Route::post('/product/review', [ShopController::class, 'store_review'])->name('product.review.store');
 

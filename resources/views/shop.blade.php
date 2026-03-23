@@ -392,43 +392,45 @@
                     Hide Filter
                 </button>
 
-                <div class="accordion" id="categories-list">
-                    <div class="accordion-item mb-4 pb-3">
-                        <h5 class="accordion-header" id="accordion-heading-1">
-                            <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#accordion-filter-1" aria-expanded="true"
-                                aria-controls="accordion-filter-1">
-                                Product Categories
-                                <svg class="accordion-button__icon type2" viewBox="0 0 10 6"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <g aria-hidden="true" stroke="none" fill-rule="evenodd">
-                                        <path
-                                            d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z" />
-                                    </g>
-                                </svg>
-                            </button>
-                        </h5>
-                        <div id="accordion-filter-1" class="accordion-collapse collapse show border-0"
-                            aria-labelledby="accordion-heading-1" data-bs-parent="#categories-list">
-                            <div class="accordion-body px-0 pb-0 pt-3 category-list">
-                                <ul class="list list-inline mb-0">
-                                    @foreach ($categories as $category)
-                                        <li class="list-item">
-                                            <span class="menu-link py-1">
-                                                <input type="checkbox" class="chk-category" name="categories"
-                                                    value="{{ $category->id }}"
-                                                    @if (in_array($category->id, explode(',', $f_categories))) checked="checked" @endif />
-                                                {{ $category->name }}
-                                            </span>
-                                            <span class="text-right float-right">({{ $category->products->count() }})</span>
-                                        </li>
-                                    @endforeach
+                @if (empty($lockCategory))
+                    <div class="accordion" id="categories-list">
+                        <div class="accordion-item mb-4 pb-3">
+                            <h5 class="accordion-header" id="accordion-heading-1">
+                                <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#accordion-filter-1" aria-expanded="true"
+                                    aria-controls="accordion-filter-1">
+                                    Product Categories
+                                    <svg class="accordion-button__icon type2" viewBox="0 0 10 6"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <g aria-hidden="true" stroke="none" fill-rule="evenodd">
+                                            <path
+                                                d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z" />
+                                        </g>
+                                    </svg>
+                                </button>
+                            </h5>
+                            <div id="accordion-filter-1" class="accordion-collapse collapse show border-0"
+                                aria-labelledby="accordion-heading-1" data-bs-parent="#categories-list">
+                                <div class="accordion-body px-0 pb-0 pt-3 category-list">
+                                    <ul class="list list-inline mb-0">
+                                        @foreach ($categories as $category)
+                                            <li class="list-item">
+                                                <span class="menu-link py-1">
+                                                    <input type="checkbox" class="chk-category" name="categories"
+                                                        value="{{ $category->id }}"
+                                                        @if (in_array($category->id, explode(',', $f_categories))) checked="checked" @endif />
+                                                    {{ $category->name }}
+                                                </span>
+                                                <span class="text-right float-right">({{ $category->products_count ?? 0 }})</span>
+                                            </li>
+                                        @endforeach
 
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
 
                 <div class="accordion" id="color-filters">
@@ -532,7 +534,7 @@
                                                 {{ $brand->name }}
                                             </span>
                                             <span class="text-right float-end">
-                                                ({{ $brand->products->count() }})
+                                                ({{ $brand->products_count ?? 0 }})
                                             </span>
                                         </li>
                                     @endforeach
@@ -702,10 +704,19 @@
 
                 <div class="d-flex justify-content-between mb-4 pb-md-2">
                     <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">
+                        @php
+                            $shopSectionLabel = request()->routeIs('shop.mens')
+                                ? 'Mens'
+                                : (request()->routeIs('shop.womens') ? 'Womens' : null);
+                        @endphp
                         <a href="{{ route('home.index') }}"
                             class="menu-link menu-link_us-s text-uppercase fw-medium">Home</a>
                         <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>
-                        <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium">The Shop</a>
+                        <a href="{{ route('shop.all') }}" class="menu-link menu-link_us-s text-uppercase fw-medium">The Shop</a>
+                        @if ($shopSectionLabel)
+                            <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>
+                            <span class="menu-link menu-link_us-s text-uppercase fw-medium">{{ $shopSectionLabel }}</span>
+                        @endif
                     </div>
 
                     <div
@@ -1002,12 +1013,12 @@
         </section>
     </main>
 
-    <form id="frmfilter" method="GET" action="{{ route('shop.index') }}">
+    <form id="frmfilter" method="GET" action="{{ request()->routeIs('shop.mens') ? route('shop.mens') : (request()->routeIs('shop.womens') ? route('shop.womens') : route('shop.all')) }}">
         <input type="hidden" name="page" value="{{ $products->currentPage() }}">
         <input type="hidden" name="size" id="size" value="{{ $size }}" />
         <input type="hidden" name="order" id="order" value="{{ $order }}" />
         <input type="hidden" name="brands" id="hdnBrands" />
-        <input type="hidden" name="categories" id="hdnCategories" />
+        <input type="hidden" name="categories" id="hdnCategories" value="{{ $f_categories }}" />
         <input type="hidden" name="min" id="hdnMinPrice" value="{{ $min_price }}" />
         <input type="hidden" name="max" id="hdnMaxPrice" value="{{ $max_price }}" />
         <input type="hidden" name="sizes" id="hdnSizes" />
@@ -1019,7 +1030,10 @@
 @push('scripts')
     <script>
         function clearAllFilters() {
-            $('#hdnBrands, #hdnCategories, #hdnSizes, #hdnColors, #hdnMinPrice, #hdnMaxPrice').val('');
+            $('#hdnBrands, #hdnSizes, #hdnColors, #hdnMinPrice, #hdnMaxPrice').val('');
+            if ({{ empty($lockCategory) ? 'true' : 'false' }}) {
+                $('#hdnCategories').val('');
+            }
             $('.swatch-size').removeClass('btn-primary').addClass('btn-outline-light');
             $('.swatch-color').removeClass('swatch_active');
             $('.chk-brand, .chk-category').prop('checked', false);
@@ -1134,11 +1148,13 @@
                 });
                 $("#hdnBrands").val(brands.join(','));
 
-                var categories = [];
-                $("input[name='categories']:checked").each(function() {
-                    categories.push($(this).val());
-                });
-                $("#hdnCategories").val(categories.join(','));
+                if (!{{ empty($lockCategory) ? 'true' : 'false' }}) {
+                    var categories = [];
+                    $("input[name='categories']:checked").each(function() {
+                        categories.push($(this).val());
+                    });
+                    $("#hdnCategories").val(categories.join(','));
+                }
 
                 var selectedSizes = [];
                 $('.swatch-size.btn-primary').each(function() {

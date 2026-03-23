@@ -596,17 +596,9 @@
                                     <p class="home-category-banner__kicker">{{ $staticHero['kicker'] }}</p>
                                     <h2 class="home-category-banner__title">{{ $staticHero['title'] }}</h2>
                                     <div class="home-category-banner__links">
-                                        @php
-                                            $heroWomenFilters = array_filter([
-                                                'categories' => optional($womenCategory)->id,
-                                            ], fn($value) => $value !== null && $value !== '');
-                                            $heroMenFilters = array_filter([
-                                                'categories' => optional($menCategory)->id,
-                                            ], fn($value) => $value !== null && $value !== '');
-                                        @endphp
-                                        <a href="{{ route('shop.index', $heroWomenFilters) }}"
+                                        <a href="{{ route('shop.womens') }}"
                                            class="home-category-banner__link">Women</a>
-                                        <a href="{{ route('shop.index', $heroMenFilters) }}"
+                                        <a href="{{ route('shop.mens') }}"
                                            class="home-category-banner__link">Men</a>
                                     </div>
                                 </div>
@@ -757,18 +749,16 @@
                 <h2 class="home-category-banner__title">{{ $section['title'] }}</h2>
                 <div class="home-category-banner__links">
                     @php
-                        $womenFilters = array_filter([
-                            'categories' => optional($womenCategory)->id,
+                        $womenCollectionFilters = array_filter([
                             'brands' => $section['women_collection_brands'] ?? null,
                         ], fn($value) => $value !== null && $value !== '');
-                        $menFilters = array_filter([
-                            'categories' => optional($menCategory)->id,
+                        $menCollectionFilters = array_filter([
                             'brands' => $section['men_collection_brands'] ?? null,
                         ], fn($value) => $value !== null && $value !== '');
                     @endphp
-                    <a href="{{ route('shop.index', $womenFilters) }}"
+                    <a href="{{ route('shop.womens', $womenCollectionFilters) }}"
                        class="home-category-banner__link">Women</a>
-                    <a href="{{ route('shop.index', $menFilters) }}"
+                    <a href="{{ route('shop.mens', $menCollectionFilters) }}"
                        class="home-category-banner__link">Men</a>
                 </div>
             </div>

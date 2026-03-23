@@ -50,9 +50,6 @@
                                     <div class="swiper-slide product-single__image-item">
                                         <img loading="lazy" class="h-auto" id="main-img" width="674" height="674" alt=""
                                             src="{{ $productImage }}" />
-                                        <a data-fancybox="gallery" href="{{ $productImage }}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom" /></svg>
-                                        </a>
                                     </div>
                                 </div>
                                 <div class="swiper-button-prev"><svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg></div>
@@ -76,18 +73,6 @@
                             <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium">The Shop</a>
                         </div>
 
-                        <div
-                            class="product-single__prev-next d-flex align-items-center justify-content-between justify-content-md-end flex-grow-1">
-                            <a href="#" class="text-uppercase fw-medium"><svg width="10" height="10"
-                                    viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
-                                    <use href="#icon_prev_md" />
-                                </svg><span class="menu-link menu-link_us-s">Prev</span></a>
-                            <a href="#" class="text-uppercase fw-medium"><span
-                                    class="menu-link menu-link_us-s">Next</span><svg width="10" height="10"
-                                    viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
-                                    <use href="#icon_next_md" />
-                                </svg></a>
-                        </div>
                     </div>
                     <h1 class="product-single__name">{{ $product->name }}</h1>
                     @php
@@ -343,9 +328,9 @@
                                 galleryThumbs = fallback.galleryThumbs || [];
                             }
                             var slides = [];
-                            slides.push('<div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" id="main-img" width="674" height="674" alt="" src="' + mainImg + '" /><a data-fancybox="gallery" href="' + mainImg + '" data-bs-toggle="tooltip" title="Zoom"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom" /></svg></a></div>');
+                            slides.push('<div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" id="main-img" width="674" height="674" alt="" src="' + mainImg + '" /></div>');
                             for (var j = 0; j < gallery.length; j++) {
-                                slides.push('<div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="' + gallery[j] + '" width="674" height="674" alt="" /><a data-fancybox="gallery" href="' + gallery[j] + '"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom" /></svg></a></div>');
+                                slides.push('<div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="' + gallery[j] + '" width="674" height="674" alt="" /></div>');
                             }
                             var thumbSlides = ['<div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" id="thumb-img" src="' + mainThumb + '" width="104" height="104" alt="" /></div>'];
                             for (var k = 0; k < galleryThumbs.length; k++) {
