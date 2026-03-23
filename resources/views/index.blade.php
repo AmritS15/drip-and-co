@@ -216,6 +216,21 @@
         display: block;
     }
 
+    .home-collection__empty-state {
+        min-height: 220px;
+        border: 1px dashed rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    html[data-theme="dark"] .home-collection__empty-state {
+        border-color: rgba(255, 255, 255, 0.35);
+    }
+
     .home-collection__slider-wrap {
         padding: 0 2.5rem;
     }
@@ -655,88 +670,94 @@
         </section>
     @endif
 
-    @if (count($categorySliders) > 0)
     <section class="home-collection js-scroll-reveal">
         <div class="home-section-shell">
-            <div class="home-collection__tabs">
-                @foreach ($categorySliders as $index => $category)
-                    <button class="home-collection__tab {{ $index === 0 ? 'is-active' : '' }}" type="button" data-category-id="{{ $category->id }}">{{ $category->name }}</button>
-                @endforeach
-            </div>
+            @if (count($categorySliders) > 0)
+                <div class="home-collection__tabs">
+                    @foreach ($categorySliders as $index => $category)
+                        <button class="home-collection__tab {{ $index === 0 ? 'is-active' : '' }}" type="button" data-category-id="{{ $category->id }}">{{ $category->name }}</button>
+                    @endforeach
+                </div>
 
-            <div class="home-collection__panels">
-                @foreach ($categorySliders as $index => $category)
-                    <div class="home-collection__panel {{ $index === 0 ? 'is-active' : '' }}" data-panel="{{ $category->id }}">
-                        @if ($category->products->count() > 0)
-                        <div id="category-slider-{{ $category->id }}" class="home-collection__slider-wrap position-relative">
-                            <div class="swiper-container js-swiper-slider home-collection__swiper"
-                                 data-settings='{
-                                "autoplay": false,
-                                "slidesPerView": 4,
-                                "slidesPerGroup": 4,
-                                "spaceBetween": 16,
-                                "effect": "none",
-                                "loop": {{ $category->products->count() > 4 ? 'true' : 'false' }},
-                                "navigation": {
-                                    "nextEl": "#category-slider-{{ $category->id }} .products-carousel__next",
-                                    "prevEl": "#category-slider-{{ $category->id }} .products-carousel__prev"
-                                },
-                                "breakpoints": {
-                                    "320": { "slidesPerView": 2, "slidesPerGroup": 2, "spaceBetween": 12 },
-                                    "640": { "slidesPerView": 3, "slidesPerGroup": 3, "spaceBetween": 14 },
-                                    "992": { "slidesPerView": 4, "slidesPerGroup": 4, "spaceBetween": 16 }
-                                }
-                            }'>
-                                <div class="swiper-wrapper">
-                                    @foreach ($category->products as $product)
-                                        @php
-                                            $material = $product->material ?? optional($product->category)->name ?? 'Premium materials';
-                                        @endphp
-                                        <div class="swiper-slide">
-                                            <article class="product-card-modern">
-                                                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
-                                                   class="product-card-modern__media d-block">
-                                                    <img loading="lazy"
-                                                         src="{{ asset('uploads/products') }}/{{ $product->image }}"
-                                                         alt="{{ $product->name }}">
-                                                </a>
-                                                <div class="product-card-modern__body">
-                                                    <h3 class="product-card-modern__title">
-                                                        <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
-                                                           class="stretched-link text-reset text-decoration-none">
-                                                            {{ strtoupper($product->name) }}
-                                                        </a>
-                                                    </h3>
-                                                    <p class="product-card-modern__meta">{{ $material }}</p>
-                                                    <div class="product-card-modern__price">
-                                                        @if ($product->sale_price)
-                                                            <span><s>£{{ $product->regular_price }}</s> £{{ $product->sale_price }}</span>
-                                                        @else
-                                                            <span>£{{ $product->regular_price }}</span>
-                                                        @endif
+                <div class="home-collection__panels">
+                    @foreach ($categorySliders as $index => $category)
+                        <div class="home-collection__panel {{ $index === 0 ? 'is-active' : '' }}" data-panel="{{ $category->id }}">
+                            @if ($category->products->count() > 0)
+                            <div id="category-slider-{{ $category->id }}" class="home-collection__slider-wrap position-relative">
+                                <div class="swiper-container js-swiper-slider home-collection__swiper"
+                                     data-settings='{
+                                    "autoplay": false,
+                                    "slidesPerView": 4,
+                                    "slidesPerGroup": 4,
+                                    "spaceBetween": 16,
+                                    "effect": "none",
+                                    "loop": {{ $category->products->count() > 4 ? 'true' : 'false' }},
+                                    "navigation": {
+                                        "nextEl": "#category-slider-{{ $category->id }} .products-carousel__next",
+                                        "prevEl": "#category-slider-{{ $category->id }} .products-carousel__prev"
+                                    },
+                                    "breakpoints": {
+                                        "320": { "slidesPerView": 2, "slidesPerGroup": 2, "spaceBetween": 12 },
+                                        "640": { "slidesPerView": 3, "slidesPerGroup": 3, "spaceBetween": 14 },
+                                        "992": { "slidesPerView": 4, "slidesPerGroup": 4, "spaceBetween": 16 }
+                                    }
+                                }'>
+                                    <div class="swiper-wrapper">
+                                        @foreach ($category->products as $product)
+                                            @php
+                                                $material = $product->material ?? optional($product->category)->name ?? 'Premium materials';
+                                            @endphp
+                                            <div class="swiper-slide">
+                                                <article class="product-card-modern">
+                                                    <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
+                                                       class="product-card-modern__media d-block">
+                                                        <img loading="lazy"
+                                                             src="{{ asset('uploads/products') }}/{{ $product->image }}"
+                                                             alt="{{ $product->name }}">
+                                                    </a>
+                                                    <div class="product-card-modern__body">
+                                                        <h3 class="product-card-modern__title">
+                                                            <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
+                                                               class="stretched-link text-reset text-decoration-none">
+                                                                {{ strtoupper($product->name) }}
+                                                            </a>
+                                                        </h3>
+                                                        <p class="product-card-modern__meta">{{ $material }}</p>
+                                                        <div class="product-card-modern__price">
+                                                            @if ($product->sale_price)
+                                                                <span><s>£{{ $product->regular_price }}</s> £{{ $product->sale_price }}</span>
+                                                            @else
+                                                                <span>£{{ $product->regular_price }}</span>
+                                                            @endif
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </article>
-                                        </div>
-                                    @endforeach
+                                                </article>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="products-carousel__prev position-absolute top-50 start-0 d-flex align-items-center justify-content-center">
+                                    <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_md" /></svg>
+                                </div>
+                                <div class="products-carousel__next position-absolute top-50 end-0 d-flex align-items-center justify-content-center">
+                                    <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_md" /></svg>
                                 </div>
                             </div>
-                            <div class="products-carousel__prev position-absolute top-50 start-0 d-flex align-items-center justify-content-center">
-                                <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_md" /></svg>
+                            @else
+                            <div class="home-collection__empty-state">
+                                <p class="home-collection__empty text-muted small mb-0">No products in this category yet.</p>
                             </div>
-                            <div class="products-carousel__next position-absolute top-50 end-0 d-flex align-items-center justify-content-center">
-                                <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_md" /></svg>
-                            </div>
+                            @endif
                         </div>
-                        @else
-                        <p class="home-collection__empty text-muted small mb-0">No products in this category yet.</p>
-                        @endif
-                    </div>
-                @endforeach
-            </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="home-collection__empty-state">
+                    <p class="home-collection__empty text-muted small mb-0">Category slider has no products to show yet.</p>
+                </div>
+            @endif
         </div>
     </section>
-    @endif
 
     @foreach ($homeSections as $index => $section)
         <section class="home-category-banner js-scroll-reveal">
@@ -765,73 +786,77 @@
         </section>
     @endforeach
 
-    @if ($fproducts && $fproducts->count() > 0)
     <section class="home-collection home-collection--featured js-scroll-reveal">
         <div class="home-section-shell">
             <h2 class="home-collection__heading">Featured</h2>
-            <div id="featured-slider-wrap" class="home-collection__slider-wrap position-relative">
-                <div class="swiper-container js-swiper-slider home-collection__swiper"
-                     data-settings='{
-                        "autoplay": false,
-                        "slidesPerView": 4,
-                        "slidesPerGroup": 4,
-                        "spaceBetween": 16,
-                        "effect": "none",
-                        "loop": {{ $fproducts->count() > 4 ? 'true' : 'false' }},
-                        "navigation": {
-                            "nextEl": "#featured-slider-wrap .products-carousel__next",
-                            "prevEl": "#featured-slider-wrap .products-carousel__prev"
-                        },
-                        "breakpoints": {
-                            "320": { "slidesPerView": 2, "slidesPerGroup": 2, "spaceBetween": 12 },
-                            "640": { "slidesPerView": 3, "slidesPerGroup": 3, "spaceBetween": 14 },
-                            "992": { "slidesPerView": 4, "slidesPerGroup": 4, "spaceBetween": 16 }
-                        }
-                    }'>
-                    <div class="swiper-wrapper">
-                        @foreach ($fproducts as $product)
-                            @php
-                                $material = $product->material ?? optional($product->category)->name ?? 'Premium materials';
-                            @endphp
-                            <div class="swiper-slide">
-                                <article class="product-card-modern">
-                                    <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
-                                       class="product-card-modern__media d-block">
-                                        <img loading="lazy"
-                                             src="{{ asset('uploads/products') }}/{{ $product->image }}"
-                                             alt="{{ $product->name }}">
-                                    </a>
-                                    <div class="product-card-modern__body">
-                                        <h3 class="product-card-modern__title">
-                                            <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
-                                               class="stretched-link text-reset text-decoration-none">
-                                                {{ strtoupper($product->name) }}
-                                            </a>
-                                        </h3>
-                                        <p class="product-card-modern__meta">{{ $material }}</p>
-                                        <div class="product-card-modern__price">
-                                            @if ($product->sale_price)
-                                                <span><s>£{{ $product->regular_price }}</s> £{{ $product->sale_price }}</span>
-                                            @else
-                                                <span>£{{ $product->regular_price }}</span>
-                                            @endif
+            @if ($fproducts && $fproducts->count() > 0)
+                <div id="featured-slider-wrap" class="home-collection__slider-wrap position-relative">
+                    <div class="swiper-container js-swiper-slider home-collection__swiper"
+                         data-settings='{
+                            "autoplay": false,
+                            "slidesPerView": 4,
+                            "slidesPerGroup": 4,
+                            "spaceBetween": 16,
+                            "effect": "none",
+                            "loop": {{ $fproducts->count() > 4 ? 'true' : 'false' }},
+                            "navigation": {
+                                "nextEl": "#featured-slider-wrap .products-carousel__next",
+                                "prevEl": "#featured-slider-wrap .products-carousel__prev"
+                            },
+                            "breakpoints": {
+                                "320": { "slidesPerView": 2, "slidesPerGroup": 2, "spaceBetween": 12 },
+                                "640": { "slidesPerView": 3, "slidesPerGroup": 3, "spaceBetween": 14 },
+                                "992": { "slidesPerView": 4, "slidesPerGroup": 4, "spaceBetween": 16 }
+                            }
+                        }'>
+                        <div class="swiper-wrapper">
+                            @foreach ($fproducts as $product)
+                                @php
+                                    $material = $product->material ?? optional($product->category)->name ?? 'Premium materials';
+                                @endphp
+                                <div class="swiper-slide">
+                                    <article class="product-card-modern">
+                                        <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
+                                           class="product-card-modern__media d-block">
+                                            <img loading="lazy"
+                                                 src="{{ asset('uploads/products') }}/{{ $product->image }}"
+                                                 alt="{{ $product->name }}">
+                                        </a>
+                                        <div class="product-card-modern__body">
+                                            <h3 class="product-card-modern__title">
+                                                <a href="{{ route('shop.product.details', ['product_slug' => $product->slug]) }}"
+                                                   class="stretched-link text-reset text-decoration-none">
+                                                    {{ strtoupper($product->name) }}
+                                                </a>
+                                            </h3>
+                                            <p class="product-card-modern__meta">{{ $material }}</p>
+                                            <div class="product-card-modern__price">
+                                                @if ($product->sale_price)
+                                                    <span><s>£{{ $product->regular_price }}</s> £{{ $product->sale_price }}</span>
+                                                @else
+                                                    <span>£{{ $product->regular_price }}</span>
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
-                                </article>
-                            </div>
-                        @endforeach
+                                    </article>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="products-carousel__prev position-absolute top-50 start-0 d-flex align-items-center justify-content-center">
+                        <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_md" /></svg>
+                    </div>
+                    <div class="products-carousel__next position-absolute top-50 end-0 d-flex align-items-center justify-content-center">
+                        <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_md" /></svg>
                     </div>
                 </div>
-                <div class="products-carousel__prev position-absolute top-50 start-0 d-flex align-items-center justify-content-center">
-                    <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_md" /></svg>
+            @else
+                <div class="home-collection__empty-state">
+                    <p class="home-collection__empty text-muted small mb-0">Featured slider has no products to show yet.</p>
                 </div>
-                <div class="products-carousel__next position-absolute top-50 end-0 d-flex align-items-center justify-content-center">
-                    <svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_md" /></svg>
-                </div>
-            </div>
+            @endif
         </div>
     </section>
-    @endif
 
 </main>
 @endsection
@@ -842,32 +867,31 @@
         var tabs = document.querySelectorAll('.home-collection__tab');
         var panels = document.querySelectorAll('.home-collection__panel');
 
-        if (!tabs.length || !panels.length) return;
+        if (tabs.length && panels.length) {
+            tabs.forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    var categoryId = tab.getAttribute('data-category-id') || '';
 
-        tabs.forEach(function (tab) {
-            tab.addEventListener('click', function () {
-                var categoryId = tab.getAttribute('data-category-id') || '';
+                    tabs.forEach(function (t) {
+                        t.classList.toggle('is-active', t === tab);
+                    });
 
-                tabs.forEach(function (t) {
-                    t.classList.toggle('is-active', t === tab);
-                });
-
-                panels.forEach(function (panel) {
-                    var panelId = panel.getAttribute('data-panel') || '';
-                    var isActive = String(panelId) === String(categoryId);
-                    panel.classList.toggle('is-active', isActive);
-                    // Swipers inside hidden panels were initialized with 0 width; update when panel becomes visible
-                    if (isActive && typeof Swiper !== 'undefined') {
-                        var swiperEl = panel.querySelector('.home-collection__swiper');
-                        if (swiperEl && swiperEl.swiper) {
-                            requestAnimationFrame(function () {
-                                swiperEl.swiper.update();
-                            });
+                    panels.forEach(function (panel) {
+                        var panelId = panel.getAttribute('data-panel') || '';
+                        var isActive = String(panelId) === String(categoryId);
+                        panel.classList.toggle('is-active', isActive);
+                        if (isActive && typeof Swiper !== 'undefined') {
+                            var swiperEl = panel.querySelector('.home-collection__swiper');
+                            if (swiperEl && swiperEl.swiper) {
+                                requestAnimationFrame(function () {
+                                    swiperEl.swiper.update();
+                                });
+                            }
                         }
-                    }
+                    });
                 });
             });
-        });
+        }
 
         // Hero slideshow: reset autoplay timer to 5s when a pagination bullet is clicked
         var heroSlideshow = document.querySelector('.home-hero-slideshow__swiper');
