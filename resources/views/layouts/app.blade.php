@@ -943,7 +943,6 @@
             margin-top: 0;
             padding-top: 0;
         }
-        /* Wishlist: breathing room above footer (sticky layout removes default footer margin) */
         body.page-wishlist .layout-content {
             padding-bottom: 2.5rem;
         }

@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 @section('content')
 <style>
-    /* Long URLs in the Link column must wrap instead of overflowing the wg-box */
     .wg-table.table-all-user .table td.slides-table__link {
         max-width: 18rem;
         word-break: break-word;

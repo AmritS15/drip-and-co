@@ -16,12 +16,6 @@ use Surfsidemedia\Shoppingcart\Facades\Cart;
 
 class CartController extends Controller
 {
-    /**
-     * Cart/checkout pages must not be stored in the browser cache, or the Back button can show
-     * stale line items after an order when the session cart is already empty.
-     *
-     * @param  array<string, mixed>  $data
-     */
     private function viewWithNoStoreCache(string $view, array $data = [])
     {
         return response()
