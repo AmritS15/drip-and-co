@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 @section('content')
 <style>
-    /* Long emails / message text must wrap inside the wg-box */
     .wg-table.table-all-user .table td.contacts-table__email {
         max-width: 16rem;
         word-break: break-word;

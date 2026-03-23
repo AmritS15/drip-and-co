@@ -47,10 +47,6 @@
         html[data-theme="dark"] .wgp-pagination .text-muted {
             color: #adb5bd !important;
         }
-        /*
-         * Dark mode fixes inlined so they apply on deploy even when public/css is CDN-cached.
-         * Mirrors public/css/style.css — coupon expiry date + wg-box search icon.
-         */
         html[data-theme="dark"] .section-content-right input[type="date"],
         html[data-theme="dark"] .section-content-right input[type="datetime-local"],
         html[data-theme="dark"] .section-content-right input[type="month"],

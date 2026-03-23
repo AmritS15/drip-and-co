@@ -437,7 +437,6 @@ html[data-theme="dark"] .section-content-right select {
   color: #e5e7eb;
 }
 
-/* Date/time inputs: not covered above; need explicit light text + WebKit fill (coupon forms, etc.) */
 html[data-theme="dark"] .section-content-right input[type="date"],
 html[data-theme="dark"] .section-content-right input[type="datetime-local"],
 html[data-theme="dark"] .section-content-right input[type="month"],
@@ -503,7 +502,6 @@ html[data-theme="dark"] .section-content-right .header-dashboard .form-search .b
   color: #e5e7eb;
 }
 
-/* Product / Users / etc.: search lives in wg-box, not header-dashboard — icon must stay visible */
 html[data-theme="dark"] .section-content-right .wg-box .form-search .button-submit button,
 html[data-theme="dark"] .section-content-right .wg-box .form-search .button-submit button i {
   color: #ffffff !important;
@@ -2200,7 +2198,6 @@ a:hover, a:focus {
   color: #FF5200;
 }
 
-/* Admin tables: keep action icons (eye/edit/bin) inside the cell — works with or without .table-responsive */
 .wg-table .table td:has(.list-icon-function) {
   min-width: 7rem;
   vertical-align: middle;
