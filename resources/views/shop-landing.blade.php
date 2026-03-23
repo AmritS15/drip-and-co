@@ -38,12 +38,21 @@
             display: flex;
             align-items: flex-end;
             padding: 1.35rem;
-            color: #fff;
+            color: #fff !important;
             text-decoration: none;
             background-size: cover;
             background-position: center;
             transition: transform 0.25s ease, box-shadow 0.25s ease;
             box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+        }
+
+        .shop-landing__card,
+        .shop-landing__card:hover,
+        .shop-landing__card:focus,
+        .shop-landing__card:visited,
+        .shop-landing__card .shop-landing__card-title,
+        .shop-landing__card .shop-landing__card-text {
+            color: #fff !important;
         }
 
         .shop-landing__card::before {

@@ -11,8 +11,15 @@ use Illuminate\Support\Facades\Schema;
 
 class ShopController extends Controller
 {
-    public function landing()
+    public function landing(Request $request)
     {
+        $filterKeys = ['page', 'size', 'order', 'brands', 'categories', 'sizes', 'colors', 'sale', 'min', 'max'];
+        foreach ($filterKeys as $key) {
+            if ($request->query($key) !== null && $request->query($key) !== '') {
+                return $this->renderShop($request);
+            }
+        }
+
         $shopMensUrl = route('shop.mens');
         $shopWomensUrl = route('shop.womens');
 
