@@ -42,10 +42,10 @@ class AppServiceProvider extends ServiceProvider
                         ->first();
                 }
                 if (! $category) {
-                    return route('shop.index');
+                    return route('shop.all');
                 }
 
-                return route('shop.index', ['categories' => $category->id]);
+                return route('shop.all', ['categories' => $category->id]);
             };
 
             $view->with([

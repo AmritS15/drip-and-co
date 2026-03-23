@@ -682,7 +682,7 @@
 
 </head>
 
-<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif @if(request()->routeIs('home.contact')) page-contact @endif @if(request()->routeIs('home.about')) page-about @endif @if(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*')) page-auth @endif @if(request()->routeIs('wishlist.index') || request()->routeIs('user.*')) page-sticky-footer @endif @if(request()->routeIs('wishlist.index')) page-wishlist @endif">
+<body class="gradient-bg @if(request()->routeIs('home.index')) page-home @endif @if(request()->routeIs('home.contact')) page-contact @endif @if(request()->routeIs('home.about')) page-about @endif @if(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.*')) page-auth @endif @if(request()->routeIs('wishlist.index') || request()->routeIs('user.*') || request()->routeIs('shop.index')) page-sticky-footer @endif @if(request()->routeIs('wishlist.index')) page-wishlist @endif @if(request()->routeIs('shop.index')) page-shop-landing @endif">
     <svg class="d-none">
         <symbol id="icon_nav" viewBox="0 0 25 18">
             <rect width="25" height="2" />
@@ -938,6 +938,9 @@
         body.page-sticky-footer .layout-content {
             flex: 1 0 auto;
         }
+        body.page-shop-landing .layout-content {
+            padding-top: 2.25rem;
+        }
         body.page-auth .footer-spaced,
         body.page-sticky-footer .footer-spaced {
             margin-top: 0;
@@ -1070,6 +1073,15 @@
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
             border-bottom: none;
+        }
+        body.page-shop-landing #header.header.header-transparent-bg {
+            position: relative !important;
+            top: 0 !important;
+            background: var(--bs-body-bg) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        html[data-theme="dark"] body.page-shop-landing #header.header.header-transparent-bg {
+            border-bottom-color: rgba(255, 255, 255, 0.12);
         }
 
         html[data-theme="light"] .header-transparent-bg {
@@ -1207,6 +1219,15 @@
         }
 
         @media (max-width: 1199.98px) {
+            body.page-shop-landing .header-mobile {
+                position: relative !important;
+                top: 0 !important;
+                background: var(--bs-body-bg) !important;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+            }
+            html[data-theme="dark"] body.page-shop-landing .header-mobile {
+                border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+            }
             html[data-theme="light"] .header-mobile--transparent .header-mobile__icon svg,
             html[data-theme="light"] .header-mobile--transparent .header-tools__item,
             html[data-theme="light"] .header-mobile--transparent .header-toolsitem,
@@ -1305,7 +1326,7 @@
             <div class="container header-mobile__search-block">
                 <form action="#" method="GET" class="search-field mt-4 mb-2" id="mobile-search-form"
                     data-search-url="{{ route('home.search') }}"
-                    data-shop-url="{{ route('shop.index') }}"
+                    data-shop-url="{{ route('shop.all') }}"
                     data-product-base="{{ url('/shop') }}/"
                     data-thumb-base="{{ asset('uploads/products/thumbnails') }}/"
                     data-category-thumb-base="{{ asset('uploads/categories') }}/"
@@ -1704,7 +1725,7 @@
     <script src="{{ asset('assets/js/plugins/countdown.js') }}"></script>
     <script>
         $(function() {
-            var shopBase = "{{ route('shop.index') }}";
+            var shopBase = "{{ route('shop.all') }}";
             var productDetailBase = "{{ route('shop.product.details', ['product_slug' => '__SLUG__']) }}";
             var thumbBase = "{{ asset('uploads/products/thumbnails') }}/";
             var categoryThumbBase = "{{ asset('uploads/categories') }}/";
