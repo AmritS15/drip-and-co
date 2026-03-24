@@ -392,6 +392,15 @@
         transform: scale(1.02);
     }
 
+    /* Slider panes should show full uploaded image without crop */
+    .home-category-banner--in-slider .home-category-banner__pane {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: #101219;
+        transform: none;
+    }
+
     .home-category-banner::after {
         content: "";
         position: absolute;
@@ -512,7 +521,7 @@
     }
 
     .home-category-banner--in-slider {
-        margin-top: 0;
+        margin-top: 100;
     }
 
     .home-category-banner--single {
@@ -522,11 +531,19 @@
     .home-category-banner--single .home-category-banner__pane--full {
         position: absolute;
         inset: 0;
-        background-image: var(--slide-bg-image);
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        transform: scale(1.02);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #101219;
+        transform: none;
+    }
+
+    .home-category-banner--single .home-category-banner__image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+        display: block;
     }
 
     .home-hero-slideshow__standard-slide {
@@ -646,9 +663,12 @@
                         @foreach ($standardSlides as $slide)
                             <div class="swiper-slide home-hero-slideshow__slide">
                                 <a href="{{ $slide->link ?: '#' }}" class="home-hero-slideshow__standard-slide">
-                                    <div class="home-category-banner home-category-banner--hero home-category-banner--single home-category-banner--in-slider"
-                                         style="--slide-bg-image: url('{{ asset('uploads/slides') }}/{{ $slide->image }}');">
-                                        <div class="home-category-banner__pane home-category-banner__pane--full"></div>
+                                    <div class="home-category-banner home-category-banner--hero home-category-banner--single home-category-banner--in-slider">
+                                        <div class="home-category-banner__pane home-category-banner__pane--full">
+                                            <img class="home-category-banner__image"
+                                                 src="{{ asset('uploads/slides') }}/{{ $slide->image }}"
+                                                 alt="{{ $slide->title }}">
+                                        </div>
                                         <div class="home-category-banner__overlay">
                                             <p class="home-category-banner__kicker">{{ $slide->tagline }}</p>
                                             <h2 class="home-category-banner__title">{{ $slide->title }}</h2>

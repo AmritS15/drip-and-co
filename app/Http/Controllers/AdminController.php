@@ -1052,7 +1052,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
                 $image = $request->file('image_std') ?: $request->file('image');
                 $file_extension = $image->extension();
                 $file_name = Carbon::now()->timestamp . '.' . $file_extension;
-                $this->GenerateSlideThumbnailsImage($image, $file_name);
+                $this->GenerateStandardSlideImage($image, $file_name);
                 $slide->image = $file_name;
             }
         } catch (\Exception $e) {
@@ -1070,10 +1070,14 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
     {
         $destinationPath = public_path('uploads/slides');
         $img = Image::read($image->path());
-        $img->cover(400, 690, 'top');
-        $img->resize(400, 690, function ($constraint) {
-            $constraint->aspectRatio();
-        })->save($destinationPath . '/' . $imageName);
+        $img->save($destinationPath . '/' . $imageName);
+    }
+
+    public function GenerateStandardSlideImage($image, $imageName)
+    {
+        $destinationPath = public_path('uploads/slides');
+        $img = Image::read($image->path());
+        $img->save($destinationPath . '/' . $imageName);
     }
 
     public function slide_edit($id)
@@ -1155,7 +1159,7 @@ $monthlyDatas = DB::select("SELECT M.id AS MonthNo, M.name AS MonthName,
                         File::delete(public_path('uploads/slides') . '/' . $slide->image);
                     }
                     $file_name = Carbon::now()->timestamp . '.' . $image->extension();
-                    $this->GenerateSlideThumbnailsImage($image, $file_name);
+                    $this->GenerateStandardSlideImage($image, $file_name);
                     $slide->image = $file_name;
                 }
             }
