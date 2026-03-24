@@ -1,38 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<style>
-  .marker-admin-box-wrap {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .marker-admin-box {
-    max-width: 24rem;
-    width: 100%;
-    border: 1px solid #c5ccd3;
-    border-radius: 0.5rem;
-    padding: 0.9rem 1rem;
-    background-color: #ffffff;
-    color: #1c232b;
-    font-size: 0.92rem;
-    line-height: 1.45;
-  }
-
-  .marker-admin-box__title {
-    font-weight: 600;
-    margin-bottom: 0.35rem;
-  }
-
-  html[data-theme="dark"] .marker-admin-box {
-    border-color: #5c646d;
-    background-color: #2d3136;
-    color: #f1f3f5;
-  }
-</style>
-
 <main class="pt-90">
     <div class="mb-4 pb-4"></div>
     <section class="login-register container">
@@ -77,15 +45,6 @@
               </div>
             </form>
           </div>
-        </div>
-      </div>
-    </section>
-    <section class="container">
-      <div class="marker-admin-box-wrap">
-        <div class="marker-admin-box">
-          <div class="marker-admin-box__title">Admin details for Marker</div>
-          <div>Email: AdminMaker@aston.ac.uk</div>
-          <div>Password: Marker123</div>
         </div>
       </div>
     </section>
