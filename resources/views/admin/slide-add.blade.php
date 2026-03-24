@@ -2,7 +2,7 @@
 @section('content')
 @push('styles')
 <style>
-    .slide-form { max-width: 720px; display: flex; flex-direction: column; gap: 0; }
+    .slide-form { max-width: 1870px; display: flex; flex-direction: column; gap: 0; }
     .slide-form .slide-form__row { margin-bottom: 1.25rem; }
     .slide-form .slide-form__section { margin-bottom: 1.75rem; }
     .slide-form .slide-form__section-title { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #555; margin-bottom: 0.75rem; padding-bottom: 0.35rem; border-bottom: 1px solid #e0e0e0; }
